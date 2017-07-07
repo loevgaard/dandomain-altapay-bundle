@@ -46,8 +46,12 @@ abstract class Terminal implements TerminalInterface
     protected $currencies;
 
     /**
+     * We only set the canonical title when we persist the object
+     * This is because the canonical title is used for URLs and
+     * changing this would require the user to change the URL in the
+     * Dandomain gateway settings also
+     *
      * @ORM\PrePersist
-     * @ORM\PreUpdate
      */
     public function updateCanonicalTitle() {
         $this->canonicalTitle = (new Slugify())->slugify($this->title);
@@ -56,7 +60,7 @@ abstract class Terminal implements TerminalInterface
     /**
      * @inheritdoc
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -73,7 +77,7 @@ abstract class Terminal implements TerminalInterface
     /**
      * @inheritdoc
      */
-    public function getCanonicalTitle(): string
+    public function getCanonicalTitle(): ?string
     {
         return $this->canonicalTitle;
     }
@@ -90,7 +94,7 @@ abstract class Terminal implements TerminalInterface
     /**
      * @inheritdoc
      */
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
@@ -107,7 +111,7 @@ abstract class Terminal implements TerminalInterface
     /**
      * @inheritdoc
      */
-    public function getNatures(): array
+    public function getNatures(): ?array
     {
         return $this->natures;
     }
@@ -124,7 +128,7 @@ abstract class Terminal implements TerminalInterface
     /**
      * @inheritdoc
      */
-    public function getCurrencies(): array
+    public function getCurrencies(): ?array
     {
         return $this->currencies;
     }

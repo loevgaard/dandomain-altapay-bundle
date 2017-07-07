@@ -1,0 +1,6 @@
+services:
+    loevgaard_dandomain_altapay.altapay_client:
+        class: Loevgaard\AltaPay\Client
+        arguments:
+            - "%loevgaard_dandomain_altapay.altapay_username%"
+            - "%loevgaard_dandomain_altapay.altapay_password%"

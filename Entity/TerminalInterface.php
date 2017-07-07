@@ -6,7 +6,7 @@ interface TerminalInterface
     /**
      * @return string
      */
-    public function getTitle(): string;
+    public function getTitle(): ?string;
 
     /**
      * @param string $title
@@ -17,7 +17,7 @@ interface TerminalInterface
     /**
      * @return string
      */
-    public function getCanonicalTitle(): string;
+    public function getCanonicalTitle(): ?string;
 
     /**
      * @param string $canonicalTitle
@@ -28,7 +28,7 @@ interface TerminalInterface
     /**
      * @return string
      */
-    public function getCountry(): string;
+    public function getCountry(): ?string;
 
     /**
      * @param string $country
@@ -39,7 +39,7 @@ interface TerminalInterface
     /**
      * @return array
      */
-    public function getNatures(): array;
+    public function getNatures(): ?array;
 
     /**
      * @param array $natures
@@ -50,7 +50,7 @@ interface TerminalInterface
     /**
      * @return array
      */
-    public function getCurrencies(): array;
+    public function getCurrencies(): ?array;
 
     /**
      * @param array $currencies
