@@ -4,3 +4,9 @@ services:
         arguments:
             - "%loevgaard_dandomain_altapay.altapay_username%"
             - "%loevgaard_dandomain_altapay.altapay_password%"
+
+    loevgaard_dandomain_altapay.terminal_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\TerminalManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%loevgaard_dandomain_altapay.terminal_class%"

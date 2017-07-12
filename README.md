@@ -69,6 +69,24 @@ class Terminal extends BaseTerminal
 }
 ```
 
+### Import routing
+```yaml
+# app/config/routing.yml
+loevgaard_dandomain_altapay:
+    resource: "@LoevgaardDandomainAltapayBundle/Resources/config/routing.yml"
+```
+
+### Update config.yml
+```yaml
+# app/config/routing.yml
+loevgaard_dandomain_altapay:
+    altapay_username: insert username
+    altapay_password: insert password
+    shared_key_1: insert shared key 1 from Dandomain
+    shared_key_2: insert shared key 2 from Dandomain
+    terminal_class: AppBundle\Entity\Terminal
+```
+
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.

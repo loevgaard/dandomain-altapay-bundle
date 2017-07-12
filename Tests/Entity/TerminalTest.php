@@ -11,7 +11,7 @@ class TerminalTest extends TestCase
         $terminal = $this->getTerminal();
 
         $this->assertNull($terminal->getTitle());
-        $this->assertNull($terminal->getCanonicalTitle());
+        $this->assertNull($terminal->getSlug());
         $this->assertNull($terminal->getCountry());
         $this->assertNull($terminal->getCurrencies());
         $this->assertNull($terminal->getNatures());
@@ -33,9 +33,9 @@ class TerminalTest extends TestCase
     {
         $terminal = $this->getTerminal();
         $terminal->setTitle('test title !"#(€ EUR');
-        $terminal->updateCanonicalTitle();
+        $terminal->updateSlug();
 
-        $this->assertEquals('test-title-eur', $terminal->getCanonicalTitle());
+        $this->assertEquals('test-title-eur', $terminal->getSlug());
     }
 
     /**

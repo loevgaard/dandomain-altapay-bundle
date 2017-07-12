@@ -1,0 +1,3 @@
+loevgaard_altapay:
+    resource: "@LoevgaardDandomainAltapayBundle/Controller/"
+    type: annotation

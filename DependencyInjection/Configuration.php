@@ -15,6 +15,9 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('altapay_username')->end()
                 ->scalarNode('altapay_password')->end()
+                ->scalarNode('shared_key_1')->end()
+                ->scalarNode('shared_key_2')->end()
+                ->scalarNode('terminal_class')->end()
             ->end()
         ;
 

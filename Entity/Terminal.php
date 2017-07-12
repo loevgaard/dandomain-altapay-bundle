@@ -22,7 +22,7 @@ abstract class Terminal implements TerminalInterface
      *
      * @ORM\Column(type="string", unique=true)
      */
-    protected $canonicalTitle;
+    protected $slug;
 
     /**
      * @var string
@@ -53,8 +53,8 @@ abstract class Terminal implements TerminalInterface
      *
      * @ORM\PrePersist
      */
-    public function updateCanonicalTitle() {
-        $this->canonicalTitle = (new Slugify())->slugify($this->title);
+    public function updateSlug() {
+        $this->slug = (new Slugify())->slugify($this->title);
     }
 
     /**
@@ -77,17 +77,17 @@ abstract class Terminal implements TerminalInterface
     /**
      * @inheritdoc
      */
-    public function getCanonicalTitle(): ?string
+    public function getSlug(): ?string
     {
-        return $this->canonicalTitle;
+        return $this->slug;
     }
 
     /**
      * @inheritdoc
      */
-    public function setCanonicalTitle(string $canonicalTitle) : TerminalInterface
+    public function setSlug(string $slug) : TerminalInterface
     {
-        $this->canonicalTitle = $canonicalTitle;
+        $this->slug = $slug;
         return $this;
     }
 

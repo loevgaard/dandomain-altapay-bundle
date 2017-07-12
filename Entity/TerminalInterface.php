@@ -17,13 +17,13 @@ interface TerminalInterface
     /**
      * @return string
      */
-    public function getCanonicalTitle(): ?string;
+    public function getSlug(): ?string;
 
     /**
      * @param string $canonicalTitle
      * @return TerminalInterface
      */
-    public function setCanonicalTitle(string $canonicalTitle): self;
+    public function setSlug(string $canonicalTitle): self;
 
     /**
      * @return string
