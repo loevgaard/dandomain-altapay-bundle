@@ -19,7 +19,55 @@ $ composer require loevgaard/dandomain-altapay-bundle
 
 ## Usage
 
-TODO
+Then, enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file of your project:
+
+```php
+<?php
+// app/AppKernel.php
+
+// ...
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+
+            new Loevgaard\DandomainAltapayBundle\LoevgaardDandomainAltapayBundle(),
+        );
+
+        // ...
+    }
+
+    // ...
+}
+```
+
+### Doctrine ORM Terminal class
+```php
+<?php
+// src/AppBundle/Entity/User.php
+
+namespace AppBundle\Entity;
+
+use Loevgaard\DandomainAltapayBundle\Entity\Terminal as BaseTerminal;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="terminals")
+ */
+class Terminal extends BaseTerminal
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+}
+```
 
 ## Change log
 

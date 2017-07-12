@@ -1,22 +1,27 @@
 <?php
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
-use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
+use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
+use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\Dandomain\Pay\Handler;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class PaymentController extends Controller {
     /**
+     * @Method("POST")
      * @Route("/{terminal}")
      * @ParamConverter("terminal", options={"mapping": {"terminal": "canonicalTitle"}})
      *
      * @param TerminalInterface $terminal
      * @param Request $request
+     * @return RedirectResponse
      */
     public function newAction(TerminalInterface $terminal, Request $request) {
         $handler = new Handler(
@@ -31,6 +36,8 @@ class PaymentController extends Controller {
         }
 
         $paymentRequest = $handler->getPaymentRequest();
+
+        // @todo log payment request to database
 
         $paymentRequestPayload = new PaymentRequestPayload(
             $terminal->getTitle(),
@@ -51,8 +58,15 @@ class PaymentController extends Controller {
             $paymentRequestPayload->addOrderLine($orderLinePayload);
         }
 
+        $configPayload = new ConfigPayload(); // @todo set the callback urls
+        $paymentRequestPayload->setConfig($configPayload);
+
+        //$paymentRequestPayload->setCookie(); @todo set payment request entity id in the cookie so we can use this in callbacks
+
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
-        $altapay->createPaymentRequest($paymentRequestPayload);
+        $response = $altapay->createPaymentRequest($paymentRequestPayload);
+
+        return new RedirectResponse($response->getDynamicJavascriptUrl());
     }
 }

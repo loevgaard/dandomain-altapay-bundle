@@ -34,14 +34,14 @@ abstract class Terminal implements TerminalInterface
     /**
      * @var array
      *
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json_array")
      */
     protected $natures;
 
     /**
      * @var array
      *
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json_array")
      */
     protected $currencies;
 
@@ -49,7 +49,7 @@ abstract class Terminal implements TerminalInterface
      * We only set the canonical title when we persist the object
      * This is because the canonical title is used for URLs and
      * changing this would require the user to change the URL in the
-     * Dandomain gateway settings also
+     * Dandomain gateway settings
      *
      * @ORM\PrePersist
      */
