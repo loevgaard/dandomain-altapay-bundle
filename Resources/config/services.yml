@@ -10,3 +10,15 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "%loevgaard_dandomain_altapay.terminal_class%"
+    loevgaard_dandomain_altapay.payment_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\PaymentManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@loevgaard_dandomain_altapay.order_line_manager"
+            - "%loevgaard_dandomain_altapay.payment_class%"
+
+    loevgaard_dandomain_altapay.order_line_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\OrderLineManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%loevgaard_dandomain_altapay.order_line_class%"

@@ -44,10 +44,10 @@ class AppKernel extends Kernel
 }
 ```
 
-### Doctrine ORM Terminal class
+### Doctrine ORM classes
 ```php
 <?php
-// src/AppBundle/Entity/User.php
+// src/AppBundle/Entity/Terminal.php
 
 namespace AppBundle\Entity;
 
@@ -85,6 +85,8 @@ loevgaard_dandomain_altapay:
     shared_key_1: insert shared key 1 from Dandomain
     shared_key_2: insert shared key 2 from Dandomain
     terminal_class: AppBundle\Entity\Terminal
+    payment_class: AppBundle\Entity\Payment
+    order_line_class: AppBundle\Entity\OrderLine
 ```
 
 ## Change log

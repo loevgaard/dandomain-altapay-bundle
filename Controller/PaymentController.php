@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentController extends Controller {
     /**
@@ -22,6 +23,14 @@ class PaymentController extends Controller {
      */
     public function newAction($terminal, Request $request)
     {
+        $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
+        $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
+        $terminalEntity = $terminalManager->findTerminalBySlug($terminal);
+
+        if(!$terminalEntity) {
+            throw new \RuntimeException('Terminal `'.$terminal.'` not found');
+        }
+
         $handler = new Handler(
             $request,
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_1'),
@@ -35,10 +44,11 @@ class PaymentController extends Controller {
 
         $paymentRequest = $handler->getPaymentRequest();
 
-        // @todo log payment request to database
+        $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($paymentRequest);
+        $paymentManager->updatePayment($paymentEntity);
 
         $paymentRequestPayload = new PaymentRequestPayload(
-            $terminal->getTitle(),
+            $terminalEntity->getTitle(),
             $paymentRequest->getOrderId(),
             $paymentRequest->getTotalAmount(),
             $paymentRequest->getCurrencySymbol()
@@ -56,7 +66,7 @@ class PaymentController extends Controller {
             $paymentRequestPayload->addOrderLine($orderLinePayload);
         }
 
-        $configPayload = new ConfigPayload(); // @todo set the callback urls
+        $configPayload = new ConfigPayload($this->generateUrl('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL)); // @todo set the callback urls
         $paymentRequestPayload->setConfig($configPayload);
 
         //$paymentRequestPayload->setCookie(); @todo set payment request entity id in the cookie so we can use this in callbacks
@@ -65,6 +75,12 @@ class PaymentController extends Controller {
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
-        return new RedirectResponse($response->getDynamicJavascriptUrl());
+        if(!$response->isSuccessful()) {
+            // @todo fix this
+            throw new \RuntimeException('An error occurred during payment request.');
+        }
+
+        echo $response->getUrl();exit;
+        return new RedirectResponse($response->getUrl());
     }
 }

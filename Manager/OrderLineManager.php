@@ -3,9 +3,10 @@ namespace Loevgaard\DandomainAltapayBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Loevgaard\DandomainAltapayBundle\Entity\OrderLineInterface;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 
-class TerminalManager
+class OrderLineManager
 {
     /**
      * @var ObjectManager
@@ -31,6 +32,9 @@ class TerminalManager
         return $this->objectManager->getRepository($this->getClass());
     }
 
+    /**
+     * @return string
+     */
     public function getClass() : string
     {
         if (false !== strpos($this->class, ':')) {
@@ -41,56 +45,31 @@ class TerminalManager
     }
 
     /**
-     * @return TerminalInterface
+     * @return OrderLineInterface
      */
-    public function createTerminal() : TerminalInterface
+    public function createOrderLine() : OrderLineInterface
     {
         $class = $this->getClass();
         $terminal = new $class();
         return $terminal;
     }
 
-    public function deleteTerminal(TerminalInterface $terminal)
+    /**
+     * @param OrderLineInterface $orderLine
+     */
+    public function deleteOrderLine(OrderLineInterface $orderLine)
     {
-        $this->objectManager->remove($terminal);
+        $this->objectManager->remove($orderLine);
         $this->objectManager->flush();
     }
 
     /**
-     * @param string $title
-     * @return TerminalInterface|null
-     */
-    public function findTerminalByTitle(string $title) : ?TerminalInterface
-    {
-        /** @var TerminalInterface $terminal */
-        $terminal = $this->getRepository()->findOneBy([
-            'title' => $title
-        ]);
-
-        return $terminal;
-    }
-
-    /**
-     * @param string $slug
-     * @return TerminalInterface|null
-     */
-    public function findTerminalBySlug(string $slug) : ?TerminalInterface
-    {
-        /** @var TerminalInterface $terminal */
-        $terminal = $this->getRepository()->findOneBy([
-            'slug' => $slug
-        ]);
-
-        return $terminal;
-    }
-
-    /**
-     * @param TerminalInterface $terminal
+     * @param OrderLineInterface $orderLine
      * @param bool $flush
      */
-    public function updateTerminal(TerminalInterface $terminal, bool $flush = true)
+    public function updateOrderLine(OrderLineInterface $orderLine, bool $flush = true)
     {
-        $this->objectManager->persist($terminal);
+        $this->objectManager->persist($orderLine);
 
         if($flush) {
             $this->objectManager->flush();

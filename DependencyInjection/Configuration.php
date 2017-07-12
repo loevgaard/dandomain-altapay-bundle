@@ -18,6 +18,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('shared_key_1')->end()
                 ->scalarNode('shared_key_2')->end()
                 ->scalarNode('terminal_class')->end()
+                ->scalarNode('payment_class')->end()
+                ->scalarNode('order_line_class')->end()
             ->end()
         ;
 
