@@ -2,7 +2,6 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping AS ORM;
-use Loevgaard\Dandomain\Pay\PaymentRequest\OrderLine as DandomainOrderLine;
 
 /**
  * @ORM\MappedSuperclass
@@ -10,17 +9,28 @@ use Loevgaard\Dandomain\Pay\PaymentRequest\OrderLine as DandomainOrderLine;
 abstract class OrderLine implements OrderLineInterface
 {
     /**
+     * @var mixed
+     */
+    protected $id;
+
+    /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $productNumber;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $name;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $quantity;
 
@@ -28,24 +38,33 @@ abstract class OrderLine implements OrderLineInterface
      * The price excl vat
      *
      * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=10)
      */
     protected $price;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $vat;
 
     /**
-     * @param DandomainOrderLine $orderLine
+     * @var PaymentInterface
      */
-    public function populateFromDandomainPaymentRequest(DandomainOrderLine $orderLine)
+    protected $payment;
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
     {
-        
+        return $this->id;
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getProductNumber() : string
     {
@@ -53,8 +72,7 @@ abstract class OrderLine implements OrderLineInterface
     }
 
     /**
-     * @param string $productNumber
-     * @return OrderLineInterface
+     * @inheritdoc
      */
     public function setProductNumber(string $productNumber) : OrderLineInterface
     {
@@ -63,7 +81,7 @@ abstract class OrderLine implements OrderLineInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName() : string
     {
@@ -71,17 +89,16 @@ abstract class OrderLine implements OrderLineInterface
     }
 
     /**
-     * @param string $name
-     * @return OrderLineInterface
+     * @inheritdoc
      */
-    public function setName($name) : OrderLineInterface
+    public function setName(string $name) : OrderLineInterface
     {
         $this->name = $name;
         return $this;
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getQuantity() : int
     {
@@ -89,17 +106,16 @@ abstract class OrderLine implements OrderLineInterface
     }
 
     /**
-     * @param int $quantity
-     * @return OrderLineInterface
+     * @inheritdoc
      */
-    public function setQuantity($quantity) : OrderLineInterface
+    public function setQuantity(int $quantity) : OrderLineInterface
     {
         $this->quantity = $quantity;
         return $this;
     }
 
     /**
-     * @return float
+     * @inheritdoc
      */
     public function getPrice() : float
     {
@@ -107,17 +123,16 @@ abstract class OrderLine implements OrderLineInterface
     }
 
     /**
-     * @param float $price
-     * @return OrderLineInterface
+     * @inheritdoc
      */
-    public function setPrice($price) : OrderLineInterface
+    public function setPrice(float $price) : OrderLineInterface
     {
         $this->price = $price;
         return $this;
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getVat() : int
     {
@@ -125,12 +140,29 @@ abstract class OrderLine implements OrderLineInterface
     }
 
     /**
-     * @param int $vat
-     * @return OrderLineInterface
+     * @inheritdoc
      */
-    public function setVat($vat) : OrderLineInterface
+    public function setVat(int $vat) : OrderLineInterface
     {
         $this->vat = $vat;
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPayment(): PaymentInterface
+    {
+        return $this->payment;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setPayment(PaymentInterface $payment): OrderLineInterface
+    {
+        $this->payment = $payment;
+        return $this;
+    }
+
 }

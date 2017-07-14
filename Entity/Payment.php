@@ -3,274 +3,388 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\MappedSuperclass
  */
 abstract class Payment implements PaymentInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
+    /**
+     * @var mixed
+     */
+    protected $id;
+
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $apiKey;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $merchant;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $orderId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $sessionId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $currencySymbol;
 
     /**
      * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=10)
      */
     protected $totalAmount;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $callBackUrl;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $fullCallBackOkUrl;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $callBackOkUrl;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $callBackServerUrl;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $languageId;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(type="boolean")
      */
     protected $testMode;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $paymentGatewayCurrencyCode;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $cardTypeId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerRekvNr;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerName;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerCompany;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerAddress;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerAddress2;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerZipCode;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerCity;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $customerCountryId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerCountry;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerPhone;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerFax;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerEmail;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerNote;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerCvrnr;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $customerCustTypeId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerEan;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerRes1;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerRes2;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerRes3;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerRes4;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerRes5;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $customerIp;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryName;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryCompany;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryAddress;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryAddress2;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryZipCode;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryCity;
 
     /**
      * @var int
+     *
+     * @ORM\Column(type="integer")
      */
     protected $deliveryCountryID;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryCountry;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryPhone;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryFax;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryEmail;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $deliveryEan;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $shippingMethod;
 
     /**
      * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=10)
      */
     protected $shippingFee;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $paymentMethod;
 
     /**
      * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=10)
      */
     protected $paymentFee;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string")
      */
     protected $loadBalancerRealIp;
 
@@ -279,13 +393,27 @@ abstract class Payment implements PaymentInterface
      */
     protected $orderLines;
 
+    /**
+     * @var Callback[]
+     */
+    protected $callbacks;
+
     public function __construct()
     {
         $this->orderLines = new ArrayCollection();
+        $this->callbacks = new ArrayCollection();
     }
 
     /**
-     * @return string
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getApiKey() : string
     {
@@ -293,8 +421,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $apiKey
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setApiKey(string $apiKey) : PaymentInterface
     {
@@ -303,7 +430,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getMerchant() : string
     {
@@ -311,8 +438,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $merchant
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setMerchant(string $merchant) : PaymentInterface
     {
@@ -321,7 +447,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getOrderId() : int
     {
@@ -329,8 +455,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $orderId
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setOrderId(int $orderId) : PaymentInterface
     {
@@ -339,7 +464,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getSessionId() : string
     {
@@ -347,8 +472,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $sessionId
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setSessionId(string $sessionId) : PaymentInterface
     {
@@ -357,7 +481,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCurrencySymbol() : string
     {
@@ -365,8 +489,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $currencySymbol
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCurrencySymbol(string $currencySymbol) : PaymentInterface
     {
@@ -375,7 +498,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return float
+     * @inheritdoc
      */
     public function getTotalAmount() : float
     {
@@ -383,8 +506,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param float $totalAmount
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setTotalAmount(float $totalAmount) : PaymentInterface
     {
@@ -393,7 +515,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCallBackUrl() : string
     {
@@ -401,8 +523,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $callBackUrl
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCallBackUrl(string $callBackUrl) : PaymentInterface
     {
@@ -411,7 +532,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getFullCallBackOkUrl() : string
     {
@@ -419,8 +540,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $fullCallBackOkUrl
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setFullCallBackOkUrl(string $fullCallBackOkUrl) : PaymentInterface
     {
@@ -429,7 +549,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCallBackOkUrl() : string
     {
@@ -437,8 +557,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $callBackOkUrl
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCallBackOkUrl(string $callBackOkUrl) : PaymentInterface
     {
@@ -447,7 +566,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCallBackServerUrl() : string
     {
@@ -455,8 +574,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $callBackServerUrl
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCallBackServerUrl(string $callBackServerUrl) : PaymentInterface
     {
@@ -465,7 +583,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getLanguageId() : int
     {
@@ -473,8 +591,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $languageId
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setLanguageId(int $languageId) : PaymentInterface
     {
@@ -483,7 +600,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isTestMode(): bool
     {
@@ -491,8 +608,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param bool $testMode
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setTestMode(bool $testMode) : PaymentInterface
     {
@@ -501,7 +617,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getPaymentGatewayCurrencyCode()
     {
@@ -509,8 +625,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $paymentGatewayCurrencyCode
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setPaymentGatewayCurrencyCode(int $paymentGatewayCurrencyCode) : PaymentInterface
     {
@@ -519,7 +634,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getCardTypeId()
     {
@@ -527,8 +642,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $cardTypeId
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCardTypeId(int $cardTypeId) : PaymentInterface
     {
@@ -537,7 +651,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerRekvNr() : string
     {
@@ -545,8 +659,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerRekvNr
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerRekvNr(string $customerRekvNr) : PaymentInterface
     {
@@ -555,7 +668,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerName() : string
     {
@@ -563,8 +676,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerName
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerName(string $customerName) : PaymentInterface
     {
@@ -573,7 +685,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerCompany() : string
     {
@@ -581,8 +693,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerCompany
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerCompany(string $customerCompany) : PaymentInterface
     {
@@ -591,7 +702,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerAddress() : string
     {
@@ -599,8 +710,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerAddress
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerAddress(string $customerAddress) : PaymentInterface
     {
@@ -609,7 +719,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerAddress2() : string
     {
@@ -617,8 +727,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerAddress2
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerAddress2(string $customerAddress2) : PaymentInterface
     {
@@ -627,7 +736,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerZipCode() : string
     {
@@ -635,8 +744,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerZipCode
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerZipCode(string $customerZipCode) : PaymentInterface
     {
@@ -645,7 +753,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerCity() : string
     {
@@ -653,8 +761,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerCity
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerCity(string $customerCity) : PaymentInterface
     {
@@ -663,7 +770,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getCustomerCountryId()
     {
@@ -671,8 +778,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $customerCountryId
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerCountryId(int $customerCountryId) : PaymentInterface
     {
@@ -681,7 +787,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerCountry() : string
     {
@@ -689,8 +795,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerCountry
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerCountry(string $customerCountry) : PaymentInterface
     {
@@ -699,7 +804,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerPhone() : string
     {
@@ -707,8 +812,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerPhone
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerPhone(string $customerPhone) : PaymentInterface
     {
@@ -717,7 +821,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerFax() : string
     {
@@ -725,8 +829,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerFax
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerFax(string $customerFax) : PaymentInterface
     {
@@ -735,7 +838,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerEmail() : string
     {
@@ -743,8 +846,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerEmail
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerEmail(string $customerEmail) : PaymentInterface
     {
@@ -753,7 +855,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerNote() : string
     {
@@ -761,8 +863,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerNote
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerNote(string $customerNote) : PaymentInterface
     {
@@ -771,7 +872,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerCvrnr() : string
     {
@@ -779,8 +880,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerCvrnr
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerCvrnr(string $customerCvrnr) : PaymentInterface
     {
@@ -789,7 +889,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getCustomerCustTypeId() : int
     {
@@ -797,8 +897,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $customerCustTypeId
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerCustTypeId(int $customerCustTypeId) : PaymentInterface
     {
@@ -807,7 +906,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerEan() : string
     {
@@ -815,8 +914,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerEan
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerEan(string $customerEan) : PaymentInterface
     {
@@ -825,7 +923,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerRes1() : string
     {
@@ -833,8 +931,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerRes1
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerRes1(string $customerRes1) : PaymentInterface
     {
@@ -843,7 +940,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerRes2() : string
     {
@@ -851,8 +948,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerRes2
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerRes2(string $customerRes2) : PaymentInterface
     {
@@ -861,7 +957,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerRes3() : string
     {
@@ -869,8 +965,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerRes3
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerRes3(string $customerRes3) : PaymentInterface
     {
@@ -879,7 +974,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerRes4() : string
     {
@@ -887,8 +982,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerRes4
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerRes4(string $customerRes4) : PaymentInterface
     {
@@ -897,7 +991,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerRes5() : string
     {
@@ -905,8 +999,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerRes5
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerRes5(string $customerRes5) : PaymentInterface
     {
@@ -915,7 +1008,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCustomerIp() : string
     {
@@ -923,8 +1016,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $customerIp
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setCustomerIp(string $customerIp) : PaymentInterface
     {
@@ -933,7 +1025,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryName() : string
     {
@@ -941,8 +1033,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryName
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryName(string $deliveryName) : PaymentInterface
     {
@@ -951,7 +1042,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryCompany() : string
     {
@@ -959,8 +1050,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryCompany
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryCompany(string $deliveryCompany) : PaymentInterface
     {
@@ -969,7 +1059,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryAddress() : string
     {
@@ -977,8 +1067,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryAddress
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryAddress(string $deliveryAddress) : PaymentInterface
     {
@@ -987,7 +1076,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryAddress2() : string
     {
@@ -995,8 +1084,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryAddress2
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryAddress2(string $deliveryAddress2) : PaymentInterface
     {
@@ -1005,7 +1093,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryZipCode() : string
     {
@@ -1013,8 +1101,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryZipCode
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryZipCode(string $deliveryZipCode) : PaymentInterface
     {
@@ -1023,7 +1110,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryCity() : string
     {
@@ -1031,8 +1118,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryCity
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryCity(string $deliveryCity) : PaymentInterface
     {
@@ -1041,7 +1127,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getDeliveryCountryID() : int
     {
@@ -1049,8 +1135,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param int $deliveryCountryID
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryCountryID(int $deliveryCountryID) : PaymentInterface
     {
@@ -1059,7 +1144,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryCountry() : string
     {
@@ -1067,8 +1152,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryCountry
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryCountry(string $deliveryCountry) : PaymentInterface
     {
@@ -1077,7 +1161,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryPhone() : string
     {
@@ -1085,8 +1169,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryPhone
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryPhone(string $deliveryPhone) : PaymentInterface
     {
@@ -1095,7 +1178,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryFax() : string
     {
@@ -1103,8 +1186,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryFax
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryFax(string $deliveryFax) : PaymentInterface
     {
@@ -1113,7 +1195,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryEmail() : string
     {
@@ -1121,8 +1203,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryEmail
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryEmail(string $deliveryEmail) : PaymentInterface
     {
@@ -1131,7 +1212,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDeliveryEan() : string
     {
@@ -1139,8 +1220,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $deliveryEan
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setDeliveryEan(string $deliveryEan) : PaymentInterface
     {
@@ -1149,7 +1229,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getShippingMethod() : string
     {
@@ -1157,8 +1237,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $shippingMethod
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setShippingMethod(string $shippingMethod) : PaymentInterface
     {
@@ -1167,7 +1246,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return float
+     * @inheritdoc
      */
     public function getShippingFee() : float
     {
@@ -1175,8 +1254,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param float $shippingFee
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setShippingFee(float $shippingFee) : PaymentInterface
     {
@@ -1185,7 +1263,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getPaymentMethod() : string
     {
@@ -1193,8 +1271,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $paymentMethod
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setPaymentMethod(string $paymentMethod) : PaymentInterface
     {
@@ -1203,7 +1280,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return float
+     * @inheritdoc
      */
     public function getPaymentFee() : float
     {
@@ -1211,8 +1288,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param float $paymentFee
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setPaymentFee(float $paymentFee) : PaymentInterface
     {
@@ -1221,7 +1297,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getLoadBalancerRealIp() : string
     {
@@ -1229,8 +1305,7 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @param string $loadBalancerRealIp
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function setLoadBalancerRealIp(string $loadBalancerRealIp) : PaymentInterface
     {
@@ -1239,30 +1314,56 @@ abstract class Payment implements PaymentInterface
     }
 
     /**
-     * @return OrderLineInterface[]
+     * @inheritdoc
      */
-    public function getOrderLines() : array
+    public function getOrderLines() : ArrayCollection
     {
         return $this->orderLines;
     }
 
     /**
-     * @param OrderLineInterface[] $orderLines
-     * @return PaymentInterface
+     * @inheritdoc
      */
-    public function setOrderLines(array $orderLines) : PaymentInterface
+    public function setOrderLines(ArrayCollection $orderLines) : PaymentInterface
     {
         $this->orderLines = $orderLines;
         return $this;
     }
 
     /**
-     * @param OrderLineInterface $orderLine
-     * @return PaymentInterface
+     * @inheritdoc
      */
     public function addOrderLine(OrderLineInterface $orderLine) : PaymentInterface
     {
         $this->orderLines[] = $orderLine;
+        $orderLine->setPayment($this);
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCallbacks() : ArrayCollection
+    {
+        return $this->callbacks;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCallbacks(ArrayCollection $callbacks) : PaymentInterface
+    {
+        $this->callbacks = $callbacks;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addCallback(CallbackInterface $callback) : PaymentInterface
+    {
+        $this->callbacks[] = $callback;
+        $callback->setPayment($this);
         return $this;
     }
 }

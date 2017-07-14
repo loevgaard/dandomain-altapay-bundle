@@ -1,4 +1,10 @@
 services:
+    loevgaard_dandomain_altapay.form.callback:
+        class: Loevgaard\DandomainAltapayBundle\Form\CallbackType
+        arguments: ['@loevgaard_dandomain_altapay.callback_manager']
+        tags:
+            - { name: form.type }
+
     loevgaard_dandomain_altapay.altapay_client:
         class: Loevgaard\AltaPay\Client
         arguments:
@@ -22,3 +28,9 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "%loevgaard_dandomain_altapay.order_line_class%"
+
+    loevgaard_dandomain_altapay.callback_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\CallbackManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%loevgaard_dandomain_altapay.callback_class%"

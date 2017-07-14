@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping AS ORM;
 abstract class Terminal implements TerminalInterface
 {
     /**
+     * @var mixed
+     */
+    protected $id;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
@@ -55,6 +60,14 @@ abstract class Terminal implements TerminalInterface
      */
     public function updateSlug() {
         $this->slug = (new Slugify())->slugify($this->title);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

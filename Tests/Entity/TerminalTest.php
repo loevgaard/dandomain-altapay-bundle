@@ -29,7 +29,7 @@ class TerminalTest extends TestCase
         $this->assertSame(['Nature 1', 'Nature 2'], $terminal->getNatures());
     }
 
-    public function testUpdateCanonical()
+    public function testUpdateSlug()
     {
         $terminal = $this->getTerminal();
         $terminal->setTitle('test title !"#(€ EUR');

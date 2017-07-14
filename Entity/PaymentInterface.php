@@ -1,8 +1,17 @@
 <?php
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 interface PaymentInterface
 {
+    /**
+     * Returns unique payment id
+     *
+     * @return mixed
+     */
+    public function getId();
+
     /**
      * @return string
      */
@@ -587,19 +596,36 @@ interface PaymentInterface
     public function setLoadBalancerRealIp(string $loadBalancerRealIp) : PaymentInterface;
 
     /**
-     * @return OrderLineInterface[]
+     * @return ArrayCollection|OrderLineInterface[]
      */
-    public function getOrderLines() : array;
+    public function getOrderLines() : ArrayCollection;
 
     /**
-     * @param OrderLineInterface[] $orderLines
+     * @param ArrayCollection|OrderLineInterface[] $orderLines
      * @return PaymentInterface
      */
-    public function setOrderLines(array $orderLines) : PaymentInterface;
+    public function setOrderLines(ArrayCollection $orderLines) : PaymentInterface;
 
     /**
      * @param OrderLineInterface $orderLine
      * @return PaymentInterface
      */
     public function addOrderLine(OrderLineInterface $orderLine) : PaymentInterface;
+
+    /**
+     * @return ArrayCollection|CallbackInterface[]
+     */
+    public function getCallbacks() : ArrayCollection;
+
+    /**
+     * @param ArrayCollection|CallbackInterface[] $callbacks
+     * @return PaymentInterface
+     */
+    public function setCallbacks(ArrayCollection $callbacks) : PaymentInterface;
+
+    /**
+     * @param CallbackInterface $callback
+     * @return PaymentInterface
+     */
+    public function addCallback(CallbackInterface $callback) : PaymentInterface;
 }

@@ -35,6 +35,7 @@ class AppKernel extends Kernel
             // ...
 
             new Loevgaard\DandomainAltapayBundle\LoevgaardDandomainAltapayBundle(),
+            new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
         );
 
         // ...
@@ -69,6 +70,89 @@ class Terminal extends BaseTerminal
 }
 ```
 
+```php
+<?php
+namespace AppBundle\Entity;
+
+use Loevgaard\DandomainAltapayBundle\Entity\Payment as BasePayment;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="payments")
+ */
+class Payment extends BasePayment
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="OrderLine", mappedBy="payment", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    protected $orderLines;
+}
+```
+
+```php
+<?php
+namespace AppBundle\Entity;
+
+use Loevgaard\DandomainAltapayBundle\Entity\OrderLine as BaseOrderLine;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="order_lines")
+ */
+class OrderLine extends BaseOrderLine
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Payment", inversedBy="orderLines")
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $payment;
+}
+```
+
+```php
+<?php
+namespace AppBundle\Entity;
+
+use Loevgaard\DandomainAltapayBundle\Entity\Callback as BaseCallback;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="callbacks")
+ */
+class Callback extends BaseCallback
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Payment", inversedBy="callbacks")
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $payment;
+}
+```
+
 ### Import routing
 ```yaml
 # app/config/routing.yml
@@ -87,6 +171,10 @@ loevgaard_dandomain_altapay:
     terminal_class: AppBundle\Entity\Terminal
     payment_class: AppBundle\Entity\Payment
     order_line_class: AppBundle\Entity\OrderLine
+    callback_class: AppBundle\Entity\Callback
+    
+knp_doctrine_behaviors:
+    timestampable: true
 ```
 
 ## Change log

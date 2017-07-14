@@ -58,8 +58,8 @@ class PaymentManager
     public function createPayment() : PaymentInterface
     {
         $class = $this->getClass();
-        $terminal = new $class();
-        return $terminal;
+        $payment = new $class();
+        return $payment;
     }
 
     /**
@@ -134,6 +134,8 @@ class PaymentManager
             ;
             $payment->addOrderLine($orderLineEntity);
         }
+
+        return $payment;
     }
 
     /**
@@ -156,5 +158,17 @@ class PaymentManager
         if($flush) {
             $this->objectManager->flush();
         }
+    }
+
+    /**
+     * @param int $id
+     * @return PaymentInterface|null
+     */
+    public function findPaymentById(int $id) : ?PaymentInterface
+    {
+        /** @var PaymentInterface $terminal */
+        $payment = $this->getRepository()->find($id);
+
+        return $payment;
     }
 }

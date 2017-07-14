@@ -4,6 +4,13 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 interface OrderLineInterface
 {
     /**
+     * Returns unique order line id
+     *
+     * @return mixed
+     */
+    public function getId();
+
+    /**
      * @return string
      */
     public function getProductNumber() : string;
@@ -23,7 +30,7 @@ interface OrderLineInterface
      * @param string $name
      * @return OrderLineInterface
      */
-    public function setName($name) : OrderLineInterface;
+    public function setName(string $name) : OrderLineInterface;
 
     /**
      * @return int
@@ -34,7 +41,7 @@ interface OrderLineInterface
      * @param int $quantity
      * @return OrderLineInterface
      */
-    public function setQuantity($quantity) : OrderLineInterface;
+    public function setQuantity(int $quantity) : OrderLineInterface;
 
     /**
      * @return float
@@ -45,7 +52,7 @@ interface OrderLineInterface
      * @param float $price
      * @return OrderLineInterface
      */
-    public function setPrice($price) : OrderLineInterface;
+    public function setPrice(float $price) : OrderLineInterface;
 
     /**
      * @return int
@@ -56,5 +63,16 @@ interface OrderLineInterface
      * @param int $vat
      * @return OrderLineInterface
      */
-    public function setVat($vat) : OrderLineInterface;
+    public function setVat(int $vat) : OrderLineInterface;
+
+    /**
+     * @return PaymentInterface
+     */
+    public function getPayment() : PaymentInterface;
+
+    /**
+     * @param PaymentInterface $payment
+     * @return OrderLineInterface
+     */
+    public function setPayment(PaymentInterface $payment) : OrderLineInterface;
 }

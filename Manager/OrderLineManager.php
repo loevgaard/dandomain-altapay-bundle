@@ -50,8 +50,8 @@ class OrderLineManager
     public function createOrderLine() : OrderLineInterface
     {
         $class = $this->getClass();
-        $terminal = new $class();
-        return $terminal;
+        $orderLine = new $class();
+        return $orderLine;
     }
 
     /**

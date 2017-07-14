@@ -1,0 +1,4 @@
+callback:
+    form:
+        order_id: Order id
+        total: Total

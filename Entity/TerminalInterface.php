@@ -4,6 +4,13 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 interface TerminalInterface
 {
     /**
+     * Returns terminal id
+     *
+     * @return mixed
+     */
+    public function getId();
+
+    /**
      * @return string
      */
     public function getTitle(): ?string;

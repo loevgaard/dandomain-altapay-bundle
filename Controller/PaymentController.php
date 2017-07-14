@@ -66,10 +66,21 @@ class PaymentController extends Controller {
             $paymentRequestPayload->addOrderLine($orderLinePayload);
         }
 
-        $configPayload = new ConfigPayload($this->generateUrl('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL)); // @todo set the callback urls
+        $configPayload = new ConfigPayload(
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_ok', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_fail', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_open', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_notification', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        );
         $paymentRequestPayload->setConfig($configPayload);
 
-        //$paymentRequestPayload->setCookie(); @todo set payment request entity id in the cookie so we can use this in callbacks
+        // @todo the payment_id should be a const somewhere
+        $paymentRequestPayload
+            ->setCookiePart('payment_id', $paymentEntity->getId())
+            ->setCookiePart('checksum_complete', 'insert checksum') // @todo insert checksum
+        ;
 
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
