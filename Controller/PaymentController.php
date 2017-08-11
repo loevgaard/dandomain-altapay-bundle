@@ -5,6 +5,8 @@ use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\Dandomain\Pay\Handler;
+use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
+use Loevgaard\DandomainAltapayBundle\Exception\TerminalNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -25,11 +27,6 @@ class PaymentController extends Controller {
     {
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
         $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
-        $terminalEntity = $terminalManager->findTerminalBySlug($terminal);
-
-        if(!$terminalEntity) {
-            throw new \RuntimeException('Terminal `'.$terminal.'` not found');
-        }
 
         $handler = new Handler(
             $request,
@@ -37,15 +34,19 @@ class PaymentController extends Controller {
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_2')
         );
 
-        if(!$handler->checksumMatches()) {
-            // @todo what should happen here?
-            throw new \RuntimeException('Checksum mismatch. Try again');
-        }
-
         $paymentRequest = $handler->getPaymentRequest();
 
         $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($paymentRequest);
         $paymentManager->updatePayment($paymentEntity);
+
+        $terminalEntity = $terminalManager->findTerminalBySlug($terminal);
+        if (!$terminalEntity) {
+            throw TerminalNotFoundException::create('Terminal `'.$terminal.'` does not exist', $request, $paymentEntity);
+        }
+
+        if (!$handler->checksumMatches()) {
+            throw ChecksumMismatchException::create('Checksum mismatch. Try again', $request, $paymentEntity);
+        }
 
         $paymentRequestPayload = new PaymentRequestPayload(
             $terminalEntity->getTitle(),
@@ -67,12 +68,17 @@ class PaymentController extends Controller {
         }
 
         $configPayload = new ConfigPayload(
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_form', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
             $this->generateUrl('loevgaard_dandomain_altapay_callback_ok', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_fail', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_open', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_notification', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_fail', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_redirect', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_open', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('loevgaard_dandomain_altapay_callback_notification', [],
+                UrlGeneratorInterface::ABSOLUTE_URL)
         );
         $paymentRequestPayload->setConfig($configPayload);
 
@@ -86,12 +92,13 @@ class PaymentController extends Controller {
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
-        if(!$response->isSuccessful()) {
+        if (!$response->isSuccessful()) {
             // @todo fix this
             throw new \RuntimeException('An error occurred during payment request.');
         }
 
-        echo $response->getUrl();exit;
+        echo $response->getUrl();
+        exit;
         return new RedirectResponse($response->getUrl());
     }
 }

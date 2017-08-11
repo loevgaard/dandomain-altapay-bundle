@@ -166,7 +166,7 @@ class PaymentManager
      */
     public function findPaymentById(int $id) : ?PaymentInterface
     {
-        /** @var PaymentInterface $terminal */
+        /** @var PaymentInterface $payment */
         $payment = $this->getRepository()->find($id);
 
         return $payment;
