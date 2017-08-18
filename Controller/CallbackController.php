@@ -113,7 +113,7 @@ class CallbackController extends Controller {
         $callback = $callbackManager->createCallbackFromRequest($request);
         $callback->setPayment($payment);
 
-        $callbackManager->updateCallback($callback);
+        $callbackManager->update($callback);
 
         $allowedIps = $this->container->getParameter('loevgaard_dandomain_altapay.altapay_ips');
         if($this->container->get('kernel')->getEnvironment() === 'prod' && !in_array($request->getClientIp(), $allowedIps)) {
@@ -148,11 +148,11 @@ class CallbackController extends Controller {
      */
     protected function logCallback($payment, Request $request) {
         $callbackManager = $this->container->get('loevgaard_dandomain_altapay.callback_manager');
-        $callback = $callbackManager->createCallback();
+        $callback = $callbackManager->create();
         $callback->setPayment($payment)
             ->setRequest((string)$request);
 
-        $callbackManager->updateCallback($callback);
+        $callbackManager->update($callback);
     }
 
     /**

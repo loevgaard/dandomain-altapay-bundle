@@ -6,56 +6,16 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Loevgaard\DandomainAltapayBundle\Entity\CallbackInterface;
 use Loevgaard\DandomainAltapayBundle\Entity\OrderLineInterface;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
+use Loevgaard\DandomainFoundationBundle\Manager\Manager;
 use Symfony\Component\HttpFoundation\Request;
 
-class CallbackManager
+/**
+ * @method CallbackInterface create()
+ * @method delete(CallbackInterface $obj)
+ * @method update(CallbackInterface $obj, $flush = true)
+ */
+class CallbackManager extends Manager
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var string
-     */
-    protected $class;
-
-    public function __construct(ObjectManager $objectManager, string $class)
-    {
-        $this->objectManager = $objectManager;
-        $this->class = $class;
-    }
-
-    /**
-     * @return ObjectRepository
-     */
-    protected function getRepository() : ObjectRepository
-    {
-        return $this->objectManager->getRepository($this->getClass());
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass() : string
-    {
-        if (false !== strpos($this->class, ':')) {
-            $metadata = $this->objectManager->getClassMetadata($this->class);
-            $this->class = $metadata->getName();
-        }
-        return $this->class;
-    }
-
-    /**
-     * @return CallbackInterface
-     */
-    public function createCallback() : CallbackInterface
-    {
-        $class = $this->getClass();
-        $obj = new $class();
-        return $obj;
-    }
-
     /**
      * @param Request $request
      * @return CallbackInterface
@@ -88,7 +48,7 @@ class CallbackManager
             'avs_code' => 'avsCode',
             'avs_text' => 'avsText',
         ];
-        $obj = $this->createCallback();
+        $obj = $this->create();
         $obj->setRequest((string)$request);
 
         foreach ($fields as $key => $field) {
@@ -100,27 +60,5 @@ class CallbackManager
         }
 
         return $obj;
-    }
-
-    /**
-     * @param CallbackInterface $callback
-     */
-    public function deleteCallback(CallbackInterface $callback)
-    {
-        $this->objectManager->remove($callback);
-        $this->objectManager->flush();
-    }
-
-    /**
-     * @param CallbackInterface $callback
-     * @param bool $flush
-     */
-    public function updateCallback(CallbackInterface $callback, bool $flush = true)
-    {
-        $this->objectManager->persist($callback);
-
-        if($flush) {
-            $this->objectManager->flush();
-        }
     }
 }

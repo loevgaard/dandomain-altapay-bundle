@@ -23,7 +23,7 @@ class SyncTerminalsCommand extends ContainerAwareCommand
         foreach ($response->getTerminals() as $terminal) {
             $entity = $terminalManager->findTerminalByTitle($terminal->getTitle());
             if(!$entity) {
-                $entity = $terminalManager->createTerminal();
+                $entity = $terminalManager->create();
             }
             $entity
                 ->setTitle($terminal->getTitle())
@@ -36,7 +36,7 @@ class SyncTerminalsCommand extends ContainerAwareCommand
                 }, $terminal->getCurrencies()))
             ;
 
-            $terminalManager->updateTerminal($entity);
+            $terminalManager->update($entity);
         }
     }
 }

@@ -22,9 +22,13 @@ class PaymentController extends Controller {
      * @param string $terminal
      * @param Request $request
      * @return RedirectResponse
+     * @throws ChecksumMismatchException
+     * @throws TerminalNotFoundException
      */
     public function newAction($terminal, Request $request)
     {
+        // @todo log the raw http request
+
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
         $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
 
@@ -37,7 +41,7 @@ class PaymentController extends Controller {
         $paymentRequest = $handler->getPaymentRequest();
 
         $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($paymentRequest);
-        $paymentManager->updatePayment($paymentEntity);
+        $paymentManager->update($paymentEntity);
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal);
         if (!$terminalEntity) {

@@ -14,23 +14,24 @@ services:
     loevgaard_dandomain_altapay.terminal_manager:
         class: Loevgaard\DandomainAltapayBundle\Manager\TerminalManager
         arguments:
-            - "@doctrine.orm.entity_manager"
+            - "@doctrine"
             - "%loevgaard_dandomain_altapay.terminal_class%"
     loevgaard_dandomain_altapay.payment_manager:
         class: Loevgaard\DandomainAltapayBundle\Manager\PaymentManager
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@loevgaard_dandomain_altapay.order_line_manager"
+            - "@doctrine"
             - "%loevgaard_dandomain_altapay.payment_class%"
-
-    loevgaard_dandomain_altapay.order_line_manager:
-        class: Loevgaard\DandomainAltapayBundle\Manager\OrderLineManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "%loevgaard_dandomain_altapay.order_line_class%"
+        calls:
+            - [setOrderManager, ["@loevgaard_dandomain_foundation.order_manager"]]
+            - [setOrderLineManager, ["@loevgaard_dandomain_foundation.order_line_manager"]]
+            - [setSiteManager, ["@loevgaard_dandomain_foundation.site_manager"]]
+            - [setCustomerManager, ["@loevgaard_dandomain_foundation.customer_manager"]]
+            - [setDeliveryManager, ["@loevgaard_dandomain_foundation.delivery_manager"]]
+            - [setPaymentMethodManager, ["@loevgaard_dandomain_foundation.payment_method_manager"]]
+            - [setShippingMethodManager, ["@loevgaard_dandomain_foundation.shipping_method_manager"]]
 
     loevgaard_dandomain_altapay.callback_manager:
         class: Loevgaard\DandomainAltapayBundle\Manager\CallbackManager
         arguments:
-            - "@doctrine.orm.entity_manager"
+            - "@doctrine"
             - "%loevgaard_dandomain_altapay.callback_class%"

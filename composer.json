@@ -20,7 +20,8 @@
         "cocur/slugify": "^2.5",
         "sensio/framework-extra-bundle": "^3.0",
         "doctrine/doctrine-bundle": "^1.6",
-        "knplabs/doctrine-behaviors": "~1.1"
+        "knplabs/doctrine-behaviors": "~1.1",
+        "loevgaard/dandomain-foundation-bundle": "dev-master"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.11",
