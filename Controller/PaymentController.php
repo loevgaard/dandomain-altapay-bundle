@@ -5,8 +5,11 @@ use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\Dandomain\Pay\Handler;
+use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
 use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
+use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Exception\TerminalNotFoundException;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,14 +19,18 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentController extends Controller {
     /**
+     * Payment flow
+     * 1. The Dandomain payment API POSTs to this page with the terminal slug in the URL
+     * 2. After validating all input, we create a payment request to the Altapay API
+     * 3. Finally we redirect the user to the URL given by the Altapay API
+     *
      * @Method("POST")
      * @Route("/{terminal}")
      *
-     * @param string $terminal
+     * @param $terminal
      * @param Request $request
      * @return RedirectResponse
-     * @throws ChecksumMismatchException
-     * @throws TerminalNotFoundException
+     * @throws PaymentException
      */
     public function newAction($terminal, Request $request)
     {
@@ -32,15 +39,19 @@ class PaymentController extends Controller {
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
         $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
 
+        // convert symfony request to PSR7 request
+        $psr7Factory = new DiactorosFactory();
+        $psrRequest = $psr7Factory->createRequest($request);
+
         $handler = new Handler(
-            $request,
+            $psrRequest,
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_1'),
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_2')
         );
 
-        $paymentRequest = $handler->getPaymentRequest();
+        $dandomainPaymentRequest = $handler->getPaymentRequest();
 
-        $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($paymentRequest);
+        $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($dandomainPaymentRequest);
         $paymentManager->update($paymentEntity);
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal);
@@ -54,12 +65,12 @@ class PaymentController extends Controller {
 
         $paymentRequestPayload = new PaymentRequestPayload(
             $terminalEntity->getTitle(),
-            $paymentRequest->getOrderId(),
-            $paymentRequest->getTotalAmount(),
-            $paymentRequest->getCurrencySymbol()
+            $dandomainPaymentRequest->getOrderId(),
+            $dandomainPaymentRequest->getTotalAmount(),
+            $dandomainPaymentRequest->getCurrencySymbol()
         );
 
-        foreach ($paymentRequest->getOrderLines() as $orderLine) {
+        foreach ($dandomainPaymentRequest->getOrderLines() as $orderLine) {
             $orderLinePayload = new OrderLinePayload(
                 $orderLine->getName(),
                 $orderLine->getProductNumber(),
@@ -89,7 +100,7 @@ class PaymentController extends Controller {
         // @todo the payment_id should be a const somewhere
         $paymentRequestPayload
             ->setCookiePart('payment_id', $paymentEntity->getId())
-            ->setCookiePart('checksum_complete', 'insert checksum') // @todo insert checksum
+            ->setCookiePart('checksum_complete', $handler->getChecksum2())
         ;
 
 
@@ -97,8 +108,7 @@ class PaymentController extends Controller {
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
         if (!$response->isSuccessful()) {
-            // @todo fix this
-            throw new \RuntimeException('An error occurred during payment request.');
+            throw AltapayPaymentRequestException::create('An error occured during payment request. Try again.', $request, $paymentEntity);
         }
 
         echo $response->getUrl();
