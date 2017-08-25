@@ -19,7 +19,6 @@ class LoevgaardDandomainAltapayExtension extends Extension
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_1', $config['shared_key_1']);
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_2', $config['shared_key_2']);
         $container->setParameter('loevgaard_dandomain_altapay.terminal_class', $config['terminal_class']);
-        $container->setParameter('loevgaard_dandomain_altapay.payment_class', $config['payment_class']);
         $container->setParameter('loevgaard_dandomain_altapay.callback_class', $config['callback_class']);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

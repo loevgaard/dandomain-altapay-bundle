@@ -22,7 +22,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('shared_key_1')->end()
                 ->scalarNode('shared_key_2')->end()
                 ->scalarNode('terminal_class')->end()
-                ->scalarNode('payment_class')->end()
                 ->scalarNode('callback_class')->end()
             ->end()
         ;
