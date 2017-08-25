@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @Route("/payment")
+ */
 class PaymentController extends Controller {
     /**
      * Payment flow
@@ -25,7 +28,7 @@ class PaymentController extends Controller {
      * 3. Finally we redirect the user to the URL given by the Altapay API
      *
      * @Method("POST")
-     * @Route("/{terminal}")
+     * @Route("/{terminal}", name="loevgaard_dandomain_altapay_payment_new")
      *
      * @param $terminal
      * @param Request $request
