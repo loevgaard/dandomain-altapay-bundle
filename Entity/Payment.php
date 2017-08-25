@@ -7,6 +7,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Loevgaard\DandomainFoundationBundle\Model\OrderInterface;
 
 /**
+ * @todo move this entity to dandomain foundation bundle
+ *
  * @ORM\MappedSuperclass
  */
 abstract class Payment implements PaymentInterface
@@ -108,6 +110,11 @@ abstract class Payment implements PaymentInterface
      * @ORM\Column(type="integer")
      */
     protected $cardTypeId;
+
+    /**
+     * @var string
+     */
+    protected $loadBalancerRealIp;
 
     /**
      * @var Callback[]
@@ -354,6 +361,23 @@ abstract class Payment implements PaymentInterface
     public function setCardTypeId(int $cardTypeId) : PaymentInterface
     {
         $this->cardTypeId = $cardTypeId;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLoadBalancerRealIp(): string
+    {
+        return $this->loadBalancerRealIp;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setLoadBalancerRealIp(string $loadBalancerRealIp) : PaymentInterface
+    {
+        $this->loadBalancerRealIp = $loadBalancerRealIp;
         return $this;
     }
 

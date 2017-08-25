@@ -12,6 +12,7 @@ use Loevgaard\DandomainFoundationBundle\Manager\ShippingMethodManager;
 use Loevgaard\DandomainFoundationBundle\Manager\SiteManager;
 use Loevgaard\DandomainFoundationBundle\Manager\CustomerManager;
 use Loevgaard\DandomainFoundationBundle\Manager\DeliveryManager;
+use Loevgaard\DandomainFoundationBundle\Manager\ProductManager;
 
 /**
  * @method PaymentInterface create()
@@ -61,6 +62,11 @@ class PaymentManager extends Manager
     protected $shippingMethodManager;
 
     /**
+     * @var ProductManager
+     */
+    protected $productManager;
+
+    /**
      * @var string
      */
     protected $class;
@@ -78,7 +84,6 @@ class PaymentManager extends Manager
         $order->setExternalId($paymentRequest->getOrderId());
         $order->setCurrencyCode($paymentRequest->getCurrencySymbol());
         $order->setIp($paymentRequest->getCustomerIp());
-        //$order->setLoadBalancerRealIp($paymentRequest->getLoadBalancerRealIp());
         $order->setSite($site);
 
         // create customer object
@@ -123,20 +128,25 @@ class PaymentManager extends Manager
         $delivery->setEmail($paymentRequest->getDeliveryEmail());
         $delivery->setEan($paymentRequest->getDeliveryEan());
 
-        // create shipping method object
-        // @todo figure out if the payment request from Dandomain contains a payment method id (check also shipping method)
-        //$shippingMethod = $this->shippingMethodManager->findByExternalId($paymentRequest->ship)
-        $order->setShippingMethod($paymentRequest->getShippingMethod());
-        $order->setShippingMethodFee($paymentRequest->getShippingFee());
-        $order->setPaymentMethod($paymentRequest->getPaymentMethod());
-        $order->setPaymentMethodFee($paymentRequest->getPaymentFee());
-
         // add delivery to order
         $order->setDelivery($delivery);
 
+        /**
+         * @todo the payment request from Dandomain Payment API does not contain a shipping method id
+         * we should be able to find it using language and name, but the shipping method manager from
+         * dandomain-foundation-bundle does not contain such a method, so we will just set the fee.
+         * The same is true for the payment method below shipping method
+         */
+        //$order->setShippingMethod($paymentRequest->getShippingMethod());
+        $order->setShippingMethodFee($paymentRequest->getShippingFee());
+        //$order->setPaymentMethod($paymentRequest->getPaymentMethod());
+        $order->setPaymentMethodFee($paymentRequest->getPaymentFee());
+
         foreach ($paymentRequest->getOrderLines() as $orderLine) {
+            $product = $this->productManager->findByProductNumber($orderLine->getProductNumber());
             $orderLineEntity = $this->orderLineManager->create();
             $orderLineEntity
+                ->setProduct($product)
                 ->setProductNumber($orderLine->getProductNumber())
                 ->setProductName($orderLine->getName())
                 ->setQuantity($orderLine->getQuantity())
@@ -160,6 +170,7 @@ class PaymentManager extends Manager
         $payment->setTestMode($paymentRequest->isTestMode());
         $payment->setPaymentGatewayCurrencyCode($paymentRequest->getPaymentGatewayCurrencyCode());
         $payment->setCardTypeId($paymentRequest->getCardTypeId());
+        $payment->setLoadBalancerRealIp($paymentRequest->getLoadBalancerRealIp());
         $payment->setOrder($order);
 
         return $payment;
@@ -248,6 +259,16 @@ class PaymentManager extends Manager
     public function setShippingMethodManager(ShippingMethodManager $shippingMethodManager)
     {
         $this->shippingMethodManager = $shippingMethodManager;
+        return $this;
+    }
+
+    /**
+     * @param ProductManager $productManager
+     * @return PaymentManager
+     */
+    public function setProductManager(ProductManager $productManager)
+    {
+        $this->productManager = $productManager;
         return $this;
     }
 }

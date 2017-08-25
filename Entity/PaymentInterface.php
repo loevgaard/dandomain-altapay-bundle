@@ -157,6 +157,17 @@ interface PaymentInterface
     public function setCardTypeId(int $cardTypeId) : PaymentInterface;
 
     /**
+     * @return string
+     */
+    public function getLoadBalancerRealIp(): string;
+
+    /**
+     * @param string $loadBalancerRealIp
+     * @return PaymentInterface
+     */
+    public function setLoadBalancerRealIp(string $loadBalancerRealIp) : PaymentInterface;
+
+    /**
      * @return ArrayCollection|CallbackInterface[]
      */
     public function getCallbacks() : ArrayCollection;

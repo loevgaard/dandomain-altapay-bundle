@@ -29,6 +29,7 @@ services:
             - [setDeliveryManager, ["@loevgaard_dandomain_foundation.delivery_manager"]]
             - [setPaymentMethodManager, ["@loevgaard_dandomain_foundation.payment_method_manager"]]
             - [setShippingMethodManager, ["@loevgaard_dandomain_foundation.shipping_method_manager"]]
+            - [setProductManager, ["@loevgaard_dandomain_foundation.product_manager"]]
 
     loevgaard_dandomain_altapay.callback_manager:
         class: Loevgaard\DandomainAltapayBundle\Manager\CallbackManager
