@@ -179,7 +179,7 @@ abstract class Payment implements PaymentInterface
     /**
      * @inheritdoc
      */
-    public function setOrderId(OrderInterface $order) : PaymentInterface
+    public function setOrder(OrderInterface $order) : PaymentInterface
     {
         $this->order = $order;
         return $this;
