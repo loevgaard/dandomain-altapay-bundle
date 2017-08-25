@@ -1,7 +1,7 @@
 <?php
 namespace Loevgaard\DandomainAltapayBundle\Exception;
 
-use Loevgaard\DandomainAltapayBundle\Entity\PaymentInterface;
+use Loevgaard\DandomainFoundationBundle\Model\Payment;
 use Symfony\Component\HttpFoundation\Request;
 
 class PaymentException extends Exception
@@ -12,17 +12,17 @@ class PaymentException extends Exception
     protected $request;
 
     /**
-     * @var PaymentInterface
+     * @var Payment
      */
     protected $payment;
 
     /**
      * @param string $message
      * @param Request $request
-     * @param PaymentInterface $payment
+     * @param Payment $payment
      * @return PaymentException
      */
-    public static function create(string $message, Request $request, PaymentInterface $payment) : PaymentException
+    public static function create(string $message, Request $request, Payment $payment) : PaymentException
     {
         $e = new static($message);
         $e->setRequest($request);
@@ -49,18 +49,18 @@ class PaymentException extends Exception
     }
 
     /**
-     * @return PaymentInterface
+     * @return Payment
      */
-    public function getPayment() : PaymentInterface
+    public function getPayment() : Payment
     {
         return $this->payment;
     }
 
     /**
-     * @param PaymentInterface $payment
+     * @param Payment $payment
      * @return PaymentException
      */
-    public function setPayment(PaymentInterface $payment) : PaymentException
+    public function setPayment(Payment $payment) : PaymentException
     {
         $this->payment = $payment;
         return $this;

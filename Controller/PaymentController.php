@@ -40,7 +40,7 @@ class PaymentController extends Controller {
         // @todo log the raw http request
 
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
-        $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
+        $paymentManager = $this->container->get('loevgaard_dandomain_foundation.payment_manager');
 
         // convert symfony request to PSR7 request
         $psr7Factory = new DiactorosFactory();
