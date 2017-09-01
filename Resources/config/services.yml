@@ -1,10 +1,4 @@
 services:
-    loevgaard_dandomain_altapay.form.callback:
-        class: Loevgaard\DandomainAltapayBundle\Form\CallbackType
-        arguments: ['@loevgaard_dandomain_altapay.callback_manager']
-        tags:
-            - { name: form.type }
-
     loevgaard_dandomain_altapay.altapay_client:
         class: Loevgaard\AltaPay\Client
         arguments:
@@ -22,3 +16,13 @@ services:
         arguments:
             - "@doctrine"
             - "%loevgaard_dandomain_altapay.callback_class%"
+    loevgaard_dandomain_altapay.terminal_synchronizer:
+        class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer
+        arguments:
+            - "@loevgaard_dandomain_altapay.terminal_manager"
+            - "@loevgaard_dandomain_altapay.altapay_client"
+    loevgaard_dandomain_altapay.sync_terminals_command:
+        class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand
+        tags: [console.command]
+        calls:
+            - [setTerminalSynchronizer, ["@loevgaard_dandomain_altapay.terminal_synchronizer"]]

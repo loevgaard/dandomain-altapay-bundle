@@ -1,18 +1,19 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
-use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
+use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\Dandomain\Pay\Handler;
 use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
 use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Exception\TerminalNotFoundException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -20,19 +21,22 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @Route("/payment")
  */
-class PaymentController extends Controller {
+class PaymentController extends Controller
+{
     /**
      * Payment flow
      * 1. The Dandomain payment API POSTs to this page with the terminal slug in the URL
      * 2. After validating all input, we create a payment request to the Altapay API
-     * 3. Finally we redirect the user to the URL given by the Altapay API
+     * 3. Finally we redirect the user to the URL given by the Altapay API.
      *
      * @Method("POST")
      * @Route("/{terminal}", name="loevgaard_dandomain_altapay_payment_new")
      *
      * @param $terminal
      * @param Request $request
+     *
      * @return RedirectResponse
+     *
      * @throws PaymentException
      */
     public function newAction($terminal, Request $request)
@@ -106,7 +110,6 @@ class PaymentController extends Controller {
             ->setCookiePart('checksum_complete', $handler->getChecksum2())
         ;
 
-
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
@@ -116,6 +119,7 @@ class PaymentController extends Controller {
 
         echo $response->getUrl();
         exit;
+
         return new RedirectResponse($response->getUrl());
     }
 }

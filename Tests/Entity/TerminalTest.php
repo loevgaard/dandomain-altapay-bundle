@@ -1,7 +1,9 @@
 <?php
-namespace Tests\Loevgaard\DandomainAltapayBundle\Entity;
+
+namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
+use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use PHPUnit\Framework\TestCase;
 
 class TerminalTest extends TestCase
@@ -10,20 +12,18 @@ class TerminalTest extends TestCase
     {
         $terminal = $this->getTerminal();
 
-        $this->assertNull($terminal->getTitle());
-        $this->assertNull($terminal->getSlug());
-        $this->assertNull($terminal->getCountry());
-        $this->assertNull($terminal->getCurrencies());
-        $this->assertNull($terminal->getNatures());
-
         $terminal
+            ->setId(1)
             ->setTitle('title')
+            ->setSlug('sluuuug')
             ->setCountry('DK')
             ->setCurrencies(['EUR', 'DKK'])
             ->setNatures(['Nature 1', 'Nature 2'])
         ;
 
+        $this->assertSame(1, $terminal->getId());
         $this->assertSame('title', $terminal->getTitle());
+        $this->assertSame('sluuuug', $terminal->getSlug());
         $this->assertSame('DK', $terminal->getCountry());
         $this->assertSame(['EUR', 'DKK'], $terminal->getCurrencies());
         $this->assertSame(['Nature 1', 'Nature 2'], $terminal->getNatures());
@@ -39,7 +39,7 @@ class TerminalTest extends TestCase
     }
 
     /**
-     * @return Terminal
+     * @return TerminalInterface
      */
     public function getTerminal()
     {

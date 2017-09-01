@@ -1,4 +1,5 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;

@@ -1,8 +1,10 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Loevgaard\DandomainFoundationBundle\Model\Payment;
 
 /**
  * @ORM\MappedSuperclass
@@ -18,7 +20,7 @@ abstract class Callback implements CallbackInterface
 
     /**
      * The order id will always be an integer in Dandomain so we use type int
-     * instead of string (although Altapay handles order id as string)
+     * instead of string (although Altapay handles order id as string).
      *
      * @var int
      *
@@ -76,7 +78,7 @@ abstract class Callback implements CallbackInterface
     protected $merchantErrorMessage;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -132,7 +134,7 @@ abstract class Callback implements CallbackInterface
     protected $nature;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -188,7 +190,7 @@ abstract class Callback implements CallbackInterface
     protected $avsText;
 
     /**
-     * This contains the request string
+     * This contains the request string.
      *
      * @var string
      *
@@ -197,12 +199,12 @@ abstract class Callback implements CallbackInterface
     protected $request;
 
     /**
-     * @var PaymentInterface
+     * @var Payment
      */
     protected $payment;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -210,7 +212,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     */
+    public function setId($id): CallbackInterface
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getOrderId(): ?int
     {
@@ -218,16 +230,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setOrderId(int $orderId) : CallbackInterface
+    public function setOrderId(int $orderId): CallbackInterface
     {
         $this->orderId = $orderId;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAmount(): ?float
     {
@@ -235,16 +248,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setAmount(float $amount) : CallbackInterface
+    public function setAmount(float $amount): CallbackInterface
     {
         $this->amount = $amount;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCurrency(): ?int
     {
@@ -252,16 +266,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setCurrency(int $currency) : CallbackInterface
+    public function setCurrency(int $currency): CallbackInterface
     {
         $this->currency = $currency;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getLanguage(): ?string
     {
@@ -269,16 +284,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setLanguage(string $language) : CallbackInterface
+    public function setLanguage(string $language): CallbackInterface
     {
         $this->language = $language;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTransactionInfo(): ?array
     {
@@ -286,16 +302,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setTransactionInfo(array $transactionInfo) : CallbackInterface
+    public function setTransactionInfo(array $transactionInfo): CallbackInterface
     {
         $this->transactionInfo = $transactionInfo;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getStatus(): ?string
     {
@@ -303,16 +320,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setStatus(string $status) : CallbackInterface
+    public function setStatus(string $status): CallbackInterface
     {
         $this->status = $status;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getErrorMessage(): ?string
     {
@@ -320,16 +338,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setErrorMessage(string $errorMessage) : CallbackInterface
+    public function setErrorMessage(string $errorMessage): CallbackInterface
     {
         $this->errorMessage = $errorMessage;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMerchantErrorMessage(): ?string
     {
@@ -337,16 +356,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setMerchantErrorMessage(string $merchantErrorMessage) : CallbackInterface
+    public function setMerchantErrorMessage(string $merchantErrorMessage): CallbackInterface
     {
         $this->merchantErrorMessage = $merchantErrorMessage;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isCardholderMessageMustBeShown(): ?bool
     {
@@ -354,16 +374,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setCardholderMessageMustBeShown(bool $cardholderMessageMustBeShown) : CallbackInterface
+    public function setCardholderMessageMustBeShown(bool $cardholderMessageMustBeShown): CallbackInterface
     {
         $this->cardholderMessageMustBeShown = $cardholderMessageMustBeShown;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTransactionId(): ?string
     {
@@ -371,16 +392,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setTransactionId(string $transactionId) : CallbackInterface
+    public function setTransactionId(string $transactionId): CallbackInterface
     {
         $this->transactionId = $transactionId;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getType(): ?string
     {
@@ -388,16 +410,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setType(string $type) : CallbackInterface
+    public function setType(string $type): CallbackInterface
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPaymentStatus(): ?string
     {
@@ -405,16 +428,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setPaymentStatus(string $paymentStatus) : CallbackInterface
+    public function setPaymentStatus(string $paymentStatus): CallbackInterface
     {
         $this->paymentStatus = $paymentStatus;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMaskedCreditCard(): ?string
     {
@@ -422,16 +446,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setMaskedCreditCard(string $maskedCreditCard) : CallbackInterface
+    public function setMaskedCreditCard(string $maskedCreditCard): CallbackInterface
     {
         $this->maskedCreditCard = $maskedCreditCard;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getBlacklistToken(): ?string
     {
@@ -439,16 +464,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setBlacklistToken(string $blacklistToken) : CallbackInterface
+    public function setBlacklistToken(string $blacklistToken): CallbackInterface
     {
         $this->blacklistToken = $blacklistToken;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCreditCardToken(): ?string
     {
@@ -456,16 +482,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setCreditCardToken(string $creditCardToken) : CallbackInterface
+    public function setCreditCardToken(string $creditCardToken): CallbackInterface
     {
         $this->creditCardToken = $creditCardToken;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getNature(): ?string
     {
@@ -473,16 +500,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setNature(string $nature) : CallbackInterface
+    public function setNature(string $nature): CallbackInterface
     {
         $this->nature = $nature;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isRequireCapture(): ?bool
     {
@@ -490,16 +518,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setRequireCapture(bool $requireCapture) : CallbackInterface
+    public function setRequireCapture(bool $requireCapture): CallbackInterface
     {
         $this->requireCapture = $requireCapture;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getXml(): ?string
     {
@@ -507,16 +536,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setXml(string $xml) : CallbackInterface
+    public function setXml(string $xml): CallbackInterface
     {
         $this->xml = $xml;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getChecksum(): ?string
     {
@@ -524,16 +554,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setChecksum(string $checksum) : CallbackInterface
+    public function setChecksum(string $checksum): CallbackInterface
     {
         $this->checksum = $checksum;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFraudRiskScore(): ?float
     {
@@ -541,16 +572,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setFraudRiskScore(float $fraudRiskScore) : CallbackInterface
+    public function setFraudRiskScore(float $fraudRiskScore): CallbackInterface
     {
         $this->fraudRiskScore = $fraudRiskScore;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFraudExplanation(): ?string
     {
@@ -558,16 +590,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setFraudExplanation(string $fraudExplanation) : CallbackInterface
+    public function setFraudExplanation(string $fraudExplanation): CallbackInterface
     {
         $this->fraudExplanation = $fraudExplanation;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFraudRecommendation(): ?string
     {
@@ -575,16 +608,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setFraudRecommendation(string $fraudRecommendation) : CallbackInterface
+    public function setFraudRecommendation(string $fraudRecommendation): CallbackInterface
     {
         $this->fraudRecommendation = $fraudRecommendation;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAvsCode(): ?string
     {
@@ -592,16 +626,17 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setAvsCode(string $avsCode) : CallbackInterface
+    public function setAvsCode(string $avsCode): CallbackInterface
     {
         $this->avsCode = $avsCode;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAvsText(): ?string
     {
@@ -609,45 +644,48 @@ abstract class Callback implements CallbackInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setAvsText(string $avsText) : CallbackInterface
+    public function setAvsText(string $avsText): CallbackInterface
     {
         $this->avsText = $avsText;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getRequest() : ?string
+    public function getRequest(): ?string
     {
         return $this->request;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setRequest(string $request) : CallbackInterface
+    public function setRequest(string $request): CallbackInterface
     {
         $this->request = $request;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getPayment(): ?PaymentInterface
+    public function getPayment(): ?Payment
     {
         return $this->payment;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setPayment(PaymentInterface $payment) : CallbackInterface
+    public function setPayment(Payment $payment): CallbackInterface
     {
         $this->payment = $payment;
+
         return $this;
     }
 }

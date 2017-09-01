@@ -2,6 +2,6 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Exception;
 
-abstract class Exception extends \Exception
+class NotAllowedIpException extends PaymentException
 {
 }

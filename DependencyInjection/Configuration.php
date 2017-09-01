@@ -1,4 +1,5 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -12,17 +13,37 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('loevgaard_dandomain_altapay');
 
         $rootNode
+            ->fixXmlConfig('altapay_ip')
             ->children()
-                ->scalarNode('altapay_username')->end()
-                ->scalarNode('altapay_password')->end()
-                ->arrayNode('altapay_ips')
-                    ->prototype('scalar')->end()
-                    ->defaultValue(['77.66.40.133', '77.66.62.133'])
+                ->scalarNode('altapay_username')
+                    ->isRequired()
+                    ->cannotBeEmpty()
                 ->end()
-                ->scalarNode('shared_key_1')->end()
-                ->scalarNode('shared_key_2')->end()
-                ->scalarNode('terminal_class')->end()
-                ->scalarNode('callback_class')->end()
+                ->scalarNode('altapay_password')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->arrayNode('altapay_ips')
+                    ->isRequired()
+                    ->requiresAtLeastOneElement()
+                    ->prototype('scalar')->end()
+                ->end()
+                ->scalarNode('shared_key_1')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('shared_key_2')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('terminal_class')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('callback_class')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
             ->end()
         ;
 

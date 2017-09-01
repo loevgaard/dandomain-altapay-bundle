@@ -1,14 +1,24 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 interface TerminalInterface
 {
     /**
-     * Returns terminal id
+     * Returns terminal id.
      *
      * @return mixed
      */
     public function getId();
+
+    /**
+     * Sets the terminal id.
+     *
+     * @param mixed $id
+     *
+     * @return TerminalInterface
+     */
+    public function setId($id): self;
 
     /**
      * @return string
@@ -17,6 +27,7 @@ interface TerminalInterface
 
     /**
      * @param string $title
+     *
      * @return TerminalInterface
      */
     public function setTitle(string $title): self;
@@ -28,6 +39,7 @@ interface TerminalInterface
 
     /**
      * @param string $canonicalTitle
+     *
      * @return TerminalInterface
      */
     public function setSlug(string $canonicalTitle): self;
@@ -39,6 +51,7 @@ interface TerminalInterface
 
     /**
      * @param string $country
+     *
      * @return TerminalInterface
      */
     public function setCountry(string $country): self;
@@ -50,6 +63,7 @@ interface TerminalInterface
 
     /**
      * @param array $natures
+     *
      * @return TerminalInterface
      */
     public function setNatures(array $natures): self;
@@ -61,6 +75,7 @@ interface TerminalInterface
 
     /**
      * @param array $currencies
+     *
      * @return TerminalInterface
      */
     public function setCurrencies(array $currencies): self;

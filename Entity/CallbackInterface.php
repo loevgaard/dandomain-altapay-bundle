@@ -1,14 +1,26 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Entity;
+
+use Loevgaard\DandomainFoundationBundle\Model\Payment;
 
 interface CallbackInterface
 {
     /**
-     * Returns unique callback id
+     * Returns unique callback id.
      *
      * @return mixed
      */
     public function getId();
+
+    /**
+     * Sets the callback id.
+     *
+     * @param $id
+     *
+     * @return CallbackInterface
+     */
+    public function setId($id): self;
 
     /**
      * @return int
@@ -17,9 +29,10 @@ interface CallbackInterface
 
     /**
      * @param int $orderId
+     *
      * @return CallbackInterface
      */
-    public function setOrderId(int $orderId) : CallbackInterface;
+    public function setOrderId(int $orderId): self;
 
     /**
      * @return float
@@ -28,9 +41,10 @@ interface CallbackInterface
 
     /**
      * @param float $amount
+     *
      * @return CallbackInterface
      */
-    public function setAmount(float $amount) : CallbackInterface;
+    public function setAmount(float $amount): self;
 
     /**
      * @return int
@@ -39,9 +53,10 @@ interface CallbackInterface
 
     /**
      * @param int $currency
+     *
      * @return CallbackInterface
      */
-    public function setCurrency(int $currency) : CallbackInterface;
+    public function setCurrency(int $currency): self;
 
     /**
      * @return string
@@ -50,9 +65,10 @@ interface CallbackInterface
 
     /**
      * @param string $language
+     *
      * @return CallbackInterface
      */
-    public function setLanguage(string $language) : CallbackInterface;
+    public function setLanguage(string $language): self;
 
     /**
      * @return array
@@ -61,9 +77,10 @@ interface CallbackInterface
 
     /**
      * @param array $transactionInfo
+     *
      * @return CallbackInterface
      */
-    public function setTransactionInfo(array $transactionInfo) : CallbackInterface;
+    public function setTransactionInfo(array $transactionInfo): self;
 
     /**
      * @return string
@@ -72,9 +89,10 @@ interface CallbackInterface
 
     /**
      * @param string $status
+     *
      * @return CallbackInterface
      */
-    public function setStatus(string $status) : CallbackInterface;
+    public function setStatus(string $status): self;
 
     /**
      * @return string
@@ -83,9 +101,10 @@ interface CallbackInterface
 
     /**
      * @param string $errorMessage
+     *
      * @return CallbackInterface
      */
-    public function setErrorMessage(string $errorMessage) : CallbackInterface;
+    public function setErrorMessage(string $errorMessage): self;
 
     /**
      * @return string
@@ -94,9 +113,10 @@ interface CallbackInterface
 
     /**
      * @param string $merchantErrorMessage
+     *
      * @return CallbackInterface
      */
-    public function setMerchantErrorMessage(string $merchantErrorMessage) : CallbackInterface;
+    public function setMerchantErrorMessage(string $merchantErrorMessage): self;
 
     /**
      * @return bool
@@ -105,9 +125,10 @@ interface CallbackInterface
 
     /**
      * @param bool $cardholderMessageMustBeShown
+     *
      * @return CallbackInterface
      */
-    public function setCardholderMessageMustBeShown(bool $cardholderMessageMustBeShown) : CallbackInterface;
+    public function setCardholderMessageMustBeShown(bool $cardholderMessageMustBeShown): self;
 
     /**
      * @return string
@@ -116,9 +137,10 @@ interface CallbackInterface
 
     /**
      * @param string $transactionId
+     *
      * @return CallbackInterface
      */
-    public function setTransactionId(string $transactionId) : CallbackInterface;
+    public function setTransactionId(string $transactionId): self;
 
     /**
      * @return string
@@ -127,9 +149,10 @@ interface CallbackInterface
 
     /**
      * @param string $type
+     *
      * @return CallbackInterface
      */
-    public function setType(string $type) : CallbackInterface;
+    public function setType(string $type): self;
 
     /**
      * @return string
@@ -138,9 +161,10 @@ interface CallbackInterface
 
     /**
      * @param string $paymentStatus
+     *
      * @return CallbackInterface
      */
-    public function setPaymentStatus(string $paymentStatus) : CallbackInterface;
+    public function setPaymentStatus(string $paymentStatus): self;
 
     /**
      * @return string
@@ -149,9 +173,10 @@ interface CallbackInterface
 
     /**
      * @param string $maskedCreditCard
+     *
      * @return CallbackInterface
      */
-    public function setMaskedCreditCard(string $maskedCreditCard) : CallbackInterface;
+    public function setMaskedCreditCard(string $maskedCreditCard): self;
 
     /**
      * @return string
@@ -160,9 +185,10 @@ interface CallbackInterface
 
     /**
      * @param string $blacklistToken
+     *
      * @return CallbackInterface
      */
-    public function setBlacklistToken(string $blacklistToken) : CallbackInterface;
+    public function setBlacklistToken(string $blacklistToken): self;
 
     /**
      * @return string
@@ -171,9 +197,10 @@ interface CallbackInterface
 
     /**
      * @param string $creditCardToken
+     *
      * @return CallbackInterface
      */
-    public function setCreditCardToken(string $creditCardToken) : CallbackInterface;
+    public function setCreditCardToken(string $creditCardToken): self;
 
     /**
      * @return string
@@ -182,9 +209,10 @@ interface CallbackInterface
 
     /**
      * @param string $nature
+     *
      * @return CallbackInterface
      */
-    public function setNature(string $nature) : CallbackInterface;
+    public function setNature(string $nature): self;
 
     /**
      * @return bool
@@ -193,9 +221,10 @@ interface CallbackInterface
 
     /**
      * @param bool $requireCapture
+     *
      * @return CallbackInterface
      */
-    public function setRequireCapture(bool $requireCapture) : CallbackInterface;
+    public function setRequireCapture(bool $requireCapture): self;
 
     /**
      * @return string
@@ -204,9 +233,10 @@ interface CallbackInterface
 
     /**
      * @param string $xml
+     *
      * @return CallbackInterface
      */
-    public function setXml(string $xml) : CallbackInterface;
+    public function setXml(string $xml): self;
 
     /**
      * @return string
@@ -215,9 +245,10 @@ interface CallbackInterface
 
     /**
      * @param string $checksum
+     *
      * @return CallbackInterface
      */
-    public function setChecksum(string $checksum) : CallbackInterface;
+    public function setChecksum(string $checksum): self;
 
     /**
      * @return float
@@ -226,9 +257,10 @@ interface CallbackInterface
 
     /**
      * @param float $fraudRiskScore
+     *
      * @return CallbackInterface
      */
-    public function setFraudRiskScore(float $fraudRiskScore) : CallbackInterface;
+    public function setFraudRiskScore(float $fraudRiskScore): self;
 
     /**
      * @return string
@@ -237,9 +269,10 @@ interface CallbackInterface
 
     /**
      * @param string $fraudExplanation
+     *
      * @return CallbackInterface
      */
-    public function setFraudExplanation(string $fraudExplanation) : CallbackInterface;
+    public function setFraudExplanation(string $fraudExplanation): self;
 
     /**
      * @return string
@@ -248,9 +281,10 @@ interface CallbackInterface
 
     /**
      * @param string $fraudRecommendation
+     *
      * @return CallbackInterface
      */
-    public function setFraudRecommendation(string $fraudRecommendation) : CallbackInterface;
+    public function setFraudRecommendation(string $fraudRecommendation): self;
 
     /**
      * @return string
@@ -259,9 +293,10 @@ interface CallbackInterface
 
     /**
      * @param string $avsCode
+     *
      * @return CallbackInterface
      */
-    public function setAvsCode(string $avsCode) : CallbackInterface;
+    public function setAvsCode(string $avsCode): self;
 
     /**
      * @return string
@@ -270,29 +305,32 @@ interface CallbackInterface
 
     /**
      * @param string $avsText
+     *
      * @return CallbackInterface
      */
-    public function setAvsText(string $avsText) : CallbackInterface;
+    public function setAvsText(string $avsText): self;
 
     /**
      * @return string
      */
-    public function getRequest() : ?string;
+    public function getRequest(): ?string;
 
     /**
      * @param string $request
+     *
      * @return CallbackInterface
      */
-    public function setRequest(string $request) : CallbackInterface;
+    public function setRequest(string $request): self;
 
     /**
-     * @return PaymentInterface
+     * @return Payment
      */
-    public function getPayment(): ?PaymentInterface;
+    public function getPayment(): ?Payment;
 
     /**
-     * @param PaymentInterface $payment
+     * @param Payment $payment
+     *
      * @return CallbackInterface
      */
-    public function setPayment(PaymentInterface $payment) : CallbackInterface;
+    public function setPayment(Payment $payment): self;
 }

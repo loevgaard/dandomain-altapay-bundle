@@ -1,8 +1,9 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Cocur\Slugify\Slugify;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperclass
@@ -54,16 +55,17 @@ abstract class Terminal implements TerminalInterface
      * We only set the canonical title when we persist the object
      * This is because the canonical title is used for URLs and
      * changing this would require the user to change the URL in the
-     * Dandomain gateway settings
+     * Dandomain gateway settings.
      *
      * @ORM\PrePersist
      */
-    public function updateSlug() {
+    public function updateSlug()
+    {
         $this->slug = (new Slugify())->slugify($this->title);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -71,7 +73,17 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     */
+    public function setId($id): TerminalInterface
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getTitle(): ?string
     {
@@ -79,16 +91,17 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setTitle(string $title) : TerminalInterface
+    public function setTitle(string $title): TerminalInterface
     {
         $this->title = $title;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSlug(): ?string
     {
@@ -96,16 +109,17 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setSlug(string $slug) : TerminalInterface
+    public function setSlug(string $slug): TerminalInterface
     {
         $this->slug = $slug;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCountry(): ?string
     {
@@ -113,16 +127,17 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setCountry(string $country) : TerminalInterface
+    public function setCountry(string $country): TerminalInterface
     {
         $this->country = $country;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getNatures(): ?array
     {
@@ -130,16 +145,17 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setNatures(array $natures) : TerminalInterface
+    public function setNatures(array $natures): TerminalInterface
     {
         $this->natures = $natures;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCurrencies(): ?array
     {
@@ -147,11 +163,12 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setCurrencies(array $currencies) : TerminalInterface
+    public function setCurrencies(array $currencies): TerminalInterface
     {
         $this->currencies = $currencies;
+
         return $this;
     }
 }

@@ -1,8 +1,7 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use Loevgaard\DandomainFoundationBundle\Manager\Manager;
 
@@ -15,13 +14,14 @@ class TerminalManager extends Manager
 {
     /**
      * @param string $title
+     *
      * @return TerminalInterface|null
      */
-    public function findTerminalByTitle(string $title) : ?TerminalInterface
+    public function findTerminalByTitle(string $title): ?TerminalInterface
     {
         /** @var TerminalInterface $terminal */
         $terminal = $this->getRepository()->findOneBy([
-            'title' => $title
+            'title' => $title,
         ]);
 
         return $terminal;
@@ -29,13 +29,14 @@ class TerminalManager extends Manager
 
     /**
      * @param string $slug
+     *
      * @return TerminalInterface|null
      */
-    public function findTerminalBySlug(string $slug) : ?TerminalInterface
+    public function findTerminalBySlug(string $slug): ?TerminalInterface
     {
         /** @var TerminalInterface $terminal */
         $terminal = $this->getRepository()->findOneBy([
-            'slug' => $slug
+            'slug' => $slug,
         ]);
 
         return $terminal;

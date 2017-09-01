@@ -1,11 +1,8 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Loevgaard\DandomainAltapayBundle\Entity\CallbackInterface;
-use Loevgaard\DandomainAltapayBundle\Entity\OrderLineInterface;
-use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use Loevgaard\DandomainFoundationBundle\Manager\Manager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,9 +15,10 @@ class CallbackManager extends Manager
 {
     /**
      * @param Request $request
+     *
      * @return CallbackInterface
      */
-    public function createCallbackFromRequest(Request $request) : CallbackInterface
+    public function createCallbackFromRequest(Request $request): CallbackInterface
     {
         $fields = [
             'shop_orderid' => 'orderId',
@@ -49,11 +47,11 @@ class CallbackManager extends Manager
             'avs_text' => 'avsText',
         ];
         $obj = $this->create();
-        $obj->setRequest((string)$request);
+        $obj->setRequest((string) $request);
 
         foreach ($fields as $key => $field) {
             $val = $request->get($key);
-            if($val) {
+            if ($val) {
                 $setter = 'set'.ucfirst($field);
                 $obj->{$setter}($val);
             }
