@@ -2,3 +2,7 @@ callback:
     form:
         order_id: Order id
         total: Total
+
+error:
+    heading: An error occurred
+    redirect: You are being redirected back in 15 seconds. If not, please click <a href="%url%">here</a>

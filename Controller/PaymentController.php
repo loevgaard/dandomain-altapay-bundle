@@ -61,7 +61,9 @@ class PaymentController extends Controller
         $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($dandomainPaymentRequest);
         $paymentManager->update($paymentEntity);
 
-        $terminalEntity = $terminalManager->findTerminalBySlug($terminal);
+        throw TerminalNotFoundException::create('Terminal does not exist', $request, $paymentEntity);
+
+        $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
             throw TerminalNotFoundException::create('Terminal `'.$terminal.'` does not exist', $request, $paymentEntity);
         }
@@ -77,13 +79,13 @@ class PaymentController extends Controller
             $dandomainPaymentRequest->getCurrencySymbol()
         );
 
-        foreach ($dandomainPaymentRequest->getOrderLines() as $orderLine) {
+        foreach ($dandomainPaymentRequest->getPaymentLines() as $paymentLine) {
             $orderLinePayload = new OrderLinePayload(
-                $orderLine->getName(),
-                $orderLine->getProductNumber(),
-                $orderLine->getQuantity(),
-                $orderLine->getPrice(),
-                $orderLine->getVat()
+                $paymentLine->getName(),
+                $paymentLine->getProductNumber(),
+                $paymentLine->getQuantity(),
+                $paymentLine->getPrice(),
+                $paymentLine->getVat()
             );
 
             $paymentRequestPayload->addOrderLine($orderLinePayload);

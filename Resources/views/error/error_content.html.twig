@@ -1,0 +1,13 @@
+{% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
+
+<h1>{{ 'error.heading'|trans }}</h1>
+<div class="alert alert-danger">{{ error }}</div>
+<div class="alert alert-info">{{ 'error.redirect'|trans({'%url%' : redirect}) }}</div>
+
+{% if redirect is defined and redirect is not empty %}
+    <script>
+        setTimeout(function () {
+            location.href = '{{ redirect }}';
+        }, 15000);
+    </script>
+{% endif %}

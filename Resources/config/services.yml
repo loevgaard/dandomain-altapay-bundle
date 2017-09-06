@@ -1,4 +1,11 @@
 services:
+    loevgaard_dandomain_altapay.exception_listener:
+        class: Loevgaard\DandomainAltapayBundle\EventListener\ExceptionListener
+        arguments:
+            - "@templating.engine.twig"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
     loevgaard_dandomain_altapay.altapay_client:
         class: Loevgaard\AltaPay\Client
         arguments:
@@ -10,17 +17,21 @@ services:
         arguments:
             - "@doctrine"
             - "%loevgaard_dandomain_altapay.terminal_class%"
+        calls:
+            - [setContainer, ["@service_container"]]
 
     loevgaard_dandomain_altapay.callback_manager:
         class: Loevgaard\DandomainAltapayBundle\Manager\CallbackManager
         arguments:
             - "@doctrine"
             - "%loevgaard_dandomain_altapay.callback_class%"
+
     loevgaard_dandomain_altapay.terminal_synchronizer:
         class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer
         arguments:
             - "@loevgaard_dandomain_altapay.terminal_manager"
             - "@loevgaard_dandomain_altapay.altapay_client"
+
     loevgaard_dandomain_altapay.sync_terminals_command:
         class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand
         tags: [console.command]
