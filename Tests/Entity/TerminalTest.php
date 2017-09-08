@@ -39,7 +39,7 @@ class TerminalTest extends TestCase
     }
 
     /**
-     * @return TerminalInterface
+     * @return Terminal
      */
     public function getTerminal()
     {

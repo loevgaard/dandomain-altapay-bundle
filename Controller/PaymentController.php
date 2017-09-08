@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 
 /**
  * @Route("/payment")
@@ -32,6 +33,8 @@ class PaymentController extends Controller
      * @Method("POST")
      * @Route("/{terminal}", name="loevgaard_dandomain_altapay_payment_new")
      *
+     * @LogHttpTransaction()
+     *
      * @param $terminal
      * @param Request $request
      *
@@ -41,8 +44,6 @@ class PaymentController extends Controller
      */
     public function newAction($terminal, Request $request)
     {
-        // @todo log the raw http request
-
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
         $paymentManager = $this->container->get('loevgaard_dandomain_foundation.payment_manager');
 
@@ -60,8 +61,6 @@ class PaymentController extends Controller
 
         $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($dandomainPaymentRequest);
         $paymentManager->update($paymentEntity);
-
-        throw TerminalNotFoundException::create('Terminal does not exist', $request, $paymentEntity);
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
@@ -84,32 +83,27 @@ class PaymentController extends Controller
                 $paymentLine->getName(),
                 $paymentLine->getProductNumber(),
                 $paymentLine->getQuantity(),
-                $paymentLine->getPrice(),
-                $paymentLine->getVat()
+                $paymentLine->getPrice()
             );
+            $orderLinePayload->setTaxPercent($paymentLine->getVat());
 
             $paymentRequestPayload->addOrderLine($orderLinePayload);
         }
 
-        $configPayload = new ConfigPayload(
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_form', [],
-                UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_ok', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_fail', [],
-                UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_redirect', [],
-                UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_open', [],
-                UrlGeneratorInterface::ABSOLUTE_URL),
-            $this->generateUrl('loevgaard_dandomain_altapay_callback_notification', [],
-                UrlGeneratorInterface::ABSOLUTE_URL)
-        );
+        $configPayload = new ConfigPayload();
+        $configPayload
+            ->setCallbackForm($this->generateUrl('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setCallbackOk($this->generateUrl('loevgaard_dandomain_altapay_callback_ok', [], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setCallbackFail($this->generateUrl('loevgaard_dandomain_altapay_callback_fail', [], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setCallbackRedirect($this->generateUrl('loevgaard_dandomain_altapay_callback_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setCallbackOpen($this->generateUrl('loevgaard_dandomain_altapay_callback_open', [], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setCallbackNotification($this->generateUrl('loevgaard_dandomain_altapay_callback_notification', [], UrlGeneratorInterface::ABSOLUTE_URL))
+        ;
         $paymentRequestPayload->setConfig($configPayload);
 
-        // @todo the payment_id should be a const somewhere
         $paymentRequestPayload
-            ->setCookiePart('payment_id', $paymentEntity->getId())
-            ->setCookiePart('checksum_complete', $handler->getChecksum2())
+            ->setCookiePart($this->getParameter('loevgaard_dandomain_altapay.cookie_payment_id'), $paymentEntity->getId())
+            ->setCookiePart($this->getParameter('loevgaard_dandomain_altapay.cookie_checksum_complete'), $handler->getChecksum2())
         ;
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
@@ -118,9 +112,6 @@ class PaymentController extends Controller
         if (!$response->isSuccessful()) {
             throw AltapayPaymentRequestException::create('An error occured during payment request. Try again.', $request, $paymentEntity);
         }
-
-        echo $response->getUrl();
-        exit;
 
         return new RedirectResponse($response->getUrl());
     }

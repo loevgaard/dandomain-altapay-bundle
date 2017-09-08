@@ -64,6 +64,8 @@ XML;
             ->willReturn($xml)
             ;
         $getTerminalsResponse = new GetTerminals($psrResponse);
+
+        /** @var TerminalManager|\PHPUnit_Framework_MockObject_MockObject $terminalManager */
         $terminalManager = $this->getMockBuilder(TerminalManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['create', 'update', 'findTerminalByTitle'])

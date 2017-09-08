@@ -3,7 +3,6 @@
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
-use Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer;
 use Loevgaard\DandomainFoundationBundle\Manager\Manager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -25,6 +24,7 @@ class TerminalManager extends Manager implements ContainerAwareInterface
 
     /**
      * @param string $title
+     * @param bool $fetch
      *
      * @return TerminalInterface|null
      */

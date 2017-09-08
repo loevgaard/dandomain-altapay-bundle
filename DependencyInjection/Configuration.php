@@ -13,7 +13,6 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('loevgaard_dandomain_altapay');
 
         $rootNode
-            ->fixXmlConfig('altapay_ip')
             ->children()
                 ->scalarNode('altapay_username')
                     ->isRequired()
@@ -44,7 +43,18 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('http_transaction_class')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('cookie_payment_id')
+                    ->defaultValue('payment_id')
+                ->end()
+                ->scalarNode('cookie_checksum_complete')
+                    ->defaultValue('checksum_complete')
+                ->end()
             ->end()
+            ->fixXmlConfig('altapay_ip')
         ;
 
         return $treeBuilder;

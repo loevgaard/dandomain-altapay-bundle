@@ -2,6 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
+use Loevgaard\DandomainAltapayBundle\Exception\CallbackException;
 use Loevgaard\DandomainAltapayBundle\Exception\NotAllowedIpException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainFoundationBundle\Manager\PaymentManager;
@@ -11,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 
 /**
  * @Route("/callback")
@@ -20,6 +22,8 @@ class CallbackController extends Controller
     /**
      * @Method("POST")
      * @Route("/form", name="loevgaard_dandomain_altapay_callback_form")
+     *
+     * @LogHttpTransaction()
      *
      * @param Request $request
      *
@@ -38,6 +42,8 @@ class CallbackController extends Controller
      * @Method("POST")
      * @Route("/ok", name="loevgaard_dandomain_altapay_callback_ok")
      *
+     * @LogHttpTransaction()
+     *
      * @param Request $request
      *
      * @return Response
@@ -52,6 +58,8 @@ class CallbackController extends Controller
     /**
      * @Method("POST")
      * @Route("/fail", name="loevgaard_dandomain_altapay_callback_fail")
+     *
+     * @LogHttpTransaction()
      *
      * @param Request $request
      *
@@ -68,6 +76,8 @@ class CallbackController extends Controller
      * @Method("POST")
      * @Route("/redirect", name="loevgaard_dandomain_altapay_callback_redirect")
      *
+     * @LogHttpTransaction()
+     *
      * @param Request $request
      *
      * @return Response
@@ -82,6 +92,8 @@ class CallbackController extends Controller
     /**
      * @Method("POST")
      * @Route("/open", name="loevgaard_dandomain_altapay_callback_open")
+     *
+     * @LogHttpTransaction()
      *
      * @param Request $request
      *
@@ -98,6 +110,8 @@ class CallbackController extends Controller
      * @Method("POST")
      * @Route("/notification", name="loevgaard_dandomain_altapay_callback_notification")
      *
+     * @LogHttpTransaction()
+     *
      * @param Request $request
      *
      * @return Response
@@ -112,6 +126,8 @@ class CallbackController extends Controller
     /**
      * @Method("POST")
      * @Route("/verify-order", name="loevgaard_dandomain_altapay_callback_verify_order")
+     *
+     * @LogHttpTransaction()
      *
      * @param Request $request
      *
@@ -150,20 +166,19 @@ class CallbackController extends Controller
 
     /**
      * @param Request $request
-     *
      * @return Payment
+     * @throws CallbackException
      */
     protected function getPaymentFromRequest(Request $request)
     {
-        $paymentId = $request->cookies->getInt('payment_id');
+        $paymentId = $request->cookies->getInt($this->getParameter('loevgaard_dandomain_altapay.cookie_payment_id'));
         $paymentManager = $this->getPaymentManager();
 
         /** @var Payment $payment */
         $payment = $paymentManager->getRepository()->find($paymentId);
 
         if (!$payment) {
-            // @todo fix exception
-            throw new \RuntimeException('Payment '.$paymentId.' does not exist');
+            throw new CallbackException('Payment '.$paymentId.' does not exist');
         }
 
         return $payment;

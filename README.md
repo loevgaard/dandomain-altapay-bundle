@@ -72,16 +72,18 @@ class Terminal extends BaseTerminal
 
 ```php
 <?php
+// src/AppBundle/Entity/HttpTransaction.php
+
 namespace AppBundle\Entity;
 
-use Loevgaard\DandomainAltapayBundle\Entity\Payment as BasePayment;
+use Loevgaard\DandomainAltapayBundle\Entity\HttpTransaction as BaseHttpTransaction;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="payments")
+ * @ORM\Table(name="http_transactions")
  */
-class Payment extends BasePayment
+class HttpTransaction extends BaseHttpTransaction
 {
     /**
      * @ORM\Id
@@ -89,41 +91,9 @@ class Payment extends BasePayment
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\OneToMany(targetEntity="OrderLine", mappedBy="payment", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
-    protected $orderLines;
 }
 ```
 
-```php
-<?php
-namespace AppBundle\Entity;
-
-use Loevgaard\DandomainAltapayBundle\Entity\OrderLine as BaseOrderLine;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="order_lines")
- */
-class OrderLine extends BaseOrderLine
-{
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Payment", inversedBy="orderLines")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $payment;
-}
-```
 
 ```php
 <?php
@@ -162,16 +132,15 @@ loevgaard_dandomain_altapay:
 
 ### Update config.yml
 ```yaml
-# app/config/routing.yml
+# app/config/config.yml
 loevgaard_dandomain_altapay:
     altapay_username: insert username
     altapay_password: insert password
     shared_key_1: insert shared key 1 from Dandomain
     shared_key_2: insert shared key 2 from Dandomain
-    terminal_class: AppBundle\Entity\Terminal
-    payment_class: AppBundle\Entity\Payment
-    order_line_class: AppBundle\Entity\OrderLine
     callback_class: AppBundle\Entity\Callback
+    terminal_class: AppBundle\Entity\Terminal
+    altapay_ips: ['77.66.40.133', '77.66.62.133']
     
 knp_doctrine_behaviors:
     timestampable: true

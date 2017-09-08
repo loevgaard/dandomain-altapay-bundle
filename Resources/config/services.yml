@@ -6,6 +6,26 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    loevgaard_dandomain_altapay.controller_listener:
+        class: Loevgaard\DandomainAltapayBundle\EventListener\ControllerListener
+        arguments:
+            - "@loevgaard_dandomain_altapay.transaction_logger"
+            - "@annotation_reader"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller }
+
+    loevgaard_dandomain_altapay.response_listener:
+        class: Loevgaard\DandomainAltapayBundle\EventListener\ResponseListener
+        arguments:
+            - "@loevgaard_dandomain_altapay.transaction_logger"
+        tags:
+            - { name: kernel.event_listener, event: kernel.response }
+
+    loevgaard_dandomain_altapay.transaction_logger:
+        class: Loevgaard\DandomainAltapayBundle\Http\TransactionLogger
+        arguments:
+            - "@loevgaard_dandomain_altapay.http_transaction_manager"
+
     loevgaard_dandomain_altapay.altapay_client:
         class: Loevgaard\AltaPay\Client
         arguments:
@@ -25,6 +45,12 @@ services:
         arguments:
             - "@doctrine"
             - "%loevgaard_dandomain_altapay.callback_class%"
+
+    loevgaard_dandomain_altapay.http_transaction_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\HttpTransactionManager
+        arguments:
+            - "@doctrine"
+            - "%loevgaard_dandomain_altapay.http_transaction_class%"
 
     loevgaard_dandomain_altapay.terminal_synchronizer:
         class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer
