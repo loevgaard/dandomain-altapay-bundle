@@ -2,7 +2,23 @@ callback:
     form:
         order_id: Order id
         total: Total
+    ok:
+        heading: Your payment succeeded
+    fail:
+        error: An error occurred
+
+payment:
+    index:
+        heading: Payments
+    label:
+        order_id: Order id
+        capture: Capture
 
 error:
     heading: An error occurred
     redirect: You are being redirected back in 15 seconds. If not, please click <a href="%url%">here</a>
+
+# Global strings
+layout:
+    actions: Actions
+    show: Show

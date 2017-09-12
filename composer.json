@@ -15,7 +15,7 @@
         "symfony/framework-bundle": "^3.0",
         "symfony/form": "^3.0",
         "loevgaard/dandomain-pay-php-sdk": "^1.0@dev",
-        "loevgaard/altapay-php-sdk": "^0.1.0@dev",
+        "loevgaard/altapay-php-sdk": "^1.0@dev",
         "doctrine/orm": "^2.5",
         "cocur/slugify": "^2.5",
         "sensio/framework-extra-bundle": "^3.0",

@@ -50,9 +50,7 @@ class CallbackController extends Controller
      */
     public function okAction(Request $request)
     {
-        $payment = $this->handleCallback($request);
-
-        return new Response('OK');
+        return $this->render('@LoevgaardDandomainAltapay/callback/ok.html.twig');
     }
 
     /**
@@ -67,9 +65,7 @@ class CallbackController extends Controller
      */
     public function failAction(Request $request)
     {
-        $payment = $this->handleCallback($request);
-
-        return new Response('OK');
+        return $this->render('@LoevgaardDandomainAltapay/callback/fail.html.twig');
     }
 
     /**
@@ -84,9 +80,7 @@ class CallbackController extends Controller
      */
     public function redirectAction(Request $request)
     {
-        $payment = $this->handleCallback($request);
-
-        return new Response('OK');
+        return $this->render('@LoevgaardDandomainAltapay/callback/redirect.html.twig');
     }
 
     /**
@@ -101,9 +95,7 @@ class CallbackController extends Controller
      */
     public function openAction(Request $request)
     {
-        $payment = $this->handleCallback($request);
-
-        return new Response('OK');
+        return $this->render('@LoevgaardDandomainAltapay/callback/open.html.twig');
     }
 
     /**

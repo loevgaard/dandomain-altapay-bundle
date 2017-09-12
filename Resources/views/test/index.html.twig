@@ -1,0 +1,188 @@
+{% extends "@LoevgaardDandomainAltapay/layout.html.twig" %}
+
+{% block loevgaard_dandomain_altapay_content %}
+    <h1>Test page</h1>
+    <h2>Use this page to perform test requests</h2>
+    <p>All fields can be left blank and can obtain any kind of value. This is to be able to test as much as possible.</p>
+    <p>The contents of the fields are saved so you don't have to input everything everytime ;-)</p>
+    <h3>Configuration</h3>
+    <dl class="dl-horizontal">
+        <dt>Shared Key 1</dt>
+        <dd id="shared_key_1">{{ shared_key_1 }}</dd>
+        <dt>Shared Key 2</dt>
+        <dd id="shared_key_2">{{ shared_key_2 }}</dd>
+        <dt>Terminal</dt>
+        <dd>
+            <select id="terminal">
+                <option value=""></option>
+                {% for terminal in terminals %}
+                    <option value="{{ terminal.slug }}">{{ terminal.title }}</option>
+                {% endfor %}
+            </select>
+        </dd>
+    </dl>
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>General fields</h3>
+            <div class="form-group">
+                {{ form_label(form.APIkey) }}
+                <button type="button" class="btn btn-sm btn-info btn-compute-checksum" style="margin-bottom: 7px">Compute checksum</button>
+                {{ form_widget(form.APIkey) }}
+            </div>
+            {{ form_row(form.APIMerchant) }}
+            {{ form_row(form.APIOrderID) }}
+            {{ form_row(form.APISessionID) }}
+            {{ form_row(form.APICurrencySymbol) }}
+            {{ form_row(form.APITotalAmount) }}
+            {{ form_row(form.APICallBackUrl) }}
+            {{ form_row(form.APIFullCallBackOKUrl) }}
+            {{ form_row(form.APICallBackOKUrl) }}
+            {{ form_row(form.APICallBackServerUrl) }}
+            {{ form_row(form.APILanguageID) }}
+            {{ form_row(form.APITestMode) }}
+            {{ form_row(form.APIPayGatewayCurrCode) }}
+            {{ form_row(form.APICardTypeID) }}
+            {{ form_row(form.APIShippingMethod) }}
+            {{ form_row(form.APIShippingFee) }}
+            {{ form_row(form.APIPayMethod) }}
+            {{ form_row(form.APIPayFee) }}
+            {{ form_row(form.APILoadBalancerRealIP) }}
+        </div>
+        <div class="col-xs-4">
+            <h3>Customer fields</h3>
+            {{ form_row(form.APICName) }}
+            {{ form_row(form.APICCompany) }}
+            {{ form_row(form.APICAddress) }}
+            {{ form_row(form.APICAddress2) }}
+            {{ form_row(form.APICZipCode) }}
+            {{ form_row(form.APICCity) }}
+            {{ form_row(form.APICCountryID) }}
+            {{ form_row(form.APICCountry) }}
+            {{ form_row(form.APICPhone) }}
+            {{ form_row(form.APICFax) }}
+            {{ form_row(form.APICEmail) }}
+            {{ form_row(form.APICNote) }}
+            {{ form_row(form.APICcvrnr) }}
+            {{ form_row(form.APICEAN) }}
+            {{ form_row(form.APICRekvNr) }}
+            {{ form_row(form.APICres1) }}
+            {{ form_row(form.APICres2) }}
+            {{ form_row(form.APICres3) }}
+            {{ form_row(form.APICres4) }}
+            {{ form_row(form.APICres5) }}
+            {{ form_row(form.APICIP) }}
+            {{ form_row(form.APICCustTypeID) }}
+        </div>
+        <div class="col-xs-4">
+            <h3>Delivery fields</h3>
+            {{ form_row(form.APIDName) }}
+            {{ form_row(form.APIDCompany) }}
+            {{ form_row(form.APIDAddress) }}
+            {{ form_row(form.APIDAddress2) }}
+            {{ form_row(form.APIDZipCode) }}
+            {{ form_row(form.APIDCity) }}
+            {{ form_row(form.APIDCountryID) }}
+            {{ form_row(form.APIDCountry) }}
+            {{ form_row(form.APIDPhone) }}
+            {{ form_row(form.APIDFax) }}
+            {{ form_row(form.APIDEmail) }}
+            {{ form_row(form.APIDean) }}
+        </div>
+    </div>
+    <h3>Basket</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ form_label(form.APIBasketProdAmount1) }}</th>
+                <th>{{ form_label(form.APIBasketProdNumber1) }}</th>
+                <th>{{ form_label(form.APIBasketProdName1) }}</th>
+                <th>{{ form_label(form.APIBasketProdVAT1) }}</th>
+                <th>{{ form_label(form.APIBasketProdPrice1) }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ form_widget(form.APIBasketProdAmount1) }}</td>
+                <td>{{ form_widget(form.APIBasketProdNumber1) }}</td>
+                <td>{{ form_widget(form.APIBasketProdName1) }}</td>
+                <td>{{ form_widget(form.APIBasketProdVAT1) }}</td>
+                <td>{{ form_widget(form.APIBasketProdPrice1) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <script>
+        var paymentUrl = '{{ path('loevgaard_dandomain_altapay_payment_new', {'terminal' : 'terminal_placeholder'}) }}';
+        var checksumUrl = '{{ path('loevgaard_dandomain_altapay_test_checksum_1', {'orderId' : 'orderId_placeholder', 'amount' : 'amount_placeholder', 'sharedKey' : 'sharedKey_placeholder', 'currency': 'currency_placeholder'}) }}';
+        $(function () {
+            loadFormData();
+
+            $('form').on('submit', function (e) {
+                var terminal = $('#terminal').val();
+                if(!terminal) {
+                    alert('You have not chosen a terminal');
+                    e.preventDefault();
+                }
+
+                var action = paymentUrl.replace('terminal_placeholder', terminal);
+
+                $(this).attr('action', action);
+
+                saveFormData();
+            });
+
+            $('.btn-compute-checksum').on('click', function () {
+                var orderId = $('#{{ form.APIOrderID.vars.id }}').val();
+                var amount = $('#{{ form.APITotalAmount.vars.id }}').val();
+                var sharedKey = $('#shared_key_1').text();
+                var currency = $('#{{ form.APIPayGatewayCurrCode.vars.id }}').val();
+
+                if(!orderId) {
+                    alert('Order id is empty');
+                    return false;
+                }
+
+                if(!amount) {
+                    alert('Amount is empty');
+                    return false;
+                }
+
+                if(!sharedKey) {
+                    alert('Shared key is empty');
+                    return false;
+                }
+
+                if(!currency) {
+                    alert('Currency is empty');
+                    return false;
+                }
+
+                var url = checksumUrl.replace('orderId_placeholder', orderId).replace('amount_placeholder', amount).replace('sharedKey_placeholder', sharedKey).replace('currency_placeholder', currency);
+                console.log(url);
+
+                $.getJSON(url, function (data) {
+                    $('#{{ form.APIkey.vars.id }}').val(data);
+                });
+            });
+        });
+
+        function loadFormData() {
+            $('form input').each(function () {
+                var $this = $(this);
+                var val = localStorage.getItem($this.attr('name'));
+                if(val) {
+                    $this.val(val);
+                }
+            });
+        }
+
+        function saveFormData() {
+            $('form input').each(function () {
+                var $this = $(this);
+                localStorage.setItem($this.attr('name'), $this.val());
+            });
+        }
+    </script>
+{% endblock loevgaard_dandomain_altapay_content %}
