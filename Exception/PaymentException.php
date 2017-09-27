@@ -2,7 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Exception;
 
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Symfony\Component\HttpFoundation\Request;
 
 class PaymentException extends Exception

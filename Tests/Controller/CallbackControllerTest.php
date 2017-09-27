@@ -4,9 +4,9 @@ namespace Loevgaard\DandomainAltapayBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PostControllerTest extends WebTestCase
+class CallbackControllerTest extends WebTestCase
 {
-    public function testShowPost()
+    /*public function testShowPost()
     {
         $client = static::createClient();
 
@@ -16,5 +16,5 @@ class PostControllerTest extends WebTestCase
             0,
             $crawler->filter('html:contains("Hello World")')->count()
         );
-    }
+    }*/
 }

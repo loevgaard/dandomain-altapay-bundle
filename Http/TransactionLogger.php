@@ -30,7 +30,7 @@ class TransactionLogger
 
         $this->transactions[$requestHash] = [
             'request' => $request,
-            'response' => null
+            'response' => null,
         ];
     }
 
@@ -38,24 +38,22 @@ class TransactionLogger
     {
         $requestHash = $this->hashRequest($request);
 
-        // if the request hash is not set it means we do not have a corresponding request
-        // which means we do not want to log it
-        if(!isset($this->transactions[$requestHash])) {
-            return false;
+        // if the request hash is set it means we have a corresponding request
+        // which means we want to log it
+        if (isset($this->transactions[$requestHash])) {
+            $this->transactions[$requestHash]['response'] = $response;
         }
-
-        $this->transactions[$requestHash]['response'] = $response;
     }
 
     /**
-     * Flushes the HTTP transaction log
+     * Flushes the HTTP transaction log.
      */
     public function flush()
     {
         foreach ($this->transactions as $transaction) {
             $entity = $this->httpTransactionManager->create();
             $entity->setRequest($transaction['request'])
-                ->setResponse((string)$transaction['response']);
+                ->setResponse((string) $transaction['response']);
 
             $this->httpTransactionManager->update($entity);
         }
@@ -63,6 +61,7 @@ class TransactionLogger
 
     /**
      * @param Request $request
+     *
      * @return string
      */
     private function hashRequest(Request $request)

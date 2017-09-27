@@ -1,4 +1,5 @@
 services:
+    # Listeners
     loevgaard_dandomain_altapay.exception_listener:
         class: Loevgaard\DandomainAltapayBundle\EventListener\ExceptionListener
         arguments:
@@ -21,17 +22,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response }
 
-    loevgaard_dandomain_altapay.transaction_logger:
-        class: Loevgaard\DandomainAltapayBundle\Http\TransactionLogger
-        arguments:
-            - "@loevgaard_dandomain_altapay.http_transaction_manager"
-
-    loevgaard_dandomain_altapay.altapay_client:
-        class: Loevgaard\AltaPay\Client
-        arguments:
-            - "%loevgaard_dandomain_altapay.altapay_username%"
-            - "%loevgaard_dandomain_altapay.altapay_password%"
-
+    # Managers
     loevgaard_dandomain_altapay.terminal_manager:
         class: Loevgaard\DandomainAltapayBundle\Manager\TerminalManager
         arguments:
@@ -51,6 +42,32 @@ services:
         arguments:
             - "@doctrine"
             - "%loevgaard_dandomain_altapay.http_transaction_class%"
+
+    loevgaard_dandomain_altapay.payment_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\PaymentManager
+        arguments:
+            - "@doctrine"
+            - "%loevgaard_dandomain_altapay.payment_class%"
+        calls:
+            - [setPaymentLineManager, ["@loevgaard_dandomain_altapay.payment_line_manager"]]
+
+    loevgaard_dandomain_altapay.payment_line_manager:
+        class: Loevgaard\DandomainAltapayBundle\Manager\PaymentLineManager
+        arguments:
+            - "@doctrine"
+            - "%loevgaard_dandomain_altapay.payment_line_class%"
+
+    # Misc
+    loevgaard_dandomain_altapay.transaction_logger:
+        class: Loevgaard\DandomainAltapayBundle\Http\TransactionLogger
+        arguments:
+            - "@loevgaard_dandomain_altapay.http_transaction_manager"
+
+    loevgaard_dandomain_altapay.altapay_client:
+        class: Loevgaard\AltaPay\Client
+        arguments:
+            - "%loevgaard_dandomain_altapay.altapay_username%"
+            - "%loevgaard_dandomain_altapay.altapay_password%"
 
     loevgaard_dandomain_altapay.terminal_synchronizer:
         class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer

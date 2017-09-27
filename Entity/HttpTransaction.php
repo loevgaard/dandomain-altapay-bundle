@@ -35,7 +35,7 @@ abstract class HttpTransaction implements HttpTransactionInterface
     protected $response;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getIp(): string
     {
@@ -43,16 +43,17 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setIp(string $ip) : HttpTransactionInterface
+    public function setIp(string $ip): HttpTransactionInterface
     {
         $this->ip = $ip;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRequest(): string
     {
@@ -60,11 +61,11 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setRequest($request) : HttpTransactionInterface
+    public function setRequest($request): HttpTransactionInterface
     {
-        if($request instanceof Request) {
+        if ($request instanceof Request) {
             $this->ip = $request->getClientIp();
 
             $post = '';
@@ -81,11 +82,12 @@ abstract class HttpTransaction implements HttpTransactionInterface
         }
 
         $this->request = $request;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getResponse(): string
     {
@@ -93,11 +95,12 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setResponse(string $response) : HttpTransactionInterface
+    public function setResponse(string $response): HttpTransactionInterface
     {
         $this->response = $response;
+
         return $this;
     }
 }

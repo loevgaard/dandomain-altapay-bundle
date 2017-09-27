@@ -94,6 +94,9 @@ class LoevgaardDandomainAltapayExtensionTest extends TestCase
         $this->assertSame($config['shared_key_2'], $container->getParameter('loevgaard_dandomain_altapay.shared_key_2'));
         $this->assertSame($config['terminal_class'], $container->getParameter('loevgaard_dandomain_altapay.terminal_class'));
         $this->assertSame($config['callback_class'], $container->getParameter('loevgaard_dandomain_altapay.callback_class'));
+        $this->assertSame($config['http_transaction_class'], $container->getParameter('loevgaard_dandomain_altapay.http_transaction_class'));
+        $this->assertSame($config['payment_class'], $container->getParameter('loevgaard_dandomain_altapay.payment_class'));
+        $this->assertSame($config['payment_line_class'], $container->getParameter('loevgaard_dandomain_altapay.payment_line_class'));
     }
 
     /**
@@ -109,6 +112,9 @@ shared_key_1: key1
 shared_key_2: key2
 terminal_class: TerminalClass
 callback_class: CallbackClass
+http_transaction_class: HttpTransactionClass
+payment_class: PaymentClass
+payment_line_class: PaymentLineClass
 EOF;
         $parser = new Parser();
 

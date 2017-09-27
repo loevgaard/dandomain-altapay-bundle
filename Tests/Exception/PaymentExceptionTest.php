@@ -2,8 +2,8 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\Exception;
 
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 

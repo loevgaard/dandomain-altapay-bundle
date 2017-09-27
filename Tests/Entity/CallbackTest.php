@@ -4,7 +4,7 @@ namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
 use Loevgaard\DandomainAltapayBundle\Entity\Callback;
 use Loevgaard\DandomainAltapayBundle\Entity\CallbackInterface;
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use PHPUnit\Framework\TestCase;
 
 class CallbackTest extends TestCase

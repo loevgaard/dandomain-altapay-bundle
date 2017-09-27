@@ -7,5 +7,4 @@ namespace Loevgaard\DandomainAltapayBundle\Annotation;
  */
 class LogHttpTransaction
 {
-
 }

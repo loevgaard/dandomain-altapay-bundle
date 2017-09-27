@@ -3,13 +3,32 @@
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
 use Loevgaard\DandomainAltapayBundle\Entity\HttpTransactionInterface;
-use Loevgaard\DandomainFoundationBundle\Manager\Manager;
+use Loevgaard\DoctrineManager\Manager;
 
-/**
- * @method HttpTransactionInterface create()
- * @method delete(HttpTransactionInterface $obj)
- * @method update(HttpTransactionInterface $obj, $flush = true)
- */
 class HttpTransactionManager extends Manager
 {
+    /**
+     * @return HttpTransactionInterface
+     */
+    public function create()
+    {
+        return parent::create();
+    }
+
+    /**
+     * @param HttpTransactionInterface $obj
+     */
+    public function delete($obj)
+    {
+        parent::delete($obj);
+    }
+
+    /**
+     * @param HttpTransactionInterface $obj
+     * @param bool                     $flush
+     */
+    public function update($obj, $flush = true)
+    {
+        parent::update($obj, $flush);
+    }
 }

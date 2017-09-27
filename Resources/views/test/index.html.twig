@@ -26,9 +26,13 @@
         <div class="col-xs-4">
             <h3>General fields</h3>
             <div class="form-group">
+                <button type="button" class="btn btn-lg btn-success btn-block btn-populate-general">Populate general fields</button>
+            </div>
+
+            <div class="form-group">
                 {{ form_label(form.APIkey) }}
-                <button type="button" class="btn btn-sm btn-info btn-compute-checksum" style="margin-bottom: 7px">Compute checksum</button>
                 {{ form_widget(form.APIkey) }}
+                <div style="text-align: right;margin-top: 7px;"><button type="button" class="btn btn-sm btn-info btn-compute-checksum" style="margin-bottom: 7px">Compute</button></div>
             </div>
             {{ form_row(form.APIMerchant) }}
             {{ form_row(form.APIOrderID) }}
@@ -51,6 +55,10 @@
         </div>
         <div class="col-xs-4">
             <h3>Customer fields</h3>
+            <div class="form-group">
+                <button type="button" class="btn btn-lg btn-success btn-block btn-populate-customer">Populate customer fields</button>
+            </div>
+
             {{ form_row(form.APICName) }}
             {{ form_row(form.APICCompany) }}
             {{ form_row(form.APICAddress) }}
@@ -76,6 +84,10 @@
         </div>
         <div class="col-xs-4">
             <h3>Delivery fields</h3>
+            <div class="form-group">
+                <button type="button" class="btn btn-lg btn-success btn-block btn-populate-delivery">Populate delivery fields</button>
+            </div>
+
             {{ form_row(form.APIDName) }}
             {{ form_row(form.APIDCompany) }}
             {{ form_row(form.APIDAddress) }}
@@ -91,6 +103,7 @@
         </div>
     </div>
     <h3>Basket</h3>
+    <button type="button" class="btn btn-lg btn-success btn-populate-basket">Populate basket</button>
     <table class="table">
         <thead>
             <tr>
@@ -133,7 +146,9 @@
                 saveFormData();
             });
 
-            $('.btn-compute-checksum').on('click', function () {
+            $('.btn-compute-checksum').on('click', computeChecksum);
+
+            function computeChecksum() {
                 var orderId = $('#{{ form.APIOrderID.vars.id }}').val();
                 var amount = $('#{{ form.APITotalAmount.vars.id }}').val();
                 var sharedKey = $('#shared_key_1').text();
@@ -165,6 +180,54 @@
                 $.getJSON(url, function (data) {
                     $('#{{ form.APIkey.vars.id }}').val(data);
                 });
+            }
+
+            $('.btn-populate-general').on('click', function () {
+                $('#{{ form.APIMerchant.vars.id }}').val('123456');
+                var orderId = String(Math.ceil(Date.now() / 1000)).substring(4);
+                $('#{{ form.APIOrderID.vars.id }}').val(orderId);
+                $('#{{ form.APISessionID.vars.id }}').val('SessionId');
+                $('#{{ form.APICurrencySymbol.vars.id }}').val('DKK');
+                $('#{{ form.APITotalAmount.vars.id }}').val(123.41);
+                $('#{{ form.APILanguageID.vars.id }}').val(26);
+                $('#{{ form.APITestMode.vars.id }}').val('True');
+                $('#{{ form.APIPayGatewayCurrCode.vars.id }}').val(208);
+                $('#{{ form.APICardTypeID.vars.id }}').val(0);
+                $('#{{ form.APIShippingMethod.vars.id }}').val('Post Danmark');
+                $('#{{ form.APIShippingFee.vars.id }}').val(20.55);
+                $('#{{ form.APIPayMethod.vars.id }}').val('Kreditkort');
+                $('#{{ form.APIPayFee.vars.id }}').val(0.68);
+
+                computeChecksum();
+            });
+
+            $('.btn-populate-customer').on('click', function () {
+                $('#{{ form.APICName.vars.id }}').val('Kristian Hansen');
+                $('#{{ form.APICAddress.vars.id }}').val('Trygvej 98');
+                $('#{{ form.APICZipCode.vars.id }}').val('8000');
+                $('#{{ form.APICCity.vars.id }}').val('Aarhus');
+                $('#{{ form.APICCountryID.vars.id }}').val(123);
+                $('#{{ form.APICCountry.vars.id }}').val('DK');
+                $('#{{ form.APICPhone.vars.id }}').val('11225588');
+                $('#{{ form.APICEmail.vars.id }}').val('kristian@hansen.dk');
+            });
+
+            $('.btn-populate-delivery').on('click', function () {
+                $('#{{ form.APIDName.vars.id }}').val('Brian Larsen');
+                $('#{{ form.APIDAddress.vars.id }}').val('Kornblomstvej 17');
+                $('#{{ form.APIDZipCode.vars.id }}').val('8900');
+                $('#{{ form.APIDCity.vars.id }}').val('Randers');
+                $('#{{ form.APIDCountryID.vars.id }}').val(123);
+                $('#{{ form.APIDCountry.vars.id }}').val('DK');
+                $('#{{ form.APIDEmail.vars.id }}').val('brian@larsen.dk');
+            });
+
+            $('.btn-populate-basket').on('click', function () {
+                $('#{{ form.APIBasketProdAmount1.vars.id }}').val(1);
+                $('#{{ form.APIBasketProdNumber1.vars.id }}').val('prodnum-1234');
+                $('#{{ form.APIBasketProdName1.vars.id }}').val('Product 1234');
+                $('#{{ form.APIBasketProdVAT1.vars.id }}').val(25);
+                $('#{{ form.APIBasketProdPrice1.vars.id }}').val('119.80');
             });
         });
 

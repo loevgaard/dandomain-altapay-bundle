@@ -3,14 +3,9 @@
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
 use Loevgaard\DandomainAltapayBundle\Entity\CallbackInterface;
-use Loevgaard\DandomainFoundationBundle\Manager\Manager;
+use Loevgaard\DoctrineManager\Manager;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @method CallbackInterface create()
- * @method delete(CallbackInterface $obj)
- * @method update(CallbackInterface $obj, $flush = true)
- */
 class CallbackManager extends Manager
 {
     /**
@@ -58,5 +53,30 @@ class CallbackManager extends Manager
         }
 
         return $obj;
+    }
+
+    /**
+     * @return CallbackInterface
+     */
+    public function create()
+    {
+        return parent::create();
+    }
+
+    /**
+     * @param CallbackInterface $obj
+     */
+    public function delete($obj)
+    {
+        parent::delete($obj);
+    }
+
+    /**
+     * @param CallbackInterface $obj
+     * @param bool              $flush
+     */
+    public function update($obj, $flush = true)
+    {
+        parent::update($obj, $flush);
     }
 }

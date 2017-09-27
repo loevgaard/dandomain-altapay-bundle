@@ -15,7 +15,7 @@
             <td>{{ payment.orderId }}</td>
             <td>
                 <a class="btn btn-sm btn-default" href="">{{ 'layout.show'|trans }}</a>
-                <a class="btn btn-sm btn-default" href="">{{ 'payment.label.capture'|trans }}</a>
+                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}">{{ 'payment.label.capture'|trans }}</a>
             </td>
         </tr>
         {% endfor %}

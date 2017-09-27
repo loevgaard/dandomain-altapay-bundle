@@ -3,7 +3,6 @@
 namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
-use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use PHPUnit\Framework\TestCase;
 
 class TerminalTest extends TestCase

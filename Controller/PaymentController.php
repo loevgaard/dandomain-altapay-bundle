@@ -8,11 +8,12 @@ use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
 use Loevgaard\Dandomain\Pay\Handler;
+use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
 use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Exception\TerminalNotFoundException;
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
@@ -21,7 +22,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 
 /**
  * @Route("/payment")
@@ -32,17 +32,19 @@ class PaymentController extends Controller
      * @Method("GET")
      * @Route("", name="loevgaard_dandomain_altapay_payment_index")
      *
+     * @param Request $request
+     *
      * @return Response
      */
     public function indexAction(Request $request)
     {
-        $paymentManager = $this->container->get('loevgaard_dandomain_foundation.payment_manager');
+        $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
 
         /** @var Payment[] $payments */
         $payments = $paymentManager->getRepository()->findAll();
 
         return $this->render('@LoevgaardDandomainAltapay/payment/index.html.twig', [
-            'payments' => $payments
+            'payments' => $payments,
         ]);
     }
 
@@ -67,7 +69,7 @@ class PaymentController extends Controller
     public function newAction($terminal, Request $request)
     {
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
-        $paymentManager = $this->container->get('loevgaard_dandomain_foundation.payment_manager');
+        $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
 
         // convert symfony request to PSR7 request
         $psr7Factory = new DiactorosFactory();
@@ -167,28 +169,28 @@ class PaymentController extends Controller
      * @Method("POST")
      * @Route("/{paymentId}/capture", name="loevgaard_dandomain_altapay_payment_capture")
      *
-     * @param int $paymentId
+     * @param int     $paymentId
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function captureAction(int $paymentId, Request $request)
     {
-        $paymentManager = $this->get('loevgaard_dandomain_foundation.payment_manager');
+        $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
 
         /** @var Payment $payment */
         $payment = $paymentManager->getRepository()->find($paymentId);
 
-        if($payment) {
+        if ($payment) {
             $altapayClient = $this->get('loevgaard_dandomain_altapay.altapay_client');
 
             $payload = new CaptureReservationPayload();
             $res = $altapayClient->captureReservation($payload);
 
-            if($res->isSuccessful()) {
+            if ($res->isSuccessful()) {
                 $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was captured.'); // @todo fix translation
             } else {
-                $this->addFlash('danger', 'An error occurred during capture of the payment: '.$res->getErrorMessage());
+                $this->addFlash('danger', 'An error occurred during capture of the payment: '.$res->getErrorMessage()); // @todo fix translation
             }
         }
 

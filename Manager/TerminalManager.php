@@ -3,16 +3,11 @@
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
-use Loevgaard\DandomainFoundationBundle\Manager\Manager;
+use Loevgaard\DoctrineManager\Manager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @method TerminalInterface create()
- * @method delete(TerminalInterface $obj)
- * @method update(TerminalInterface $obj, $flush = true)
- */
 class TerminalManager extends Manager implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -24,7 +19,7 @@ class TerminalManager extends Manager implements ContainerAwareInterface
 
     /**
      * @param string $title
-     * @param bool $fetch
+     * @param bool   $fetch
      *
      * @return TerminalInterface|null
      */
@@ -35,8 +30,9 @@ class TerminalManager extends Manager implements ContainerAwareInterface
             'title' => $title,
         ]);
 
-        if($fetch) {
+        if ($fetch) {
             $this->container->get('loevgaard_dandomain_altapay.terminal_synchronizer')->syncAll();
+
             return $this->findTerminalByTitle($title, false);
         }
 
@@ -45,7 +41,7 @@ class TerminalManager extends Manager implements ContainerAwareInterface
 
     /**
      * @param string $slug
-     * @param bool $fetch
+     * @param bool   $fetch
      *
      * @return TerminalInterface|null
      */
@@ -56,11 +52,37 @@ class TerminalManager extends Manager implements ContainerAwareInterface
             'slug' => $slug,
         ]);
 
-        if($fetch) {
+        if ($fetch) {
             $this->container->get('loevgaard_dandomain_altapay.terminal_synchronizer')->syncAll();
+
             return $this->findTerminalBySlug($slug, false);
         }
 
         return $terminal;
+    }
+
+    /**
+     * @return TerminalInterface
+     */
+    public function create()
+    {
+        return parent::create();
+    }
+
+    /**
+     * @param TerminalInterface $obj
+     */
+    public function delete($obj)
+    {
+        parent::delete($obj);
+    }
+
+    /**
+     * @param TerminalInterface $obj
+     * @param bool              $flush
+     */
+    public function update($obj, $flush = true)
+    {
+        parent::update($obj, $flush);
     }
 }

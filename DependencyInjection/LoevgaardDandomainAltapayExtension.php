@@ -22,6 +22,8 @@ class LoevgaardDandomainAltapayExtension extends Extension
         $container->setParameter('loevgaard_dandomain_altapay.terminal_class', $config['terminal_class']);
         $container->setParameter('loevgaard_dandomain_altapay.callback_class', $config['callback_class']);
         $container->setParameter('loevgaard_dandomain_altapay.http_transaction_class', $config['http_transaction_class']);
+        $container->setParameter('loevgaard_dandomain_altapay.payment_class', $config['payment_class']);
+        $container->setParameter('loevgaard_dandomain_altapay.payment_line_class', $config['payment_line_class']);
         $container->setParameter('loevgaard_dandomain_altapay.cookie_payment_id', $config['cookie_payment_id']);
         $container->setParameter('loevgaard_dandomain_altapay.cookie_checksum_complete', $config['cookie_checksum_complete']);
 

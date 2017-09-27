@@ -2,10 +2,10 @@
 
 namespace Loevgaard\DandomainAltapayBundle\EventListener;
 
+use Doctrine\Common\Annotations\Reader;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Http\TransactionLogger;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Doctrine\Common\Annotations\Reader;
 
 class ControllerListener
 {
@@ -26,7 +26,7 @@ class ControllerListener
     {
         $controller = $event->getController();
 
-        if(!$event->isMasterRequest() || !is_array($controller)) {
+        if (!$event->isMasterRequest() || !is_array($controller)) {
             return;
         }
 
@@ -36,7 +36,7 @@ class ControllerListener
         $methodReflection = $controllerReflection->getMethod($method);
         $annotation = $this->reader->getMethodAnnotation($methodReflection, LogHttpTransaction::class);
 
-        if($annotation) {
+        if ($annotation) {
             $request = $event->getRequest();
             $this->transactionLogger->setRequest($request);
         }

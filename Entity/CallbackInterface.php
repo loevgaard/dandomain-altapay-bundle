@@ -2,8 +2,6 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
-
 interface CallbackInterface
 {
     /**

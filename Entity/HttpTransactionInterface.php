@@ -13,9 +13,10 @@ interface HttpTransactionInterface
 
     /**
      * @param string $ip
+     *
      * @return HttpTransactionInterface
      */
-    public function setIp(string $ip) : HttpTransactionInterface;
+    public function setIp(string $ip): HttpTransactionInterface;
 
     /**
      * @return string
@@ -24,9 +25,10 @@ interface HttpTransactionInterface
 
     /**
      * @param string|Request $request
+     *
      * @return HttpTransactionInterface
      */
-    public function setRequest($request) : HttpTransactionInterface;
+    public function setRequest($request): HttpTransactionInterface;
 
     /**
      * @return string
@@ -35,7 +37,8 @@ interface HttpTransactionInterface
 
     /**
      * @param string $response
+     *
      * @return HttpTransactionInterface
      */
-    public function setResponse(string $response) : HttpTransactionInterface;
+    public function setResponse(string $response): HttpTransactionInterface;
 }

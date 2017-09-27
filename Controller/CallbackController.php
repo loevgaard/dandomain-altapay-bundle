@@ -2,17 +2,17 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
+use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Exception\CallbackException;
 use Loevgaard\DandomainAltapayBundle\Exception\NotAllowedIpException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
-use Loevgaard\DandomainFoundationBundle\Manager\PaymentManager;
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
+use Loevgaard\DandomainAltapayBundle\Manager\PaymentManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 
 /**
  * @Route("/callback")
@@ -50,6 +50,8 @@ class CallbackController extends Controller
      */
     public function okAction(Request $request)
     {
+        $payment = $this->handleCallback($request);
+
         return $this->render('@LoevgaardDandomainAltapay/callback/ok.html.twig');
     }
 
@@ -65,6 +67,8 @@ class CallbackController extends Controller
      */
     public function failAction(Request $request)
     {
+        $payment = $this->handleCallback($request);
+
         return $this->render('@LoevgaardDandomainAltapay/callback/fail.html.twig');
     }
 
@@ -80,6 +84,8 @@ class CallbackController extends Controller
      */
     public function redirectAction(Request $request)
     {
+        $payment = $this->handleCallback($request);
+
         return $this->render('@LoevgaardDandomainAltapay/callback/redirect.html.twig');
     }
 
@@ -142,6 +148,26 @@ class CallbackController extends Controller
     protected function handleCallback(Request $request)
     {
         $payment = $this->getPaymentFromRequest($request);
+
+        // @todo this should be placed somewhere in the altapay php sdk
+        $paymentId = null;
+
+        if($request->request->has('xml')) {
+            $xml = new \SimpleXMLElement($request->request->get('xml'));
+            if(isset($xml->Body->Transactions->Transaction) && !empty($xml->Body->Transactions->Transaction)) {
+                foreach ($xml->Body->Transactions->Transaction as $transaction) {
+                    $paymentId = (string)$transaction->PaymentId;
+                    break;
+                }
+            }
+        }
+
+        if($paymentId) {
+            $paymentManager = $this->getPaymentManager();
+            $payment->setAltapayId($paymentId);
+            $paymentManager->update($payment);
+        }
+
         $callbackManager = $this->container->get('loevgaard_dandomain_altapay.callback_manager');
         $callback = $callbackManager->createCallbackFromRequest($request);
         $callback->setPayment($payment);
@@ -149,7 +175,7 @@ class CallbackController extends Controller
         $callbackManager->update($callback);
 
         $allowedIps = $this->container->getParameter('loevgaard_dandomain_altapay.altapay_ips');
-        if ($this->container->get('kernel')->getEnvironment() === 'prod' && !in_array($request->getClientIp(), $allowedIps)) {
+        if ('prod' === $this->container->get('kernel')->getEnvironment() && !in_array($request->getClientIp(), $allowedIps)) {
             throw NotAllowedIpException::create('IP `'.$request->getClientIp().'` is not an allowed IP.', $request, $payment);
         }
 
@@ -158,7 +184,9 @@ class CallbackController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return Payment
+     *
      * @throws CallbackException
      */
     protected function getPaymentFromRequest(Request $request)
@@ -197,6 +225,6 @@ class CallbackController extends Controller
      */
     protected function getPaymentManager()
     {
-        return $this->container->get('loevgaard_dandomain_foundation.payment_manager');
+        return $this->container->get('loevgaard_dandomain_altapay.payment_manager');
     }
 }

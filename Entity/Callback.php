@@ -4,7 +4,6 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use Loevgaard\DandomainFoundationBundle\Model\Payment;
 
 /**
  * @ORM\MappedSuperclass
@@ -143,7 +142,7 @@ abstract class Callback implements CallbackInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $xml;
 
