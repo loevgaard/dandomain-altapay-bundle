@@ -5,17 +5,32 @@
 <table class="table table-hover table-striped">
     <thead>
         <tr>
+            <th>{{ 'payment.label.id'|trans }}</th>
+            <th>{{ 'payment.label.altapay_id'|trans }}</th>
             <th>{{ 'payment.label.order_id'|trans }}</th>
+            <th>{{ 'payment.label.customer_name'|trans }}</th>
+            <th>{{ 'payment.label.customer_email'|trans }}</th>
+            <th>{{ 'payment.label.total'|trans }}</th>
             <th>{{ 'layout.actions'|trans }}</th>
         </tr>
     </thead>
     <tbody>
         {% for payment in payments %}
         <tr>
+            <td>{{ payment.id }}</td>
+            <td>{{ payment.altapayId }}</td>
             <td>{{ payment.orderId }}</td>
-            <td>
+            <td>{{ payment.customerName }}</td>
+            <td>{{ payment.customerEmail }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.totalAmount }}</td>
+            <td nowrap>
                 <a class="btn btn-sm btn-default" href="">{{ 'layout.show'|trans }}</a>
-                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}">{{ 'payment.label.capture'|trans }}</a>
+                {% if payment.captureable %}
+                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}">{{ 'payment.label.capture'|trans }}</a>
+                {% endif %}
+                {% if payment.refundable %}
+                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}">{{ 'payment.label.refund'|trans }}</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

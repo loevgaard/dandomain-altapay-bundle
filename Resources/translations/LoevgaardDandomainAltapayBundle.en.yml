@@ -11,8 +11,14 @@ payment:
     index:
         heading: Payments
     label:
+        id: Id
+        altapay_id: Altapay id
         order_id: Order id
+        customer_name: Customer
+        customer_email: Customer email
+        total: Total
         capture: Capture
+        refund: Refund
 
 error:
     heading: An error occurred

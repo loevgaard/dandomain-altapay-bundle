@@ -3,6 +3,7 @@
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
 use Loevgaard\AltaPay\Payload\CaptureReservation as CaptureReservationPayload;
+use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReservationPayload;
 use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
@@ -88,10 +89,12 @@ class PaymentController extends Controller
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
+            // @todo fix translation
             throw TerminalNotFoundException::create('Terminal `'.$terminal.'` does not exist', $request, $paymentEntity);
         }
 
         if (!$handler->checksumMatches()) {
+            // @todo fix translation
             throw ChecksumMismatchException::create('Checksum mismatch. Try again', $request, $paymentEntity);
         }
 
@@ -159,6 +162,7 @@ class PaymentController extends Controller
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
         if (!$response->isSuccessful()) {
+            // @todo fix translation
             throw AltapayPaymentRequestException::create('An error occured during payment request. Try again. Message from gateway: '.$response->getErrorMessage(), $request, $paymentEntity);
         }
 
@@ -166,7 +170,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * @Method("POST")
+     * @Method("GET")
      * @Route("/{paymentId}/capture", name="loevgaard_dandomain_altapay_payment_capture")
      *
      * @param int     $paymentId
@@ -176,15 +180,12 @@ class PaymentController extends Controller
      */
     public function captureAction(int $paymentId, Request $request)
     {
-        $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
-
-        /** @var Payment $payment */
-        $payment = $paymentManager->getRepository()->find($paymentId);
+        $payment = $this->getPaymentFromId($paymentId);
 
         if ($payment) {
             $altapayClient = $this->get('loevgaard_dandomain_altapay.altapay_client');
 
-            $payload = new CaptureReservationPayload();
+            $payload = new CaptureReservationPayload($payment->getAltapayId());
             $res = $altapayClient->captureReservation($payload);
 
             if ($res->isSuccessful()) {
@@ -197,5 +198,50 @@ class PaymentController extends Controller
         $redirect = $request->headers->get('referer') ? $request->headers->get('referer') : $this->generateUrl('loevgaard_dandomain_altapay_payment_index');
 
         return $this->redirect($redirect);
+    }
+
+    /**
+     * @Method({"POST", "GET"})
+     * @Route("/{paymentId}/refund", name="loevgaard_dandomain_altapay_payment_refund")
+     *
+     * @param int     $paymentId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function refundAction(int $paymentId, Request $request)
+    {
+        $payment = $this->getPaymentFromId($paymentId);
+
+        if ($payment) {
+            $altapayClient = $this->get('loevgaard_dandomain_altapay.altapay_client');
+
+            $payload = new RefundCapturedReservationPayload($payment->getAltapayId());
+            $res = $altapayClient->refundCapturedReservation($payload);
+
+            if ($res->isSuccessful()) {
+                $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was refunded.'); // @todo fix translation
+            } else {
+                $this->addFlash('danger', 'An error occurred during refund of the payment: '.$res->getErrorMessage()); // @todo fix translation
+            }
+        }
+
+        $redirect = $request->headers->get('referer') ? $request->headers->get('referer') : $this->generateUrl('loevgaard_dandomain_altapay_payment_index');
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @param int $paymentId
+     * @return Payment|null
+     */
+    private function getPaymentFromId(int $paymentId) : ?Payment
+    {
+        $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
+
+        /** @var Payment $payment */
+        $payment = $paymentManager->getRepository()->find($paymentId);
+
+        return $payment;
     }
 }
