@@ -14,6 +14,7 @@
         "php": "^7.1",
         "symfony/framework-bundle": "^3.0",
         "symfony/form": "^3.0",
+        "symfony/yaml": "^3.0",
         "loevgaard/dandomain-pay-php-sdk": "^1.0@dev",
         "loevgaard/altapay-php-sdk": "^1.0@dev",
         "doctrine/orm": "^2.5",
