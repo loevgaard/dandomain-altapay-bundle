@@ -44,5 +44,13 @@
         "test": "phpunit",
         "check-style": "./vendor/bin/php-cs-fixer fix --verbose --dry-run",
         "fix-style": "./vendor/bin/php-cs-fixer fix --verbose"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
