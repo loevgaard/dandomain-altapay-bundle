@@ -10,6 +10,8 @@ callback:
 payment:
     index:
         heading: Payments
+    show:
+        heading: Payment
     label:
         id: Id
         altapay_id: Altapay id
@@ -19,6 +21,7 @@ payment:
         total: Total
         capture: Capture
         refund: Refund
+        open_in_altapay: Open in Altapay
 
 error:
     heading: An error occurred

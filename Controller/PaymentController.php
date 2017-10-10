@@ -50,6 +50,27 @@ class PaymentController extends Controller
     }
 
     /**
+     * @Method("GET")
+     * @Route("/{paymentId}/show", name="loevgaard_dandomain_altapay_payment_show")
+     *
+     * @param int     $paymentId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function showAction(int $paymentId, Request $request)
+    {
+        $payment = $this->getPaymentFromId($paymentId);
+        if(!$payment) {
+            throw $this->createNotFoundException('Payment with id `'.$paymentId.'` not found');
+        }
+
+        return $this->render('@LoevgaardDandomainAltapay/payment/show.html.twig', [
+            'payment' => $payment,
+        ]);
+    }
+
+    /**
      * Payment flow
      * 1. The Dandomain payment API POSTs to this page with the terminal slug in the URL
      * 2. After validating all input, we create a payment request to the Altapay API
@@ -226,22 +247,45 @@ class PaymentController extends Controller
             }
         }
 
-        $redirect = $request->headers->get('referer') ? $request->headers->get('referer') : $this->generateUrl('loevgaard_dandomain_altapay_payment_index');
+        $redirect = $request->headers->get('referer') ? : $this->generateUrl('loevgaard_dandomain_altapay_payment_index');
 
         return $this->redirect($redirect);
     }
 
     /**
+     * @Method("GET")
+     * @Route("/{paymentId}/redirectToAltapay", name="loevgaard_dandomain_altapay_redirect_to_altapay_payment")
+     *
+     * @param int     $paymentId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function redirectToAltapayPaymentAction(int $paymentId, Request $request)
+    {
+        $payment = $this->getPaymentFromId($paymentId);
+
+        // @todo the host should be fetched from parameters.yml
+        $url = 'https://testgateway.altapaysecure.com/merchant/transactions/paymentDetails/'.$payment->getAltapayId();
+
+        return $this->redirect($url);
+    }
+
+    /**
      * @param int $paymentId
      *
-     * @return Payment|null
+     * @return Payment
      */
-    private function getPaymentFromId(int $paymentId): ?Payment
+    private function getPaymentFromId(int $paymentId): Payment
     {
         $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
 
         /** @var Payment $payment */
         $payment = $paymentManager->getRepository()->find($paymentId);
+
+        if(!$payment) {
+            throw $this->createNotFoundException('Payment with id `'.$paymentId.'` not found');
+        }
 
         return $payment;
     }

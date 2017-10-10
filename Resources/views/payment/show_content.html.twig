@@ -1,0 +1,108 @@
+{% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
+
+<h1>{{ 'payment.show.heading'|trans }}</h1>
+
+apiKey: {{ payment.apiKey }}<br>
+merchant: {{ payment.merchant }}<br>
+orderId: {{ payment.orderId }}<br>
+sessionId: {{ payment.sessionId }}<br>
+currencySymbol: {{ payment.currencySymbol }}<br>
+totalAmount: {{ payment.totalAmount }}<br>
+callBackUrl: {{ payment.callBackUrl }}<br>
+fullCallBackOkUrl: {{ payment.fullCallBackOkUrl }}<br>
+callBackOkUrl: {{ payment.callBackOkUrl }}<br>
+callBackServerUrl: {{ payment.callBackServerUrl }}<br>
+languageId: {{ payment.languageId }}<br>
+testMode: {{ payment.testMode }}<br>
+paymentGatewayCurrencyCode: {{ payment.paymentGatewayCurrencyCode }}<br>
+cardTypeId: {{ payment.cardTypeId }}<br>
+customerRekvNr: {{ payment.customerRekvNr }}<br>
+customerName: {{ payment.customerName }}<br>
+customerCompany: {{ payment.customerCompany }}<br>
+customerAddress: {{ payment.customerAddress }}<br>
+customerAddress2: {{ payment.customerAddress2 }}<br>
+customerZipCode: {{ payment.customerZipCode }}<br>
+customerCity: {{ payment.customerCity }}<br>
+customerCountryId: {{ payment.customerCountryId }}<br>
+customerCountry: {{ payment.customerCountry }}<br>
+customerPhone: {{ payment.customerPhone }}<br>
+customerFax: {{ payment.customerFax }}<br>
+customerEmail: {{ payment.customerEmail }}<br>
+customerNote: {{ payment.customerNote }}<br>
+customerCvrnr: {{ payment.customerCvrnr }}<br>
+customerCustTypeId: {{ payment.customerCustTypeId }}<br>
+customerEan: {{ payment.customerEan }}<br>
+customerRes1: {{ payment.customerRes1 }}<br>
+customerRes2: {{ payment.customerRes2 }}<br>
+customerRes3: {{ payment.customerRes3 }}<br>
+customerRes4: {{ payment.customerRes4 }}<br>
+customerRes5: {{ payment.customerRes5 }}<br>
+customerIp: {{ payment.customerIp }}<br>
+deliveryName: {{ payment.deliveryName }}<br>
+deliveryCompany: {{ payment.deliveryCompany }}<br>
+deliveryAddress: {{ payment.deliveryAddress }}<br>
+deliveryAddress2: {{ payment.deliveryAddress2 }}<br>
+deliveryZipCode: {{ payment.deliveryZipCode }}<br>
+deliveryCity: {{ payment.deliveryCity }}<br>
+deliveryCountryID: {{ payment.deliveryCountryID }}<br>
+deliveryCountry: {{ payment.deliveryCountry }}<br>
+deliveryPhone: {{ payment.deliveryPhone }}<br>
+deliveryFax: {{ payment.deliveryFax }}<br>
+deliveryEmail: {{ payment.deliveryEmail }}<br>
+deliveryEan: {{ payment.deliveryEan }}<br>
+shippingMethod: {{ payment.shippingMethod }}<br>
+shippingFee: {{ payment.shippingFee }}<br>
+paymentMethod: {{ payment.paymentMethod }}<br>
+paymentFee: {{ payment.paymentFee }}<br>
+loadBalancerRealIp: {{ payment.loadBalancerRealIp }}<br>
+referrer: {{ payment.referrer }}<br>
+altapayId: {{ payment.altapayId }}<br>
+cardStatus: {{ payment.cardStatus }}<br>
+creditCardToken: {{ payment.creditCardToken }}<br>
+creditCardMaskedPan: {{ payment.creditCardMaskedPan }}<br>
+threeDSecureResult: {{ payment.threeDSecureResult }}<br>
+liableForChargeback: {{ payment.liableForChargeback }}<br>
+blacklistToken: {{ payment.blacklistToken }}<br>
+shop: {{ payment.shop }}<br>
+terminal: {{ payment.terminal }}<br>
+transactionStatus: {{ payment.transactionStatus }}<br>
+reasonCode: {{ payment.reasonCode }}<br>
+merchantCurrency: {{ payment.merchantCurrency }}<br>
+merchantCurrencyAlpha: {{ payment.merchantCurrencyAlpha }}<br>
+cardHolderCurrency: {{ payment.cardHolderCurrency }}<br>
+cardHolderCurrencyAlpha: {{ payment.cardHolderCurrencyAlpha }}<br>
+reservedAmount: {{ payment.reservedAmount }}<br>
+capturedAmount: {{ payment.capturedAmount }}<br>
+refundedAmount: {{ payment.refundedAmount }}<br>
+recurringDefaultAmount: {{ payment.recurringDefaultAmount }}<br>
+createdDate: {{ payment.createdDate|date }}<br>
+updatedDate: {{ payment.updatedDate|date }}<br>
+paymentNature: {{ payment.paymentNature }}<br>
+supportsRefunds: {{ payment.supportsRefunds }}<br>
+supportsRelease: {{ payment.supportsRelease }}<br>
+supportsMultipleCaptures: {{ payment.supportsMultipleCaptures }}<br>
+supportsMultipleRefunds: {{ payment.supportsMultipleRefunds }}<br>
+fraudRiskScore: {{ payment.fraudRiskScore }}<br>
+fraudExplanation: {{ payment.fraudExplanation }}<br>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Quantity</th>
+            <th>Product number</th>
+            <th>Name</th>
+            <th>VAT</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paymentLine in payment.paymentLines %}
+            <tr>
+                <td>{{ paymentLine.quantity }}</td>
+                <td>{{ paymentLine.productNumber }}</td>
+                <td>{{ paymentLine.name }}</td>
+                <td>{{ paymentLine.vat }}</td>
+                <td>{{ paymentLine.price }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
