@@ -2,6 +2,8 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
+use Loevgaard\AltaPay\Callback\Xml as XmlCallback;
+use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Exception\CallbackException;
@@ -10,6 +12,7 @@ use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Manager\PaymentManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -148,83 +151,53 @@ class CallbackController extends Controller
     protected function handleCallback(Request $request)
     {
         $payment = $this->getPaymentFromRequest($request);
+        $callbackHandler = $this->get('loevgaard_dandomain_altapay.altapay_callback_handler');
 
-        // @todo this should be placed somewhere in the altapay php sdk
-        $transaction = null;
+        // convert symfony request to PSR7 request
+        $psr7Factory = new DiactorosFactory();
+        $psrRequest = $psr7Factory->createRequest($request);
+        $callback = $callbackHandler->handleCallback($psrRequest);
 
-        if($request->request->has('xml')) {
-            $xml = new \SimpleXMLElement($request->request->get('xml'));
-            if(isset($xml->Body->Transactions->Transaction) && !empty($xml->Body->Transactions->Transaction)) {
-                foreach ($xml->Body->Transactions->Transaction as $transactionXml) {
-                    $transaction = $transactionXml;
-                    break;
-                }
+        if ($callback instanceof XmlCallback) {
+            $transactions = $callback->getTransactions();
+            if (isset($transactions[0])) {
+                /** @var Transaction $transaction */
+                $transaction = $transactions[0];
+
+                $paymentManager = $this->getPaymentManager();
+
+                $payment
+                    ->setAltapayId($transaction->getPaymentId())
+                    ->setCardStatus($transaction->getCardStatus())
+                    ->setCreditCardToken($transaction->getCreditCardToken())
+                    ->setCreditCardMaskedPan($transaction->getCreditCardMaskedPan())
+                    ->setThreeDSecureResult($transaction->getThreeDSecureResult())
+                    ->setLiableForChargeback($transaction->getLiableForChargeback())
+                    ->setBlacklistToken($transaction->getBlacklistToken())
+                    ->setShop($transaction->getShop())
+                    ->setTerminal($transaction->getTerminal())
+                    ->setTransactionStatus($transaction->getTransactionStatus())
+                    ->setReasonCode($transaction->getReasonCode())
+                    ->setMerchantCurrency($transaction->getMerchantCurrency())
+                    ->setMerchantCurrencyAlpha($transaction->getMerchantCurrencyAlpha())
+                    ->setCardHolderCurrency($transaction->getCardHolderCurrency())
+                    ->setCardHolderCurrencyAlpha($transaction->getCardHolderCurrencyAlpha())
+                    ->setReservedAmount($transaction->getReservedAmount())
+                    ->setCapturedAmount($transaction->getCapturedAmount())
+                    ->setRefundedAmount($transaction->getRefundedAmount())
+                    ->setRecurringDefaultAmount($transaction->getRecurringDefaultAmount())
+                    ->setCreatedDate($transaction->getCreatedDate())
+                    ->setUpdatedDate($transaction->getUpdatedDate())
+                    ->setPaymentNature($transaction->getPaymentNature())
+                    ->setSupportsRefunds($transaction->getPaymentNatureService()->isSupportsRefunds())
+                    ->setSupportsRelease($transaction->getPaymentNatureService()->isSupportsRelease())
+                    ->setSupportsMultipleCaptures($transaction->getPaymentNatureService()->isSupportsMultipleCaptures())
+                    ->setSupportsMultipleRefunds($transaction->getPaymentNatureService()->isSupportsMultipleRefunds())
+                    ->setFraudRiskScore($transaction->getFraudRiskScore())
+                    ->setFraudExplanation($transaction->getFraudExplanation())
+                ;
+                $paymentManager->update($payment);
             }
-        }
-
-        if($transaction) {
-            $paymentManager = $this->getPaymentManager();
-
-            $createdDate = \DateTime::createFromFormat('Y-m-d H:i:s', $transaction->CreatedDate);
-            if($createdDate === false) {
-                $createdDate = null;
-            }
-
-            $updatedDate = \DateTime::createFromFormat('Y-m-d H:i:s', $transaction->UpdatedDate);
-            if($updatedDate === false) {
-                $updatedDate = null;
-            }
-
-            $supportsRefunds = $supportsRelease = $supportsMultipleCaptures = $supportsMultipleRefunds = null;
-            if(isset($transaction->PaymentNatureService)) {
-                if(isset($transaction->PaymentNatureService->SupportsRefunds)) {
-                    $supportsRefunds = (string)$transaction->PaymentNatureService->SupportsRefunds === 'true';
-                }
-
-                if(isset($transaction->PaymentNatureService->SupportsRelease)) {
-                    $supportsRelease = (string)$transaction->PaymentNatureService->SupportsRelease === 'true';
-                }
-
-                if(isset($transaction->PaymentNatureService->SupportsMultipleCaptures)) {
-                    $supportsMultipleCaptures = (string)$transaction->PaymentNatureService->SupportsMultipleCaptures === 'true';
-                }
-
-                if(isset($transaction->PaymentNatureService->SupportsMultipleRefunds)) {
-                    $supportsMultipleRefunds = (string)$transaction->PaymentNatureService->SupportsMultipleRefunds === 'true';
-                }
-            }
-
-            $payment
-                ->setAltapayId($transaction->PaymentId ?? null)
-                ->setCardStatus($transaction->CardStatus ?? null)
-                ->setCreditCardToken($transaction->CreditCardToken ?? null)
-                ->setCreditCardMaskedPan($transaction->CreditCardMaskedPan ?? null)
-                ->setThreeDSecureResult($transaction->ThreeDSecureResult ?? null)
-                ->setLiableForChargeback($transaction->LiableForChargeback ?? null)
-                ->setBlacklistToken($transaction->BlacklistToken ?? null)
-                ->setShop($transaction->Shop ?? null)
-                ->setTerminal($transaction->Terminal ?? null)
-                ->setTransactionStatus($transaction->TransactionStatus ?? null)
-                ->setReasonCode($transaction->ReasonCode ?? null)
-                ->setMerchantCurrency(isset($transaction->MerchantCurrency) ? (int)$transaction->MerchantCurrency : null)
-                ->setMerchantCurrencyAlpha($transaction->MerchantCurrencyAlpha ?? null)
-                ->setCardHolderCurrency(isset($transaction->CardHolderCurrency) ? (int)$transaction->CardHolderCurrency : null)
-                ->setCardHolderCurrencyAlpha($transaction->CardHolderCurrencyAlpha ?? null)
-                ->setReservedAmount(isset($transaction->ReservedAmount) ? (float)$transaction->ReservedAmount : null)
-                ->setCapturedAmount(isset($transaction->CapturedAmount) ? (float)$transaction->CapturedAmount : null)
-                ->setRefundedAmount(isset($transaction->RefundedAmount) ? (float)$transaction->RefundedAmount : null)
-                ->setRecurringDefaultAmount(isset($transaction->RecurringDefaultAmount) ? (float)$transaction->RecurringDefaultAmount : null)
-                ->setCreatedDate($createdDate)
-                ->setUpdatedDate($updatedDate)
-                ->setPaymentNature($transaction->PaymentNature ?? null)
-                ->setSupportsRefunds($supportsRefunds)
-                ->setSupportsRelease($supportsRelease)
-                ->setSupportsMultipleCaptures($supportsMultipleCaptures)
-                ->setSupportsMultipleRefunds($supportsMultipleRefunds)
-                ->setFraudRiskScore(isset($transaction->FraudRiskScore) ? (float)$transaction->FraudRiskScore : null)
-                ->setFraudExplanation($transaction->FraudExplanation ?? null)
-            ;
-            $paymentManager->update($payment);
         }
 
         $callbackManager = $this->container->get('loevgaard_dandomain_altapay.callback_manager');

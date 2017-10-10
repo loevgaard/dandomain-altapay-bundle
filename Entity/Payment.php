@@ -462,28 +462,28 @@ abstract class Payment extends PaymentRequest
     protected $paymentNature;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $supportsRefunds;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $supportsRelease;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $supportsMultipleCaptures;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -503,7 +503,6 @@ abstract class Payment extends PaymentRequest
      */
     protected $fraudExplanation;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -512,25 +511,25 @@ abstract class Payment extends PaymentRequest
     }
 
     /**
-     * Returns true if the payment can be captured
+     * Returns true if the payment can be captured.
      *
      * @todo implement this method
      *
      * @return bool
      */
-    public function isCaptureable() : bool
+    public function isCaptureable(): bool
     {
         return true;
     }
 
     /**
-     * Returns true if the payment can be refunded
+     * Returns true if the payment can be refunded.
      *
      * @todo implement this method
      *
      * @return bool
      */
-    public function isRefundable() : bool
+    public function isRefundable(): bool
     {
         return true;
     }
@@ -540,7 +539,7 @@ abstract class Payment extends PaymentRequest
     /**
      * @return int
      */
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -550,7 +549,7 @@ abstract class Payment extends PaymentRequest
      *
      * @return Payment
      */
-    public function setId(int $id) : self
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -567,11 +566,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $altapayId
+     *
      * @return Payment
      */
     public function setAltapayId($altapayId)
     {
         $this->altapayId = $altapayId;
+
         return $this;
     }
 
@@ -585,11 +586,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $cardStatus
+     *
      * @return Payment
      */
     public function setCardStatus($cardStatus)
     {
         $this->cardStatus = $cardStatus;
+
         return $this;
     }
 
@@ -603,11 +606,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $creditCardToken
+     *
      * @return Payment
      */
     public function setCreditCardToken($creditCardToken)
     {
         $this->creditCardToken = $creditCardToken;
+
         return $this;
     }
 
@@ -621,11 +626,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $creditCardMaskedPan
+     *
      * @return Payment
      */
     public function setCreditCardMaskedPan($creditCardMaskedPan)
     {
         $this->creditCardMaskedPan = $creditCardMaskedPan;
+
         return $this;
     }
 
@@ -639,11 +646,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $threeDSecureResult
+     *
      * @return Payment
      */
     public function setThreeDSecureResult($threeDSecureResult)
     {
         $this->threeDSecureResult = $threeDSecureResult;
+
         return $this;
     }
 
@@ -657,11 +666,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $liableForChargeback
+     *
      * @return Payment
      */
     public function setLiableForChargeback($liableForChargeback)
     {
         $this->liableForChargeback = $liableForChargeback;
+
         return $this;
     }
 
@@ -675,11 +686,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $blacklistToken
+     *
      * @return Payment
      */
     public function setBlacklistToken($blacklistToken)
     {
         $this->blacklistToken = $blacklistToken;
+
         return $this;
     }
 
@@ -693,11 +706,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $shop
+     *
      * @return Payment
      */
     public function setShop($shop)
     {
         $this->shop = $shop;
+
         return $this;
     }
 
@@ -711,11 +726,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $terminal
+     *
      * @return Payment
      */
     public function setTerminal($terminal)
     {
         $this->terminal = $terminal;
+
         return $this;
     }
 
@@ -729,11 +746,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $transactionStatus
+     *
      * @return Payment
      */
     public function setTransactionStatus($transactionStatus)
     {
         $this->transactionStatus = $transactionStatus;
+
         return $this;
     }
 
@@ -747,11 +766,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $reasonCode
+     *
      * @return Payment
      */
     public function setReasonCode($reasonCode)
     {
         $this->reasonCode = $reasonCode;
+
         return $this;
     }
 
@@ -765,11 +786,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param int|null $merchantCurrency
+     *
      * @return Payment
      */
     public function setMerchantCurrency($merchantCurrency)
     {
         $this->merchantCurrency = $merchantCurrency;
+
         return $this;
     }
 
@@ -783,11 +806,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $merchantCurrencyAlpha
+     *
      * @return Payment
      */
     public function setMerchantCurrencyAlpha($merchantCurrencyAlpha)
     {
         $this->merchantCurrencyAlpha = $merchantCurrencyAlpha;
+
         return $this;
     }
 
@@ -801,11 +826,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param int|null $cardHolderCurrency
+     *
      * @return Payment
      */
     public function setCardHolderCurrency($cardHolderCurrency)
     {
         $this->cardHolderCurrency = $cardHolderCurrency;
+
         return $this;
     }
 
@@ -819,11 +846,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $cardHolderCurrencyAlpha
+     *
      * @return Payment
      */
     public function setCardHolderCurrencyAlpha($cardHolderCurrencyAlpha)
     {
         $this->cardHolderCurrencyAlpha = $cardHolderCurrencyAlpha;
+
         return $this;
     }
 
@@ -837,11 +866,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param float|null $reservedAmount
+     *
      * @return Payment
      */
     public function setReservedAmount($reservedAmount)
     {
         $this->reservedAmount = $reservedAmount;
+
         return $this;
     }
 
@@ -855,11 +886,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param float|null $capturedAmount
+     *
      * @return Payment
      */
     public function setCapturedAmount($capturedAmount)
     {
         $this->capturedAmount = $capturedAmount;
+
         return $this;
     }
 
@@ -873,11 +906,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param float|null $refundedAmount
+     *
      * @return Payment
      */
     public function setRefundedAmount($refundedAmount)
     {
         $this->refundedAmount = $refundedAmount;
+
         return $this;
     }
 
@@ -891,11 +926,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param float|null $recurringDefaultAmount
+     *
      * @return Payment
      */
     public function setRecurringDefaultAmount($recurringDefaultAmount)
     {
         $this->recurringDefaultAmount = $recurringDefaultAmount;
+
         return $this;
     }
 
@@ -908,12 +945,14 @@ abstract class Payment extends PaymentRequest
     }
 
     /**
-     * @param \DateTime|null $createdDate
+     * @param \DateTimeInterface|null $createdDate
+     *
      * @return Payment
      */
     public function setCreatedDate($createdDate)
     {
         $this->createdDate = $createdDate;
+
         return $this;
     }
 
@@ -926,12 +965,14 @@ abstract class Payment extends PaymentRequest
     }
 
     /**
-     * @param \DateTime|null $updatedDate
+     * @param \DateTimeInterface|null $updatedDate
+     *
      * @return Payment
      */
     public function setUpdatedDate($updatedDate)
     {
         $this->updatedDate = $updatedDate;
+
         return $this;
     }
 
@@ -945,11 +986,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $paymentNature
+     *
      * @return Payment
      */
     public function setPaymentNature($paymentNature)
     {
         $this->paymentNature = $paymentNature;
+
         return $this;
     }
 
@@ -963,11 +1006,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param bool|null $supportsRefunds
+     *
      * @return Payment
      */
     public function setSupportsRefunds($supportsRefunds)
     {
         $this->supportsRefunds = $supportsRefunds;
+
         return $this;
     }
 
@@ -981,11 +1026,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param bool|null $supportsRelease
+     *
      * @return Payment
      */
     public function setSupportsRelease($supportsRelease)
     {
         $this->supportsRelease = $supportsRelease;
+
         return $this;
     }
 
@@ -999,11 +1046,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param bool|null $supportsMultipleCaptures
+     *
      * @return Payment
      */
     public function setSupportsMultipleCaptures($supportsMultipleCaptures)
     {
         $this->supportsMultipleCaptures = $supportsMultipleCaptures;
+
         return $this;
     }
 
@@ -1017,11 +1066,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param bool|null $supportsMultipleRefunds
+     *
      * @return Payment
      */
     public function setSupportsMultipleRefunds($supportsMultipleRefunds)
     {
         $this->supportsMultipleRefunds = $supportsMultipleRefunds;
+
         return $this;
     }
 
@@ -1035,11 +1086,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param float|null $fraudRiskScore
+     *
      * @return Payment
      */
     public function setFraudRiskScore($fraudRiskScore)
     {
         $this->fraudRiskScore = $fraudRiskScore;
+
         return $this;
     }
 
@@ -1053,11 +1106,13 @@ abstract class Payment extends PaymentRequest
 
     /**
      * @param null|string $fraudExplanation
+     *
      * @return Payment
      */
     public function setFraudExplanation($fraudExplanation)
     {
         $this->fraudExplanation = $fraudExplanation;
+
         return $this;
     }
 }

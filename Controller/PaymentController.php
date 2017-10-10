@@ -3,11 +3,11 @@
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
 use Loevgaard\AltaPay\Payload\CaptureReservation as CaptureReservationPayload;
-use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReservationPayload;
 use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
+use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReservationPayload;
 use Loevgaard\Dandomain\Pay\Handler;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
@@ -233,9 +233,10 @@ class PaymentController extends Controller
 
     /**
      * @param int $paymentId
+     *
      * @return Payment|null
      */
-    private function getPaymentFromId(int $paymentId) : ?Payment
+    private function getPaymentFromId(int $paymentId): ?Payment
     {
         $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
 

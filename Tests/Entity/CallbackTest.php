@@ -71,15 +71,6 @@ class CallbackTest extends TestCase
         $this->assertSame('nature', $callback->getNature());
         $this->assertSame(false, $callback->isRequireCapture());
         $this->assertSame('xml', $callback->getXml());
-
-        /*
-        $this->assertSame(1, $callback->getId());
-        $this->assertSame('title', $callback->getTitle());
-        $this->assertSame('sluuuug', $callback->getSlug());
-        $this->assertSame('DK', $callback->getCountry());
-        $this->assertSame(['EUR', 'DKK'], $callback->getCurrencies());
-        $this->assertSame(['Nature 1', 'Nature 2'], $callback->getNatures());
-        */
     }
 
     /**

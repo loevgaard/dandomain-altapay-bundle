@@ -69,6 +69,9 @@ services:
             - "%loevgaard_dandomain_altapay.altapay_username%"
             - "%loevgaard_dandomain_altapay.altapay_password%"
 
+    loevgaard_dandomain_altapay.altapay_callback_handler:
+        class: Loevgaard\AltaPay\CallbackHandler
+
     loevgaard_dandomain_altapay.terminal_synchronizer:
         class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer
         arguments:
