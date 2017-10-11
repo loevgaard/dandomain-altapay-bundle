@@ -310,7 +310,7 @@ abstract class Payment extends PaymentRequest
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, unique=true)
      */
     protected $altapayId;
 

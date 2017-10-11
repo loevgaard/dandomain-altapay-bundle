@@ -17,6 +17,7 @@ class LoevgaardDandomainAltapayExtension extends Extension
         $container->setParameter('loevgaard_dandomain_altapay.altapay_username', $config['altapay_username']);
         $container->setParameter('loevgaard_dandomain_altapay.altapay_password', $config['altapay_password']);
         $container->setParameter('loevgaard_dandomain_altapay.altapay_ips', $config['altapay_ips']);
+        $container->setParameter('loevgaard_dandomain_altapay.altapay_url', $config['altapay_url']);
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_1', $config['shared_key_1']);
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_2', $config['shared_key_2']);
         $container->setParameter('loevgaard_dandomain_altapay.terminal_class', $config['terminal_class']);

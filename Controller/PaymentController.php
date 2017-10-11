@@ -266,7 +266,7 @@ class PaymentController extends Controller
         $payment = $this->getPaymentFromId($paymentId);
 
         // @todo the host should be fetched from parameters.yml
-        $url = 'https://testgateway.altapaysecure.com/merchant/transactions/paymentDetails/'.$payment->getAltapayId();
+        $url = $this->getParameter('loevgaard_dandomain_altapay.altapay_url').'/merchant/transactions/paymentDetails/'.$payment->getAltapayId();
 
         return $this->redirect($url);
     }

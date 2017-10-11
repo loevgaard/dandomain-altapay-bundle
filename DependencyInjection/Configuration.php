@@ -2,6 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\DependencyInjection;
 
+use Assert\Assert;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,6 +27,22 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
+                ->end()
+                ->scalarNode('altapay_url')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->beforeNormalization()
+                        ->ifString()
+                            ->then(function ($v) {
+                                return rtrim($v, '/');
+                            })
+                    ->end()
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            return filter_var($v, FILTER_VALIDATE_URL) === false;
+                        })
+                        ->thenInvalid('The URL is invalid')
+                    ->end()
                 ->end()
                 ->scalarNode('shared_key_1')
                     ->isRequired()

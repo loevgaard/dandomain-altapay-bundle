@@ -24,15 +24,15 @@
             <td>{{ payment.customerEmail }}</td>
             <td>{{ payment.currencySymbol }} {{ payment.totalAmount }}</td>
             <td nowrap>
-                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_show', {paymentId: payment.id}) }}">{{ 'layout.show'|trans }}</a>
+                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_show', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
                 {% if payment.captureable %}
-                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}">{{ 'payment.label.capture'|trans }}</a>
+                    <a class="btn btn-sm btn-success" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-download"></span> {{ 'payment.label.capture'|trans }}</a>
                 {% endif %}
                 {% if payment.refundable %}
-                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}">{{ 'payment.label.refund'|trans }}</a>
+                    <a class="btn btn-sm btn-warning" href="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</a>
                 {% endif %}
                 {% if payment.altapayId %}
-                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank">{{ 'payment.label.open_in_altapay'|trans }}</a>
+                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> {{ 'payment.label.open_in_altapay'|trans }}</a>
                 {% endif %}
             </td>
         </tr>

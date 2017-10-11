@@ -35,6 +35,7 @@ class AppKernel extends Kernel
             // ...
 
             new Loevgaard\DandomainAltapayBundle\LoevgaardDandomainAltapayBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
         );
 

@@ -1,3 +1,8 @@
+loevgaard_dandomain_altapay_api:
+    type: rest
+    resource: "@LoevgaardDandomainAltapayBundle/Controller/ApiController.php"
+    prefix: /api
+
 loevgaard_dandomain_altapay:
     resource: "@LoevgaardDandomainAltapayBundle/Controller/"
     type: annotation
