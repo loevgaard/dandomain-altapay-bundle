@@ -1,0 +1,36 @@
+{% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
+
+<!-- Refund modal -->
+<div class="modal fade" id="modal-refund" tabindex="-1" role="dialog" aria-labelledby="refundModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="" method="get">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="refund-modal-label">{{ 'payment.modal.refund.title'|trans }}</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="number" name="amount" class="amount form-control" min="0" step="0.01">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'layout.cancel'|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'payment.modal.refund.submit'|trans }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.btn-refund').on('click', function () {
+            var $this = $(this);
+
+            var $modal = $('#modal-refund');
+            $modal.find('form').attr('action', $this.data('form-action'));
+            $modal.find('input.amount').val($this.data('refundable-amount'));
+
+            $modal.modal();
+        });
+    });
+</script>

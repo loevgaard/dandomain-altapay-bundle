@@ -2,7 +2,6 @@
 
 namespace Loevgaard\DandomainAltapayBundle\DependencyInjection;
 
-use Assert\Assert;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -39,7 +38,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->validate()
                         ->ifTrue(function ($v) {
-                            return filter_var($v, FILTER_VALIDATE_URL) === false;
+                            return false === filter_var($v, FILTER_VALIDATE_URL);
                         })
                         ->thenInvalid('The URL is invalid')
                     ->end()

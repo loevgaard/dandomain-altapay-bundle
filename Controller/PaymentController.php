@@ -2,12 +2,6 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
-use Loevgaard\AltaPay\Payload\CaptureReservation as CaptureReservationPayload;
-use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
-use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
-use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
-use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
-use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReservationPayload;
 use Loevgaard\Dandomain\Pay\Handler;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
@@ -15,29 +9,32 @@ use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
 use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Exception\TerminalNotFoundException;
+use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
+use Loevgaard\DandomainAltapayBundle\PayloadGenerator\PaymentRequestPayloadGenerator;
+use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
+use Loevgaard\DandomainAltapayBundle\Translation\TranslatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/payment")
  */
 class PaymentController extends Controller
 {
+    use TranslatorTrait;
+    use DiactorosTrait;
+
     /**
      * @Method("GET")
      * @Route("", name="loevgaard_dandomain_altapay_payment_index")
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
 
@@ -53,15 +50,14 @@ class PaymentController extends Controller
      * @Method("GET")
      * @Route("/{paymentId}/show", name="loevgaard_dandomain_altapay_payment_show")
      *
-     * @param int     $paymentId
-     * @param Request $request
+     * @param int $paymentId
      *
      * @return Response
      */
-    public function showAction(int $paymentId, Request $request)
+    public function showAction(int $paymentId)
     {
         $payment = $this->getPaymentFromId($paymentId);
-        if(!$payment) {
+        if (!$payment) {
             throw $this->createNotFoundException('Payment with id `'.$paymentId.'` not found');
         }
 
@@ -81,21 +77,19 @@ class PaymentController extends Controller
      *
      * @LogHttpTransaction()
      *
-     * @param $terminal
+     * @param string  $terminal
      * @param Request $request
      *
      * @return RedirectResponse
      *
      * @throws PaymentException
      */
-    public function newAction($terminal, Request $request)
+    public function newAction(string $terminal, Request $request)
     {
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
         $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
 
-        // convert symfony request to PSR7 request
-        $psr7Factory = new DiactorosFactory();
-        $psrRequest = $psr7Factory->createRequest($request);
+        $psrRequest = $this->createPsrRequest($request);
 
         $handler = new Handler(
             $psrRequest,
@@ -110,84 +104,24 @@ class PaymentController extends Controller
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
-            // @todo fix translation
-            throw TerminalNotFoundException::create('Terminal `'.$terminal.'` does not exist', $request, $paymentEntity);
+            throw TerminalNotFoundException::create($this->trans('payment.exception.terminal_not_found', ['%terminal%' => $terminal]), $request, $paymentEntity);
         }
 
         if (!$handler->checksumMatches()) {
-            // @todo fix translation
-            throw ChecksumMismatchException::create('Checksum mismatch. Try again', $request, $paymentEntity);
+            throw ChecksumMismatchException::create($this->trans('payment.exception.checksum_mismatch'), $request, $paymentEntity);
         }
 
-        $paymentRequestPayload = new PaymentRequestPayload(
-            $terminalEntity->getTitle(),
-            $dandomainPaymentRequest->getOrderId(),
-            $dandomainPaymentRequest->getTotalAmount(),
-            $dandomainPaymentRequest->getCurrencySymbol()
-        );
-
-        foreach ($dandomainPaymentRequest->getPaymentLines() as $paymentLine) {
-            $orderLinePayload = new OrderLinePayload(
-                $paymentLine->getName(),
-                $paymentLine->getProductNumber(),
-                $paymentLine->getQuantity(),
-                $paymentLine->getPrice()
-            );
-            $orderLinePayload->setTaxPercent($paymentLine->getVat());
-
-            $paymentRequestPayload->addOrderLine($orderLinePayload);
-        }
-
-        $customerInfoPayload = new CustomerInfoPayload();
-        $customerNames = explode(' ', $dandomainPaymentRequest->getCustomerName(), 2);
-        $shippingNames = explode(' ', $dandomainPaymentRequest->getDeliveryName(), 2);
-        $customerInfoPayload
-            ->setBillingFirstName($customerNames[0] ?? '')
-            ->setBillingLastName($customerNames[1] ?? '')
-            ->setBillingAddress(
-                $dandomainPaymentRequest->getCustomerAddress().
-                ($dandomainPaymentRequest->getCustomerAddress2() ? "\r\n".$dandomainPaymentRequest->getCustomerAddress2() : '')
-            )
-            ->setBillingPostal($dandomainPaymentRequest->getCustomerZipCode())
-            ->setBillingCity($dandomainPaymentRequest->getCustomerCity())
-            ->setBillingCountry($dandomainPaymentRequest->getCustomerCountry())
-            ->setShippingFirstName($shippingNames[0] ?? '')
-            ->setShippingLastName($shippingNames[1] ?? '')
-            ->setShippingAddress(
-                $dandomainPaymentRequest->getDeliveryAddress().
-                ($dandomainPaymentRequest->getDeliveryAddress2() ? "\r\n".$dandomainPaymentRequest->getDeliveryAddress2() : '')
-            )
-            ->setShippingPostal($dandomainPaymentRequest->getDeliveryZipCode())
-            ->setShippingCity($dandomainPaymentRequest->getDeliveryCity())
-            ->setShippingCountry($dandomainPaymentRequest->getDeliveryCountry())
-        ;
-        $paymentRequestPayload->setCustomerInfo($customerInfoPayload);
-
-        $configPayload = new ConfigPayload();
-        $configPayload
-            ->setCallbackForm($this->generateUrl('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setCallbackOk($this->generateUrl('loevgaard_dandomain_altapay_callback_ok', [], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setCallbackFail($this->generateUrl('loevgaard_dandomain_altapay_callback_fail', [], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setCallbackRedirect($this->generateUrl('loevgaard_dandomain_altapay_callback_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setCallbackOpen($this->generateUrl('loevgaard_dandomain_altapay_callback_open', [], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setCallbackNotification($this->generateUrl('loevgaard_dandomain_altapay_callback_notification', [], UrlGeneratorInterface::ABSOLUTE_URL))
-        ;
-        $paymentRequestPayload->setConfig($configPayload);
-
-        $paymentRequestPayload
-            ->setCookiePart($this->getParameter('loevgaard_dandomain_altapay.cookie_payment_id'), $paymentEntity->getId())
-            ->setCookiePart($this->getParameter('loevgaard_dandomain_altapay.cookie_checksum_complete'), $handler->getChecksum2())
-        ;
+        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $dandomainPaymentRequest, $terminalEntity, $paymentEntity, $handler);
+        $paymentRequestPayload = $paymentRequestPayloadGenerator->generate();
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
         if (!$response->isSuccessful()) {
-            // @todo fix translation
-            throw AltapayPaymentRequestException::create('An error occured during payment request. Try again. Message from gateway: '.$response->getErrorMessage(), $request, $paymentEntity);
+            throw AltapayPaymentRequestException::create($this->trans('payment.exception.altapay_payment_request', ['%gateway_message%' => $response->getErrorMessage()]), $request, $paymentEntity);
         }
 
-        return new RedirectResponse($response->getUrl());
+        return $this->redirect($response->getUrl());
     }
 
     /**
@@ -204,10 +138,8 @@ class PaymentController extends Controller
         $payment = $this->getPaymentFromId($paymentId);
 
         if ($payment) {
-            $altapayClient = $this->get('loevgaard_dandomain_altapay.altapay_client');
-
-            $payload = new CaptureReservationPayload($payment->getAltapayId());
-            $res = $altapayClient->captureReservation($payload);
+            $paymentHandler = $this->getPaymentHandler();
+            $res = $paymentHandler->capture($payment, $request->query->get('amount'));
 
             if ($res->isSuccessful()) {
                 $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was captured.'); // @todo fix translation
@@ -235,10 +167,8 @@ class PaymentController extends Controller
         $payment = $this->getPaymentFromId($paymentId);
 
         if ($payment) {
-            $altapayClient = $this->get('loevgaard_dandomain_altapay.altapay_client');
-
-            $payload = new RefundCapturedReservationPayload($payment->getAltapayId());
-            $res = $altapayClient->refundCapturedReservation($payload);
+            $paymentHandler = $this->getPaymentHandler();
+            $res = $paymentHandler->refund($payment, null, $request->query->get('amount'));
 
             if ($res->isSuccessful()) {
                 $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was refunded.'); // @todo fix translation
@@ -247,7 +177,7 @@ class PaymentController extends Controller
             }
         }
 
-        $redirect = $request->headers->get('referer') ? : $this->generateUrl('loevgaard_dandomain_altapay_payment_index');
+        $redirect = $request->headers->get('referer') ?: $this->generateUrl('loevgaard_dandomain_altapay_payment_index');
 
         return $this->redirect($redirect);
     }
@@ -265,7 +195,6 @@ class PaymentController extends Controller
     {
         $payment = $this->getPaymentFromId($paymentId);
 
-        // @todo the host should be fetched from parameters.yml
         $url = $this->getParameter('loevgaard_dandomain_altapay.altapay_url').'/merchant/transactions/paymentDetails/'.$payment->getAltapayId();
 
         return $this->redirect($url);
@@ -283,10 +212,18 @@ class PaymentController extends Controller
         /** @var Payment $payment */
         $payment = $paymentManager->getRepository()->find($paymentId);
 
-        if(!$payment) {
+        if (!$payment) {
             throw $this->createNotFoundException('Payment with id `'.$paymentId.'` not found');
         }
 
         return $payment;
+    }
+
+    /**
+     * @return PaymentHandler
+     */
+    private function getPaymentHandler(): PaymentHandler
+    {
+        return $this->get('loevgaard_dandomain_altapay.payment_handler');
     }
 }

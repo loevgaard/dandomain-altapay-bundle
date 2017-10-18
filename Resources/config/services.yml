@@ -78,6 +78,17 @@ services:
             - "@loevgaard_dandomain_altapay.terminal_manager"
             - "@loevgaard_dandomain_altapay.altapay_client"
 
+    loevgaard_dandomain_altapay.payment_handler:
+        class: Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler
+        arguments:
+            - "@loevgaard_dandomain_altapay.altapay_client"
+            - "@loevgaard_dandomain_altapay.payment_manager"
+
+    loevgaard_dandomain_altapay.payment_request_converter:
+        class: Loevgaard\DandomainAltapayBundle\Converter\PaymentRequestPayloadGenerator
+        calls:
+            - [setContainer, ["@service_container"]]
+
     loevgaard_dandomain_altapay.sync_terminals_command:
         class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand
         tags: [console.command]

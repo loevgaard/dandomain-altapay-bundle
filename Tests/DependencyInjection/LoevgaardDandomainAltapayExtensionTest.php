@@ -107,6 +107,7 @@ class LoevgaardDandomainAltapayExtensionTest extends TestCase
         $yaml = <<<EOF
 altapay_username: username
 altapay_password: password
+altapay_url: https://altapayurl.com
 altapay_ips: ['123.123.123.123']
 shared_key_1: key1
 shared_key_2: key2

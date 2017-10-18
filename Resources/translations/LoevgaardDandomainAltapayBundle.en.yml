@@ -6,22 +6,112 @@ callback:
         heading: Your payment succeeded
     fail:
         error: An error occurred
+    open:
+        heading: Your payment is open
 
 payment:
     index:
         heading: Payments
+
     show:
         heading: Payment
+        test_mode: Test
+        fraud_risk_score: Fraud risk score
+        actions:
+            heading: Actions
+        data:
+            heading: Payment data
+            total_amount: Total amount
+            capturable_amount: Capturable amount
+            refundable_amount: Refundable amount
+            reserved_amount: Reserved amount
+            captured_amount: Captured amount
+            refunded_amount: Refunded amount
+            created: Created
+        customer_info:
+            heading: Customer information
+            customer_name: Name
+            customer_company: Company
+            customer_address: Address
+            customer_address2: Address 2
+            customer_zip_code: Zip Code
+            customer_city: City
+            customer_country: Country
+            customer_phone: Phone
+            customer_email: Email
+            customer_fax: Fax
+            customer_cvr: CVR
+            customer_ean: EAN
+            customer_res1: Reserved field 1
+            customer_res2: Reserved field 2
+            customer_res3: Reserved field 3
+            customer_res4: Reserved field 4
+            customer_res5: Reserved field 5
+            customer_ip: IP
+        delivery_info:
+            heading: Delivery information
+            delivery_name: Name
+            delivery_company: Company
+            delivery_address: Address
+            delivery_address2: Address 2
+            delivery_zip_code: Zip Code
+            delivery_city: City
+            delivery_country: Country
+            delivery_phone: Phone
+            delivery_email: Email
+            delivery_fax: Fax
+            delivery_ean: EAN
+        payment_info:
+            heading: Payment information
+            payment_method: Method
+            payment_fee: Fee
+            payment_nature: Nature
+        shipping_info:
+            heading: Shipping information
+            shipping_method: Method
+            shipping_fee: Fee
+            shipping_nature: Nature
+        payment_lines:
+            heading: Payment lines
+            quantity: Quantity
+            product_number: Product number
+            name: Name
+            vat: VAT
+            price: Price
+        developer_info:
+            heading: Developer information
+
     label:
         id: Id
-        altapay_id: Altapay id
         order_id: Order id
         customer_name: Customer
         customer_email: Customer email
+        customer_phone: Customer phone
         total: Total
+        refunded_amount: Refunded amount
         capture: Capture
         refund: Refund
         open_in_altapay: Open in Altapay
+
+    modal:
+        refund:
+            title: Refund payment
+            submit: Refund
+
+    exception:
+        terminal_not_found: "Terminal '%terminal%' does not exist"
+        checksum_mismatch: Checksum mismatch. Try again
+        altapay_payment_request: "An error occured during payment request. Try again. Message from gateway: %gateway_message%"
+
+terminal:
+    index:
+        heading: Terminals
+    label:
+        id: Id
+        title: Title
+        url: URL
+        country: Country
+        currencies: Currencies
 
 error:
     heading: An error occurred
@@ -31,3 +121,4 @@ error:
 layout:
     actions: Actions
     show: Show
+    cancel: Cancel

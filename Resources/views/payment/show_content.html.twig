@@ -1,100 +1,193 @@
 {% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
 
-<h1>{{ 'payment.show.heading'|trans }}</h1>
+{%
+set customer_fields = [
+{label : 'payment.show.customer_info.customer_name'|trans, getter : 'customerName'},
+{label : 'payment.show.customer_info.customer_company'|trans, getter : 'customerCompany'},
+{label : 'payment.show.customer_info.customer_address'|trans, getter : 'customerAddress'},
+{label : 'payment.show.customer_info.customer_address2'|trans, getter : 'customerAddress2'},
+{label : 'payment.show.customer_info.customer_zip_code'|trans, getter : 'customerZipCode'},
+{label : 'payment.show.customer_info.customer_city'|trans, getter : 'customerCity'},
+{label : 'payment.show.customer_info.customer_country'|trans, getter : 'customerCountry'},
+{label : 'payment.show.customer_info.customer_phone'|trans, getter : 'customerPhone'},
+{label : 'payment.show.customer_info.customer_email'|trans, getter : 'customerEmail', type : 'email'},
+{label : 'payment.show.customer_info.customer_fax'|trans, getter : 'customerFax'},
+{label : 'payment.show.customer_info.customer_cvr'|trans, getter : 'customerCvrnr'},
+{label : 'payment.show.customer_info.customer_ean'|trans, getter : 'customerEan'},
+{label : 'payment.show.customer_info.customer_res1'|trans, getter : 'customerRes1'},
+{label : 'payment.show.customer_info.customer_res2'|trans, getter : 'customerRes2'},
+{label : 'payment.show.customer_info.customer_res3'|trans, getter : 'customerRes3'},
+{label : 'payment.show.customer_info.customer_res4'|trans, getter : 'customerRes4'},
+{label : 'payment.show.customer_info.customer_res5'|trans, getter : 'customerRes5'},
+{label : 'payment.show.customer_info.customer_ip'|trans, getter : 'customerIp'}
+]
+%}
 
-apiKey: {{ payment.apiKey }}<br>
-merchant: {{ payment.merchant }}<br>
-orderId: {{ payment.orderId }}<br>
-sessionId: {{ payment.sessionId }}<br>
-currencySymbol: {{ payment.currencySymbol }}<br>
-totalAmount: {{ payment.totalAmount }}<br>
-callBackUrl: {{ payment.callBackUrl }}<br>
-fullCallBackOkUrl: {{ payment.fullCallBackOkUrl }}<br>
-callBackOkUrl: {{ payment.callBackOkUrl }}<br>
-callBackServerUrl: {{ payment.callBackServerUrl }}<br>
-languageId: {{ payment.languageId }}<br>
-testMode: {{ payment.testMode }}<br>
-paymentGatewayCurrencyCode: {{ payment.paymentGatewayCurrencyCode }}<br>
-cardTypeId: {{ payment.cardTypeId }}<br>
-customerRekvNr: {{ payment.customerRekvNr }}<br>
-customerName: {{ payment.customerName }}<br>
-customerCompany: {{ payment.customerCompany }}<br>
-customerAddress: {{ payment.customerAddress }}<br>
-customerAddress2: {{ payment.customerAddress2 }}<br>
-customerZipCode: {{ payment.customerZipCode }}<br>
-customerCity: {{ payment.customerCity }}<br>
-customerCountryId: {{ payment.customerCountryId }}<br>
-customerCountry: {{ payment.customerCountry }}<br>
-customerPhone: {{ payment.customerPhone }}<br>
-customerFax: {{ payment.customerFax }}<br>
-customerEmail: {{ payment.customerEmail }}<br>
-customerNote: {{ payment.customerNote }}<br>
-customerCvrnr: {{ payment.customerCvrnr }}<br>
-customerCustTypeId: {{ payment.customerCustTypeId }}<br>
-customerEan: {{ payment.customerEan }}<br>
-customerRes1: {{ payment.customerRes1 }}<br>
-customerRes2: {{ payment.customerRes2 }}<br>
-customerRes3: {{ payment.customerRes3 }}<br>
-customerRes4: {{ payment.customerRes4 }}<br>
-customerRes5: {{ payment.customerRes5 }}<br>
-customerIp: {{ payment.customerIp }}<br>
-deliveryName: {{ payment.deliveryName }}<br>
-deliveryCompany: {{ payment.deliveryCompany }}<br>
-deliveryAddress: {{ payment.deliveryAddress }}<br>
-deliveryAddress2: {{ payment.deliveryAddress2 }}<br>
-deliveryZipCode: {{ payment.deliveryZipCode }}<br>
-deliveryCity: {{ payment.deliveryCity }}<br>
-deliveryCountryID: {{ payment.deliveryCountryID }}<br>
-deliveryCountry: {{ payment.deliveryCountry }}<br>
-deliveryPhone: {{ payment.deliveryPhone }}<br>
-deliveryFax: {{ payment.deliveryFax }}<br>
-deliveryEmail: {{ payment.deliveryEmail }}<br>
-deliveryEan: {{ payment.deliveryEan }}<br>
-shippingMethod: {{ payment.shippingMethod }}<br>
-shippingFee: {{ payment.shippingFee }}<br>
-paymentMethod: {{ payment.paymentMethod }}<br>
-paymentFee: {{ payment.paymentFee }}<br>
-loadBalancerRealIp: {{ payment.loadBalancerRealIp }}<br>
-referrer: {{ payment.referrer }}<br>
-altapayId: {{ payment.altapayId }}<br>
-cardStatus: {{ payment.cardStatus }}<br>
-creditCardToken: {{ payment.creditCardToken }}<br>
-creditCardMaskedPan: {{ payment.creditCardMaskedPan }}<br>
-threeDSecureResult: {{ payment.threeDSecureResult }}<br>
-liableForChargeback: {{ payment.liableForChargeback }}<br>
-blacklistToken: {{ payment.blacklistToken }}<br>
-shop: {{ payment.shop }}<br>
-terminal: {{ payment.terminal }}<br>
-transactionStatus: {{ payment.transactionStatus }}<br>
-reasonCode: {{ payment.reasonCode }}<br>
-merchantCurrency: {{ payment.merchantCurrency }}<br>
-merchantCurrencyAlpha: {{ payment.merchantCurrencyAlpha }}<br>
-cardHolderCurrency: {{ payment.cardHolderCurrency }}<br>
-cardHolderCurrencyAlpha: {{ payment.cardHolderCurrencyAlpha }}<br>
-reservedAmount: {{ payment.reservedAmount }}<br>
-capturedAmount: {{ payment.capturedAmount }}<br>
-refundedAmount: {{ payment.refundedAmount }}<br>
-recurringDefaultAmount: {{ payment.recurringDefaultAmount }}<br>
-createdDate: {{ payment.createdDate|date }}<br>
-updatedDate: {{ payment.updatedDate|date }}<br>
-paymentNature: {{ payment.paymentNature }}<br>
-supportsRefunds: {{ payment.supportsRefunds }}<br>
-supportsRelease: {{ payment.supportsRelease }}<br>
-supportsMultipleCaptures: {{ payment.supportsMultipleCaptures }}<br>
-supportsMultipleRefunds: {{ payment.supportsMultipleRefunds }}<br>
-fraudRiskScore: {{ payment.fraudRiskScore }}<br>
-fraudExplanation: {{ payment.fraudExplanation }}<br>
-<table class="table table-bordered table-hover">
-    <thead>
+{%
+set delivery_fields = [
+{label : 'payment.show.delivery_info.delivery_name'|trans, getter : 'deliveryName'},
+{label : 'payment.show.delivery_info.delivery_company'|trans, getter : 'deliveryCompany'},
+{label : 'payment.show.delivery_info.delivery_address'|trans, getter : 'deliveryAddress'},
+{label : 'payment.show.delivery_info.delivery_address2'|trans, getter : 'deliveryAddress2'},
+{label : 'payment.show.delivery_info.delivery_zip_code'|trans, getter : 'deliveryZipCode'},
+{label : 'payment.show.delivery_info.delivery_city'|trans, getter : 'deliveryCity'},
+{label : 'payment.show.delivery_info.delivery_country'|trans, getter : 'deliveryCountry'},
+{label : 'payment.show.delivery_info.delivery_phone'|trans, getter : 'deliveryPhone'},
+{label : 'payment.show.delivery_info.delivery_email'|trans, getter : 'deliveryEmail', type : 'email'},
+{label : 'payment.show.delivery_info.delivery_fax'|trans, getter : 'deliveryFax'},
+{label : 'payment.show.delivery_info.delivery_ean'|trans, getter : 'deliveryEan'},
+]
+%}
+
+<h1>
+    {{ 'payment.show.heading'|trans }}
+    {% if payment.testMode %}
+        <span class="label label-danger">{{ 'payment.show.test_mode'|trans }}</span>
+    {% endif %}
+</h1>
+
+{% if payment.fraudRiskScore > 0 %}
+    <div class="alert alert-warning">
+        <strong>{{ 'payment.show.fraud_risk_score'|trans }}: {{ payment.fraudRiskScore }}</strong>
+        {{ payment.fraudExplanation}}
+    </div>
+{% endif %}
+
+<div>
+    <h2>{{ 'payment.show.actions.heading'|trans }}</h2>
+    {% if payment.captureable %}
+        <a class="btn btn-success" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-download"></span> {{ 'payment.label.capture'|trans }}</a>
+    {% endif %}
+    {% if payment.refundable %}
+        <button class="btn btn-warning btn-refund" data-refundable-amount="{{ payment.refundableAmount }}" data-form-action="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</button>
+    {% endif %}
+    {% if payment.altapayId %}
+        <a class="btn btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> {{ 'payment.label.open_in_altapay'|trans }}</a>
+    {% endif %}
+</div>
+
+<div>
+    <h2>{{ 'payment.show.data.heading'|trans }}</h2>
+    <table class="table table-bordered table-hover">
         <tr>
-            <th>Quantity</th>
-            <th>Product number</th>
-            <th>Name</th>
-            <th>VAT</th>
-            <th>Price</th>
+            <td>{{ 'payment.show.data.total_amount'|trans }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.totalAmount }}</td>
         </tr>
-    </thead>
-    <tbody>
+        <tr>
+            <td>{{ 'payment.show.data.capturable_amount'|trans }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.capturableAmount }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'payment.show.data.refundable_amount'|trans }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.refundableAmount }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'payment.show.data.reserved_amount'|trans }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.reservedAmount }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'payment.show.data.captured_amount'|trans }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.capturedAmount }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'payment.show.data.refunded_amount'|trans }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.refundedAmount }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'payment.show.data.created'|trans }}</td>
+            <td>{{ payment.createdDate|date }}</td>
+        </tr>
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>{{ 'payment.show.customer_info.heading'|trans }}</h2>
+        <table class="table table-hover table-bordered">
+            {% for item in customer_fields %}
+                {% if attribute(payment, item.getter) is not empty %}
+                    <tr>
+                        <td>{{ item.label }}</td>
+                        <td>
+                            {% if attribute(item, 'type') is defined and attribute(item, 'type') == 'email' %}
+                                <a href="mailto:{{ attribute(payment, item.getter) }}">{{ attribute(payment, item.getter) }}</a>
+                            {% else %}
+                                {{ attribute(payment, item.getter) }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h2>{{ 'payment.show.delivery_info.heading'|trans }}</h2>
+        <table class="table table-hover table-bordered">
+            {% for item in delivery_fields %}
+                {% if attribute(payment, item.getter) is not empty %}
+                    <tr>
+                        <td>{{ item.label }}</td>
+                        <td>
+                            {% if attribute(item, 'type') is defined and attribute(item, 'type') == 'email' %}
+                                <a href="mailto:{{ attribute(payment, item.getter) }}">{{ attribute(payment, item.getter) }}</a>
+                            {% else %}
+                                {{ attribute(payment, item.getter) }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>{{ 'payment.show.payment_info.heading'|trans }}</h2>
+        <table class="table table-hover table-bordered">
+            <tr>
+                <td>{{ ('payment.show.payment_info.payment_method')|trans }}</td>
+                <td>{{ payment.paymentMethod }}</td>
+            </tr>
+            {% if payment.paymentFee %}
+                <tr>
+                    <td>{{ ('payment.show.payment_info.payment_fee')|trans }}</td>
+                    <td>{{ payment.currencySymbol }} {{ payment.paymentFee }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>{{ ('payment.show.payment_info.payment_nature')|trans }}</td>
+                <td>{{ payment.paymentNature }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h2>{{ 'payment.show.shipping_info.heading'|trans }}</h2>
+        <table class="table table-hover table-bordered">
+            <tr>
+                <td>{{ ('payment.show.shipping_info.shipping_method')|trans }}</td>
+                <td>{{ payment.shippingMethod }}</td>
+            </tr>
+            {% if payment.shippingFee %}
+                <tr>
+                    <td>{{ ('payment.show.shipping_info.shipping_fee')|trans }}</td>
+                    <td>{{ payment.currencySymbol }} {{ payment.shippingFee }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+<div>
+    <h2>{{ 'payment.show.payment_lines.heading'|trans }}</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>{{ 'payment.show.payment_lines.quantity'|trans }}</th>
+            <th>{{ 'payment.show.payment_lines.product_number'|trans }}</th>
+            <th>{{ 'payment.show.payment_lines.name'|trans }}</th>
+            <th>{{ 'payment.show.payment_lines.vat'|trans }}</th>
+            <th>{{ 'payment.show.payment_lines.price'|trans }}</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for paymentLine in payment.paymentLines %}
             <tr>
                 <td>{{ paymentLine.quantity }}</td>
@@ -104,5 +197,106 @@ fraudExplanation: {{ payment.fraudExplanation }}<br>
                 <td>{{ paymentLine.price }}</td>
             </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    {{ 'payment.show.developer_info.heading'|trans }}
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                apiKey: {{ payment.apiKey }}<br>
+                merchant: {{ payment.merchant }}<br>
+                orderId: {{ payment.orderId }}<br>
+                sessionId: {{ payment.sessionId }}<br>
+                currencySymbol: {{ payment.currencySymbol }}<br>
+                totalAmount: {{ payment.totalAmount }}<br>
+                callBackUrl: {{ payment.callBackUrl }}<br>
+                fullCallBackOkUrl: {{ payment.fullCallBackOkUrl }}<br>
+                callBackOkUrl: {{ payment.callBackOkUrl }}<br>
+                callBackServerUrl: {{ payment.callBackServerUrl }}<br>
+                languageId: {{ payment.languageId }}<br>
+                testMode: {{ payment.testMode }}<br>
+                paymentGatewayCurrencyCode: {{ payment.paymentGatewayCurrencyCode }}<br>
+                cardTypeId: {{ payment.cardTypeId }}<br>
+                customerRekvNr: {{ payment.customerRekvNr }}<br>
+                customerName: {{ payment.customerName }}<br>
+                customerCompany: {{ payment.customerCompany }}<br>
+                customerAddress: {{ payment.customerAddress }}<br>
+                customerAddress2: {{ payment.customerAddress2 }}<br>
+                customerZipCode: {{ payment.customerZipCode }}<br>
+                customerCity: {{ payment.customerCity }}<br>
+                customerCountryId: {{ payment.customerCountryId }}<br>
+                customerCountry: {{ payment.customerCountry }}<br>
+                customerPhone: {{ payment.customerPhone }}<br>
+                customerFax: {{ payment.customerFax }}<br>
+                customerEmail: {{ payment.customerEmail }}<br>
+                customerNote: {{ payment.customerNote }}<br>
+                customerCvrnr: {{ payment.customerCvrnr }}<br>
+                customerCustTypeId: {{ payment.customerCustTypeId }}<br>
+                customerEan: {{ payment.customerEan }}<br>
+                customerRes1: {{ payment.customerRes1 }}<br>
+                customerRes2: {{ payment.customerRes2 }}<br>
+                customerRes3: {{ payment.customerRes3 }}<br>
+                customerRes4: {{ payment.customerRes4 }}<br>
+                customerRes5: {{ payment.customerRes5 }}<br>
+                customerIp: {{ payment.customerIp }}<br>
+                deliveryName: {{ payment.deliveryName }}<br>
+                deliveryCompany: {{ payment.deliveryCompany }}<br>
+                deliveryAddress: {{ payment.deliveryAddress }}<br>
+                deliveryAddress2: {{ payment.deliveryAddress2 }}<br>
+                deliveryZipCode: {{ payment.deliveryZipCode }}<br>
+                deliveryCity: {{ payment.deliveryCity }}<br>
+                deliveryCountryID: {{ payment.deliveryCountryID }}<br>
+                deliveryCountry: {{ payment.deliveryCountry }}<br>
+                deliveryPhone: {{ payment.deliveryPhone }}<br>
+                deliveryFax: {{ payment.deliveryFax }}<br>
+                deliveryEmail: {{ payment.deliveryEmail }}<br>
+                deliveryEan: {{ payment.deliveryEan }}<br>
+                shippingMethod: {{ payment.shippingMethod }}<br>
+                shippingFee: {{ payment.shippingFee }}<br>
+                paymentMethod: {{ payment.paymentMethod }}<br>
+                paymentFee: {{ payment.paymentFee }}<br>
+                loadBalancerRealIp: {{ payment.loadBalancerRealIp }}<br>
+                referrer: {{ payment.referrer }}<br>
+                altapayId: {{ payment.altapayId }}<br>
+                cardStatus: {{ payment.cardStatus }}<br>
+                creditCardToken: {{ payment.creditCardToken }}<br>
+                creditCardMaskedPan: {{ payment.creditCardMaskedPan }}<br>
+                threeDSecureResult: {{ payment.threeDSecureResult }}<br>
+                liableForChargeback: {{ payment.liableForChargeback }}<br>
+                blacklistToken: {{ payment.blacklistToken }}<br>
+                shop: {{ payment.shop }}<br>
+                terminal: {{ payment.terminal }}<br>
+                transactionStatus: {{ payment.transactionStatus }}<br>
+                reasonCode: {{ payment.reasonCode }}<br>
+                merchantCurrency: {{ payment.merchantCurrency }}<br>
+                merchantCurrencyAlpha: {{ payment.merchantCurrencyAlpha }}<br>
+                cardHolderCurrency: {{ payment.cardHolderCurrency }}<br>
+                cardHolderCurrencyAlpha: {{ payment.cardHolderCurrencyAlpha }}<br>
+                reservedAmount: {{ payment.reservedAmount }}<br>
+                capturedAmount: {{ payment.capturedAmount }}<br>
+                refundedAmount: {{ payment.refundedAmount }}<br>
+                recurringDefaultAmount: {{ payment.recurringDefaultAmount }}<br>
+                createdDate: {{ payment.createdDate|date }}<br>
+                updatedDate: {{ payment.updatedDate|date }}<br>
+                paymentNature: {{ payment.paymentNature }}<br>
+                supportsRefunds: {{ payment.supportsRefunds }}<br>
+                supportsRelease: {{ payment.supportsRelease }}<br>
+                supportsMultipleCaptures: {{ payment.supportsMultipleCaptures }}<br>
+                supportsMultipleRefunds: {{ payment.supportsMultipleRefunds }}<br>
+                fraudRiskScore: {{ payment.fraudRiskScore }}<br>
+                fraudExplanation: {{ payment.fraudExplanation }}<br>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "@LoevgaardDandomainAltapay/payment/partial/modal_refund.html.twig" %}

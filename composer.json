@@ -24,6 +24,7 @@
         "symfony/form": "^3.0",
         "symfony/framework-bundle": "^3.0",
         "symfony/psr-http-message-bridge": "~1.0",
+        "symfony/translation": "^3.0",
         "symfony/yaml": "^3.0",
         "zendframework/zend-diactoros": "~1.0"
     },

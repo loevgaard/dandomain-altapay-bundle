@@ -6,11 +6,12 @@
     <thead>
         <tr>
             <th>{{ 'payment.label.id'|trans }}</th>
-            <th>{{ 'payment.label.altapay_id'|trans }}</th>
             <th>{{ 'payment.label.order_id'|trans }}</th>
             <th>{{ 'payment.label.customer_name'|trans }}</th>
             <th>{{ 'payment.label.customer_email'|trans }}</th>
+            <th>{{ 'payment.label.customer_phone'|trans }}</th>
             <th>{{ 'payment.label.total'|trans }}</th>
+            <th>{{ 'payment.label.refunded_amount'|trans }}</th>
             <th>{{ 'layout.actions'|trans }}</th>
         </tr>
     </thead>
@@ -18,18 +19,19 @@
         {% for payment in payments %}
         <tr>
             <td>{{ payment.id }}</td>
-            <td>{{ payment.altapayId }}</td>
             <td>{{ payment.orderId }}</td>
             <td>{{ payment.customerName }}</td>
-            <td>{{ payment.customerEmail }}</td>
+            <td><a href="mailto:{{ payment.customerEmail }}">{{ payment.customerEmail }}</a></td>
+            <td>{{ payment.customerPhone }}</td>
             <td>{{ payment.currencySymbol }} {{ payment.totalAmount }}</td>
+            <td>{{ payment.currencySymbol }} {{ payment.refundedAmount }}</td>
             <td nowrap>
                 <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_show', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
                 {% if payment.captureable %}
                     <a class="btn btn-sm btn-success" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-download"></span> {{ 'payment.label.capture'|trans }}</a>
                 {% endif %}
                 {% if payment.refundable %}
-                    <a class="btn btn-sm btn-warning" href="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</a>
+                    <button class="btn btn-sm btn-warning btn-refund" data-refundable-amount="{{ payment.refundableAmount }}" data-form-action="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</button>
                 {% endif %}
                 {% if payment.altapayId %}
                     <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> {{ 'payment.label.open_in_altapay'|trans }}</a>
@@ -39,3 +41,5 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% include "@LoevgaardDandomainAltapay/payment/partial/modal_refund.html.twig" %}

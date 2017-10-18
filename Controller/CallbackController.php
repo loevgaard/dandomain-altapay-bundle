@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,13 +50,18 @@ class CallbackController extends Controller
      *
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function okAction(Request $request)
     {
         $payment = $this->handleCallback($request);
 
-        return $this->render('@LoevgaardDandomainAltapay/callback/ok.html.twig');
+        $url = $payment->getFullCallBackOkUrl()
+            .'&PayApiCompleteOrderChecksum='.$request->cookies->getAlnum(
+                $this->getParameter('loevgaard_dandomain_altapay.cookie_checksum_complete')
+            );
+
+        return $this->redirect($url);
     }
 
     /**

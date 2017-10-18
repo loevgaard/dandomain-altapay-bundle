@@ -4,36 +4,38 @@ namespace Loevgaard\DandomainAltapayBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
-use Loevgaard\AltaPay\Client;
-use Loevgaard\AltaPay\Payload\CaptureReservation;
-use Loevgaard\AltaPay\Payload\RefundCapturedReservation;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends FOSRestController
 {
     /**
-     * @Annotations\Get("/payment/{id}/capture")
+     * @Annotations\Get("/api/payment/{id}/capture")
      *
-     * @param string|int $id Can be both altapay id or order id
+     * @param Request    $request
+     * @param string|int $id      Can be both altapay id or order id
+     *
      * @return Response
      */
-    public function paymentCaptureAction($id)
+    public function paymentCaptureAction(Request $request, $id)
     {
-        $data = ['error' => false];
+        $data = [
+            'error' => false,
+            'captured_amount' => null,
+            'refunded_amount' => null,
+        ];
 
         $payment = $this->findPaymentByOrderIdOrAltapayId($id);
+        $paymentHandler = $this->getPaymentHandler();
+        $res = $paymentHandler->capture($payment, $request->query->get('amount'));
 
-        $altapay = $this->getAltapayClient();
-
-        $payload = new CaptureReservation($payment->getAltapayId());
-        $res = $altapay->captureReservation($payload);
-
-        if($res->isSuccessful()) {
+        if ($res->isSuccessful()) {
             $transactions = $res->getTransactions();
-            if(count($transactions)) {
+            if (count($transactions)) {
                 $data['captured_amount'] = $transactions[0]->getCapturedAmount();
+                $data['refunded_amount'] = $transactions[0]->getRefundedAmount();
             }
         } else {
             $data['error'] = true;
@@ -46,26 +48,29 @@ class ApiController extends FOSRestController
     }
 
     /**
-     * @Annotations\Post("/payment/{id}/refund")
+     * @Annotations\Post("/api/payment/{id}/refund")
      *
-     * @param Request $request
-     * @param string|int $id Can be both altapay id or order id
+     * @param Request    $request
+     * @param string|int $id      Can be both altapay id or order id
+     *
      * @return Response
      */
     public function paymentRefundAction(Request $request, $id)
     {
-        $data = ['error' => false];
+        $data = [
+            'error' => false,
+            'captured_amount' => null,
+            'refunded_amount' => null,
+        ];
 
         $payment = $this->findPaymentByOrderIdOrAltapayId($id);
+        $paymentHandler = $this->getPaymentHandler();
+        $res = $paymentHandler->refund($payment);
 
-        $altapay = $this->getAltapayClient();
-
-        $payload = new RefundCapturedReservation($payment->getAltapayId());
-        $res = $altapay->refundCapturedReservation($payload);
-
-        if($res->isSuccessful()) {
+        if ($res->isSuccessful()) {
             $transactions = $res->getTransactions();
-            if(count($transactions)) {
+            if (count($transactions)) {
+                $data['captured_amount'] = $transactions[0]->getCapturedAmount();
                 $data['refunded_amount'] = $transactions[0]->getRefundedAmount();
             }
         } else {
@@ -80,13 +85,14 @@ class ApiController extends FOSRestController
 
     /**
      * @param string|int $id
+     *
      * @return Payment
      */
-    protected function findPaymentByOrderIdOrAltapayId($id) : Payment
+    private function findPaymentByOrderIdOrAltapayId($id): Payment
     {
         $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
         $payment = $paymentManager->findByOrderIdOrAltapayId($id);
-        if(!$payment) {
+        if (!$payment) {
             throw $this->createNotFoundException();
         }
 
@@ -94,10 +100,10 @@ class ApiController extends FOSRestController
     }
 
     /**
-     * @return Client
+     * @return PaymentHandler
      */
-    protected function getAltapayClient() : Client
+    private function getPaymentHandler(): PaymentHandler
     {
-        return $this->get('loevgaard_dandomain_altapay.altapay_client');
+        return $this->get('loevgaard_dandomain_altapay.payment_handler');
     }
 }

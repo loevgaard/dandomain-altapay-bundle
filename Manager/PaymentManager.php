@@ -58,19 +58,20 @@ class PaymentManager extends Manager
 
     /**
      * @param $id
+     *
      * @return null|Payment
      */
     public function findByOrderIdOrAltapayId($id)
     {
         /** @var Payment $payment */
         $payment = $this->getRepository()->findOneBy([
-            'orderId' => $id
+            'orderId' => $id,
         ]);
 
-        if(!$payment) {
+        if (!$payment) {
             /** @var Payment $payment */
             $payment = $this->getRepository()->findOneBy([
-                'altapayId' => $id
+                'altapayId' => $id,
             ]);
         }
 

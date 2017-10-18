@@ -2,6 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
+use Brick\Math\BigDecimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Loevgaard\Dandomain\Pay\PaymentRequest;
@@ -415,28 +416,28 @@ abstract class Payment extends PaymentRequest
     /**
      * @var float|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      */
     protected $reservedAmount;
 
     /**
      * @var float|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      */
     protected $capturedAmount;
 
     /**
      * @var float|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      */
     protected $refundedAmount;
 
     /**
      * @var float|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      */
     protected $recurringDefaultAmount;
 
@@ -508,30 +509,67 @@ abstract class Payment extends PaymentRequest
         parent::__construct();
 
         $this->paymentLines = new ArrayCollection();
+        $this->reservedAmount = 0;
+        $this->capturedAmount = 0;
+        $this->refundedAmount = 0;
+        $this->recurringDefaultAmount = 0;
     }
 
     /**
      * Returns true if the payment can be captured.
      *
-     * @todo implement this method
-     *
      * @return bool
      */
     public function isCaptureable(): bool
     {
+        if ($this->capturableAmount() <= 0) {
+            return false;
+        }
+
+        if ($this->capturedAmount > 0 && !$this->supportsMultipleCaptures) {
+            return false;
+        }
+
         return true;
     }
 
     /**
      * Returns true if the payment can be refunded.
      *
-     * @todo implement this method
-     *
      * @return bool
      */
     public function isRefundable(): bool
     {
+        if ($this->refundableAmount() <= 0) {
+            return false;
+        }
+
+        if ($this->refundedAmount > 0 && !$this->supportsMultipleRefunds) {
+            return false;
+        }
+
         return true;
+    }
+
+    /**
+     * @return float
+     */
+    public function refundableAmount()
+    {
+        $capturedAmount = BigDecimal::of($this->capturedAmount);
+
+        return $capturedAmount->minus($this->refundedAmount)->toFloat();
+    }
+
+    /**
+     * @return float
+     */
+    public function capturableAmount()
+    {
+        $reservedAmount = BigDecimal::of($this->reservedAmount);
+        $realCapturedAmount = BigDecimal::of($this->capturedAmount)->minus($this->refundedAmount);
+
+        return $reservedAmount->minus($realCapturedAmount)->toFloat();
     }
 
     // @todo create type hints for getters and setters
