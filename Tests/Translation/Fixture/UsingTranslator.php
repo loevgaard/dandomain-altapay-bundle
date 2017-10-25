@@ -1,4 +1,5 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Tests\Translation\Fixture;
 
 use Loevgaard\DandomainAltapayBundle\Translation\TranslatorTrait;

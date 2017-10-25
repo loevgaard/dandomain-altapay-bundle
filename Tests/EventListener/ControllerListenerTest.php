@@ -2,11 +2,11 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\EventListener;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Loevgaard\DandomainAltapayBundle\EventListener\ControllerListener;
 use Loevgaard\DandomainAltapayBundle\Http\TransactionLogger;
 use Loevgaard\DandomainAltapayBundle\Tests\EventListener\Fixture\ControllerWithAnnotation;
 use PHPUnit\Framework\TestCase;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -55,14 +55,14 @@ class ControllerListenerTest extends TestCase
         $controller = new ControllerWithAnnotation();
         $event = $this->getFilterControllerEvent([$controller, 'foobarAction'], $this->request, HttpKernelInterface::SUB_REQUEST);
         $res = $this->listener->onKernelController($event);
-        $this->assertTrue($res === false);
+        $this->assertTrue(false === $res);
     }
 
     public function testControllerNotArray()
     {
-        $event = $this->getFilterControllerEvent(function() {}, $this->request);
+        $event = $this->getFilterControllerEvent(function () {}, $this->request);
         $res = $this->listener->onKernelController($event);
-        $this->assertTrue($res === false);
+        $this->assertTrue(false === $res);
     }
 
     public function testAnnotation()
@@ -73,9 +73,8 @@ class ControllerListenerTest extends TestCase
             ->expects($this->any())
             ->method('setRequest')
             ->willReturnCallback(function () use (&$calls) {
-                $calls++;
+                ++$calls;
             });
-        ;
 
         $controller = new ControllerWithAnnotation();
         $event = $this->getFilterControllerEvent([$controller, 'foobarAction'], $this->request);
@@ -86,7 +85,7 @@ class ControllerListenerTest extends TestCase
 
     protected function getFilterControllerEvent($controller, Request $request, int $requestType = HttpKernelInterface::MASTER_REQUEST)
     {
-        $mockKernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', array('', ''));
+        $mockKernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['', '']);
 
         return new FilterControllerEvent($mockKernel, $controller, $request, $requestType);
     }

@@ -14,7 +14,7 @@ trait TranslatorTrait
     /**
      * @return IdentityTranslator
      */
-    private function getTranslator() : IdentityTranslator
+    private function getTranslator(): IdentityTranslator
     {
         if (!$this->translator) {
             $this->translator = $this->container->get('translator');

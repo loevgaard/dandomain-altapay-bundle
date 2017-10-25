@@ -19,7 +19,7 @@ class ResponseListener
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if(!$event->isMasterRequest()) {
+        if (!$event->isMasterRequest()) {
             return false;
         }
 

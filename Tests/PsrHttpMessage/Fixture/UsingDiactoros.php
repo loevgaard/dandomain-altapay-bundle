@@ -1,4 +1,5 @@
 <?php
+
 namespace Loevgaard\DandomainAltapayBundle\Tests\PsrHttpMessage\Fixture;
 
 use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
@@ -11,6 +12,7 @@ class UsingDiactoros
 
     /**
      * @param Request $request
+     *
      * @return ServerRequestInterface
      */
     public function createIt(Request $request)

@@ -2,15 +2,15 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\EventListener;
 
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\EventListener\ExceptionListener;
 use Loevgaard\DandomainAltapayBundle\Exception\Exception;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 
 class ExceptionListenerTest extends TestCase
 {
@@ -37,10 +37,9 @@ class ExceptionListenerTest extends TestCase
         $this->engine
             ->expects($this->any())
             ->method('render')
-            ->willReturnCallback(function($template, $parameters) {
+            ->willReturnCallback(function ($template, $parameters) {
                 return 'response'.$parameters['redirect'];
             });
-        ;
 
         $this->listener = new ExceptionListener($this->engine);
         $this->request = new Request();
@@ -56,7 +55,7 @@ class ExceptionListenerTest extends TestCase
     {
         $event = $this->getGetResponseForExceptionEvent($this->request, new \Exception());
         $res = $this->listener->onKernelException($event);
-        $this->assertTrue($res === false);
+        $this->assertTrue(false === $res);
     }
 
     public function testNormalException()
@@ -96,7 +95,7 @@ class ExceptionListenerTest extends TestCase
 
     protected function getGetResponseForExceptionEvent(Request $request, \Exception $e)
     {
-        $mockKernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', array('', ''));
+        $mockKernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['', '']);
 
         return new GetResponseForExceptionEvent($mockKernel, $request, HttpKernelInterface::MASTER_REQUEST, $e);
     }

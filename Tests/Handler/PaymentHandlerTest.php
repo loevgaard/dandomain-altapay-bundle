@@ -3,8 +3,10 @@
 namespace Loevgaard\DandomainAltapayBundle\Tests\Handler;
 
 use Loevgaard\AltaPay\Client;
+use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\AltaPay\Payload\OrderLine;
 use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReservationPayload;
+use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
 use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
@@ -14,6 +16,31 @@ use PHPUnit\Framework\TestCase;
 
 final class PaymentHandlerTest extends TestCase
 {
+    public function testCapture()
+    {
+        $payment = $this->getPayment();
+        $payment->setAltapayId('altapayid');
+
+        $altapayClient = $this->getAltapayClient();
+        $altapayClient
+            ->method('captureReservation')
+            ->willReturnCallback(function () {
+                $response = $this->getMockBuilder(CaptureReservationResponse::class)
+                    ->disableOriginalConstructor()
+                    ->getMock()
+                ;
+                $response->method('isSuccessful')->willReturn(true);
+
+                return $response;
+            })
+        ;
+
+        $paymentHandler = $this->getPaymentHandler($altapayClient);
+        $res = $paymentHandler->capture($payment, 99.95);
+
+        $this->assertInstanceOf(CaptureReservationResponse::class, $res);
+    }
+
     public function testRefund1()
     {
         $amount = null;
@@ -65,6 +92,10 @@ final class PaymentHandlerTest extends TestCase
                     ->disableOriginalConstructor()
                     ->getMock()
                 ;
+                $response->method('isSuccessful')->willReturn(true);
+
+                $transaction = new Transaction();
+                $response->method('getTransactions')->willReturn([$transaction]);
 
                 return $response;
             })
@@ -106,7 +137,6 @@ final class PaymentHandlerTest extends TestCase
         $payment = $this->getPayment();
         $payment->setAltapayId('altapayid');
 
-        $paymentLines = [];
         /** @var PaymentLine|\PHPUnit_Framework_MockObject_MockObject $paymentLine */
         $paymentLine = $this->getMockForAbstractClass(PaymentLine::class);
         $paymentLine->setPrice(79.96)
@@ -156,7 +186,6 @@ final class PaymentHandlerTest extends TestCase
         $payment = $this->getPayment();
         $payment->setAltapayId('altapayid');
 
-        $paymentLines = [];
         /** @var PaymentLine|\PHPUnit_Framework_MockObject_MockObject $paymentLine */
         $paymentLine = $this->getMockForAbstractClass(PaymentLine::class);
         $paymentLine->setPrice(100)

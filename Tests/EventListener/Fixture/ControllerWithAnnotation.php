@@ -11,6 +11,5 @@ class ControllerWithAnnotation
      */
     public function foobarAction()
     {
-
     }
 }

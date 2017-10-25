@@ -10,9 +10,9 @@ use Loevgaard\DandomainAltapayBundle\Exception\CallbackException;
 use Loevgaard\DandomainAltapayBundle\Exception\NotAllowedIpException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Manager\PaymentManager;
+use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CallbackController extends Controller
 {
+    use DiactorosTrait;
+
     /**
      * @Method("POST")
      * @Route("/form", name="loevgaard_dandomain_altapay_callback_form")
@@ -159,9 +161,7 @@ class CallbackController extends Controller
         $payment = $this->getPaymentFromRequest($request);
         $callbackHandler = $this->get('loevgaard_dandomain_altapay.altapay_callback_handler');
 
-        // convert symfony request to PSR7 request
-        $psr7Factory = new DiactorosFactory();
-        $psrRequest = $psr7Factory->createRequest($request);
+        $psrRequest = $this->createPsrRequest($request);
         $callback = $callbackHandler->handleCallback($psrRequest);
 
         if ($callback instanceof XmlCallback) {

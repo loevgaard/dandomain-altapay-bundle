@@ -1,0 +1,170 @@
+<?php
+
+namespace Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator;
+
+use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
+use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
+use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
+use Loevgaard\Dandomain\Pay\Handler;
+use Loevgaard\Dandomain\Pay\PaymentRequest as DandomainPaymentRequest;
+use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
+use Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator\Fixture\Gateway;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+final class PaymentRequestPayloadGeneratorTest extends TestCase
+{
+    public function testCreateOrderLine()
+    {
+        $generator = $this->getGenerator();
+
+        $description = 'description';
+        $itemId = 'itemid';
+        $quantity = 1.0;
+        $unitPrice = 99.95;
+
+        // without optional parameters
+        $payload = $generator->createOrderLine($description, $itemId, $quantity, $unitPrice);
+        $this->assertInstanceOf(OrderLinePayload::class, $payload);
+        $this->assertSame($description, $payload->getDescription());
+        $this->assertSame($itemId, $payload->getItemId());
+        $this->assertSame($quantity, $payload->getQuantity());
+        $this->assertSame($unitPrice, $payload->getUnitPrice());
+
+        // with tax percent
+        $taxPercent = 25.0;
+        $payload = $generator->createOrderLine($description, $itemId, $quantity, $unitPrice, $taxPercent);
+        $this->assertInstanceOf(OrderLinePayload::class, $payload);
+        $this->assertSame($description, $payload->getDescription());
+        $this->assertSame($itemId, $payload->getItemId());
+        $this->assertSame($quantity, $payload->getQuantity());
+        $this->assertSame($unitPrice, $payload->getUnitPrice());
+        $this->assertSame($taxPercent, $payload->getTaxPercent());
+
+        // with goods type
+        $goodsType = OrderLinePayload::GOODS_TYPE_ITEM;
+        $payload = $generator->createOrderLine($description, $itemId, $quantity, $unitPrice, null, $goodsType);
+        $this->assertInstanceOf(OrderLinePayload::class, $payload);
+        $this->assertSame($description, $payload->getDescription());
+        $this->assertSame($itemId, $payload->getItemId());
+        $this->assertSame($quantity, $payload->getQuantity());
+        $this->assertSame($unitPrice, $payload->getUnitPrice());
+        $this->assertSame($goodsType, $payload->getGoodsType());
+    }
+
+    public function testCreateCustomerInfo()
+    {
+        $generator = $this->getGenerator();
+
+        $billingFirstName = 'billingfirstname';
+        $billingLastName = 'billinglastname';
+        $billingAddress = 'billingaddress';
+        $billingPostal = 'billingpostal';
+        $billingCity = 'billingcity';
+        $billingCountry = 'billingcountry';
+        $shippingFirstName = 'shippingfirstname';
+        $shippingLastName = 'shippinglastname';
+        $shippingAddress = 'shippingaddress';
+        $shippingPostal = 'shippingpostal';
+        $shippingCity = 'shippingcity';
+        $shippingCountry = 'shippingcountry';
+
+        // without optional parameters
+        $payload = $generator->createCustomerInfo($billingFirstName, $billingLastName, $billingAddress, $billingPostal, $billingCity, $billingCountry, $shippingFirstName, $shippingLastName, $shippingAddress, $shippingPostal, $shippingCity, $shippingCountry);
+        $this->assertInstanceOf(CustomerInfoPayload::class, $payload);
+        $this->assertSame($billingFirstName, $payload->getBillingFirstName());
+        $this->assertSame($billingLastName, $payload->getBillingLastName());
+        $this->assertSame($billingAddress, $payload->getBillingAddress());
+        $this->assertSame($billingPostal, $payload->getBillingPostal());
+        $this->assertSame($billingCity, $payload->getBillingCity());
+        $this->assertSame($billingCountry, $payload->getBillingCountry());
+        $this->assertSame($shippingFirstName, $payload->getShippingFirstName());
+        $this->assertSame($shippingLastName, $payload->getShippingLastName());
+        $this->assertSame($shippingAddress, $payload->getShippingAddress());
+        $this->assertSame($shippingPostal, $payload->getShippingPostal());
+        $this->assertSame($shippingCity, $payload->getShippingCity());
+        $this->assertSame($shippingCountry, $payload->getShippingCountry());
+    }
+
+    public function testCreateConfig()
+    {
+        $generator = $this->getGenerator();
+
+        $callbackForm = 'form';
+        $callbackOk = 'ok';
+        $callbackFail = 'fail';
+        $callbackRedirect = 'redirect';
+        $callbackOpen = 'open';
+        $callbackNotification = 'notification';
+
+        // without optional parameters
+        $payload = $generator->createConfig($callbackForm, $callbackOk, $callbackFail, $callbackRedirect, $callbackOpen, $callbackNotification);
+        $this->assertInstanceOf(ConfigPayload::class, $payload);
+        $this->assertSame($callbackForm, $payload->getCallbackForm());
+        $this->assertSame($callbackOk, $payload->getCallbackOk());
+        $this->assertSame($callbackFail, $payload->getCallbackFail());
+        $this->assertSame($callbackRedirect, $payload->getCallbackRedirect());
+        $this->assertSame($callbackOpen, $payload->getCallbackOpen());
+        $this->assertSame($callbackNotification, $payload->getCallbackNotification());
+    }
+
+    private function getGenerator()
+    {
+        $container = $this->getContainer();
+        $paymentRequest = $this->getPaymentRequest();
+        $terminal = $this->getTerminal();
+        $payment = $this->getPayment();
+        $handler = $this->getHandler();
+
+        $generator = new Gateway($container, $paymentRequest, $terminal, $payment, $handler);
+
+        return $generator;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ContainerInterface
+     */
+    private function getContainer()
+    {
+        $container = $this->getMockForAbstractClass(ContainerInterface::class);
+
+        return $container;
+    }
+
+    private function getPaymentRequest()
+    {
+        $paymentRequest = new DandomainPaymentRequest();
+
+        return $paymentRequest;
+    }
+
+    /**
+     * @return TerminalInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getTerminal()
+    {
+        $terminal = $this->getMockForAbstractClass(TerminalInterface::class);
+
+        return $terminal;
+    }
+
+    /**
+     * @return Payment|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getPayment()
+    {
+        $payment = $this->getMockForAbstractClass(Payment::class);
+
+        return $payment;
+    }
+
+    private function getHandler()
+    {
+        $request = $this->getMockForAbstractClass(ServerRequestInterface::class);
+        $handler = new Handler($request, 'sharedkey1', 'sharedkey2');
+
+        return $handler;
+    }
+}

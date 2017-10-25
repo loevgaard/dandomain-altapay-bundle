@@ -29,10 +29,9 @@ class ExceptionListener
         $exception = $event->getException();
 
         // check if exception is part of this bundle
-        if(!($exception instanceof Exception)) {
+        if (!($exception instanceof Exception)) {
             return false;
         }
-
 
         $redirect = '';
 
