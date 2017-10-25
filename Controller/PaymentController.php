@@ -88,6 +88,7 @@ class PaymentController extends Controller
     {
         $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
         $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
+        $translator = $this->getTranslator();
 
         $psrRequest = $this->createPsrRequest($request);
 
@@ -104,11 +105,11 @@ class PaymentController extends Controller
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
-            throw TerminalNotFoundException::create($this->trans('payment.exception.terminal_not_found', ['%terminal%' => $terminal]), $request, $paymentEntity);
+            throw TerminalNotFoundException::create($translator->trans('payment.exception.terminal_not_found', ['%terminal%' => $terminal], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
         if (!$handler->checksumMatches()) {
-            throw ChecksumMismatchException::create($this->trans('payment.exception.checksum_mismatch'), $request, $paymentEntity);
+            throw ChecksumMismatchException::create($translator->trans('payment.exception.checksum_mismatch', [], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
         $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $dandomainPaymentRequest, $terminalEntity, $paymentEntity, $handler);
@@ -118,7 +119,7 @@ class PaymentController extends Controller
         $response = $altapay->createPaymentRequest($paymentRequestPayload);
 
         if (!$response->isSuccessful()) {
-            throw AltapayPaymentRequestException::create($this->trans('payment.exception.altapay_payment_request', ['%gateway_message%' => $response->getErrorMessage()]), $request, $paymentEntity);
+            throw AltapayPaymentRequestException::create($translator->trans('payment.exception.altapay_payment_request', ['%gateway_message%' => $response->getErrorMessage()], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
         return $this->redirect($response->getUrl());

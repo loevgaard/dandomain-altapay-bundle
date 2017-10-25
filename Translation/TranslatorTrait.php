@@ -11,12 +11,15 @@ trait TranslatorTrait
      */
     private $translator;
 
-    private function trans(string $message, array $params = []): string
+    /**
+     * @return IdentityTranslator
+     */
+    private function getTranslator() : IdentityTranslator
     {
         if (!$this->translator) {
             $this->translator = $this->container->get('translator');
         }
 
-        return $this->translator->trans($message, $params, 'LoevgaardDandomainAltapayBundle');
+        return $this->translator;
     }
 }

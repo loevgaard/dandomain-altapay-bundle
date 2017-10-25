@@ -27,7 +27,7 @@ class ControllerListener
         $controller = $event->getController();
 
         if (!$event->isMasterRequest() || !is_array($controller)) {
-            return;
+            return false;
         }
 
         list($class, $method) = $controller;

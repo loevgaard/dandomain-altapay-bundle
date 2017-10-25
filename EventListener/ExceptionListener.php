@@ -29,25 +29,28 @@ class ExceptionListener
         $exception = $event->getException();
 
         // check if exception is part of this bundle
-        if ($exception instanceof Exception) {
-            $redirect = '';
-
-            if ($exception instanceof PaymentException) {
-                $redirect = $exception->getPayment()->getReferrer();
-                if (!$redirect) {
-                    $redirect = 'http://'.$exception->getPayment()->getCallBackServerUrl();
-                }
-            }
-
-            $responseText = $this->engine->render('@LoevgaardDandomainAltapay/error/error.html.twig', [
-                'error' => $exception->getMessage(),
-                'redirect' => $redirect,
-            ]);
-
-            $response = new Response();
-            $response->setContent($responseText);
-
-            $event->setResponse($response);
+        if(!($exception instanceof Exception)) {
+            return false;
         }
+
+
+        $redirect = '';
+
+        if ($exception instanceof PaymentException) {
+            $redirect = $exception->getPayment()->getReferrer();
+            if (!$redirect) {
+                $redirect = 'http://'.$exception->getPayment()->getCallBackServerUrl();
+            }
+        }
+
+        $responseText = $this->engine->render('@LoevgaardDandomainAltapay/error/error.html.twig', [
+            'error' => $exception->getMessage(),
+            'redirect' => $redirect,
+        ]);
+
+        $response = new Response();
+        $response->setContent($responseText);
+
+        $event->setResponse($response);
     }
 }

@@ -13,7 +13,7 @@ trait DiactorosTrait
      *
      * @return ServerRequestInterface
      */
-    public function createPsrRequest(Request $request): ServerRequestInterface
+    private function createPsrRequest(Request $request): ServerRequestInterface
     {
         $psr7Factory = new DiactorosFactory();
         $psrRequest = $psr7Factory->createRequest($request);

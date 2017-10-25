@@ -19,13 +19,11 @@ class ResponseListener
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($event->isMasterRequest()) {
-            $request = $event->getRequest();
-            $response = $event->getResponse();
-
-            $this->transactionLogger->setResponse($request, $response);
-
-            $this->transactionLogger->flush();
+        if(!$event->isMasterRequest()) {
+            return false;
         }
+
+        $this->transactionLogger->setResponse($event->getRequest(), $event->getResponse());
+        $this->transactionLogger->flush();
     }
 }
