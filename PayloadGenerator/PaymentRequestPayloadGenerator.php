@@ -6,8 +6,8 @@ use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
-use Loevgaard\Dandomain\Pay\Handler;
-use Loevgaard\Dandomain\Pay\PaymentRequest as DandomainPaymentRequest;
+use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
+use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -27,9 +27,9 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
     protected $router;
 
     /**
-     * @var DandomainPaymentRequest
+     * @var DandomainPayment
      */
-    protected $paymentRequest;
+    protected $dandomainPayment;
 
     /**
      * @var TerminalInterface
@@ -42,23 +42,23 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
     protected $payment;
 
     /**
-     * @var Handler
+     * @var ChecksumHelper
      */
-    protected $handler;
+    protected $checksumHelper;
 
     public function __construct(
         ContainerInterface $container,
-        DandomainPaymentRequest $paymentRequest,
+        DandomainPayment $paymentRequest,
         TerminalInterface $terminal,
         Payment $payment,
-        Handler $handler
+        ChecksumHelper $checksumHelper
     ) {
         $this->container = $container;
         $this->router = $this->container->get('router');
-        $this->paymentRequest = $paymentRequest;
+        $this->dandomainPayment = $paymentRequest;
         $this->terminal = $terminal;
         $this->payment = $payment;
-        $this->handler = $handler;
+        $this->checksumHelper = $checksumHelper;
     }
 
     /**
@@ -68,12 +68,12 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
     {
         $paymentRequestPayload = new PaymentRequestPayload(
             $this->terminal->getTitle(),
-            $this->paymentRequest->getOrderId(),
-            $this->paymentRequest->getTotalAmount(),
-            $this->paymentRequest->getCurrencySymbol()
+            $this->dandomainPayment->getOrderId(),
+            $this->dandomainPayment->getTotalAmount(),
+            $this->dandomainPayment->getCurrencySymbol()
         );
 
-        foreach ($this->paymentRequest->getPaymentLines() as $paymentLine) {
+        foreach ($this->dandomainPayment->getPaymentLines() as $paymentLine) {
             $orderLinePayload = $this->createOrderLine(
                 $paymentLine->getName(),
                 $paymentLine->getProductNumber(),
@@ -86,12 +86,12 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
         }
 
         // add payment fee as an order line if it's set
-        if ($this->paymentRequest->getPaymentFee()) {
+        if ($this->dandomainPayment->getPaymentFee()) {
             $orderLinePayload = $this->createOrderLine(
-                $this->paymentRequest->getPaymentMethod(),
-                $this->paymentRequest->getPaymentMethod(),
+                $this->dandomainPayment->getPaymentMethod(),
+                $this->dandomainPayment->getPaymentMethod(),
                 1,
-                $this->paymentRequest->getPaymentFee(),
+                $this->dandomainPayment->getPaymentFee(),
                 null,
                 OrderLinePayload::GOODS_TYPE_HANDLING
             );
@@ -99,34 +99,34 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
         }
 
         // add shipping fee as an order line if it's set
-        if ($this->paymentRequest->getShippingFee()) {
+        if ($this->dandomainPayment->getShippingFee()) {
             $orderLinePayload = $this->createOrderLine(
-                $this->paymentRequest->getShippingMethod(),
-                $this->paymentRequest->getShippingMethod(),
+                $this->dandomainPayment->getShippingMethod(),
+                $this->dandomainPayment->getShippingMethod(),
                 1,
-                $this->paymentRequest->getShippingFee(),
+                $this->dandomainPayment->getShippingFee(),
                 null,
                 OrderLinePayload::GOODS_TYPE_SHIPMENT
             );
             $paymentRequestPayload->addOrderLine($orderLinePayload);
         }
 
-        $customerNames = explode(' ', $this->paymentRequest->getCustomerName(), 2);
-        $shippingNames = explode(' ', $this->paymentRequest->getDeliveryName(), 2);
+        $customerNames = explode(' ', $this->dandomainPayment->getCustomerName(), 2);
+        $shippingNames = explode(' ', $this->dandomainPayment->getDeliveryName(), 2);
 
         $customerInfoPayload = $this->createCustomerInfo(
             $customerNames[0] ?? '',
             $customerNames[1] ?? '',
-            $this->paymentRequest->getCustomerAddress().($this->paymentRequest->getCustomerAddress2() ? "\r\n".$this->paymentRequest->getCustomerAddress2() : ''),
-            $this->paymentRequest->getCustomerZipCode(),
-            $this->paymentRequest->getCustomerCity(),
-            $this->paymentRequest->getCustomerCountry(),
+            $this->dandomainPayment->getCustomerAddress().($this->dandomainPayment->getCustomerAddress2() ? "\r\n".$this->dandomainPayment->getCustomerAddress2() : ''),
+            $this->dandomainPayment->getCustomerZipCode(),
+            $this->dandomainPayment->getCustomerCity(),
+            $this->dandomainPayment->getCustomerCountry(),
             $shippingNames[0] ?? '',
             $shippingNames[1] ?? '',
-            $this->paymentRequest->getDeliveryAddress().($this->paymentRequest->getDeliveryAddress2() ? "\r\n".$this->paymentRequest->getDeliveryAddress2() : ''),
-            $this->paymentRequest->getDeliveryZipCode(),
-            $this->paymentRequest->getDeliveryCity(),
-            $this->paymentRequest->getDeliveryCountry()
+            $this->dandomainPayment->getDeliveryAddress().($this->dandomainPayment->getDeliveryAddress2() ? "\r\n".$this->dandomainPayment->getDeliveryAddress2() : ''),
+            $this->dandomainPayment->getDeliveryZipCode(),
+            $this->dandomainPayment->getDeliveryCity(),
+            $this->dandomainPayment->getDeliveryCountry()
         );
         $paymentRequestPayload->setCustomerInfo($customerInfoPayload);
 
@@ -171,7 +171,7 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
             )
             ->setCookiePart(
                 $this->container->getParameter('loevgaard_dandomain_altapay.cookie_checksum_complete'),
-                $this->handler->getChecksum2()
+                $this->checksumHelper->getChecksum2()
             )
         ;
 

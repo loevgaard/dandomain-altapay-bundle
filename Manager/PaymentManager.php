@@ -2,7 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
-use Loevgaard\Dandomain\Pay\PaymentRequest;
+use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DoctrineManager\Manager;
 
@@ -16,22 +16,22 @@ class PaymentManager extends Manager
     /**
      * This will transform a PaymentRequest (parent) to a Payment (child).
      *
-     * @param PaymentRequest $paymentRequest
+     * @param DandomainPayment $dandomainPayment
      *
      * @return Payment
      */
-    public function createPaymentFromDandomainPaymentRequest(PaymentRequest $paymentRequest)
+    public function createPaymentFromDandomainPaymentRequest(DandomainPayment $dandomainPayment)
     {
         $payment = $this->create();
 
-        $methods = get_class_methods($paymentRequest);
+        $methods = get_class_methods($dandomainPayment);
 
         foreach ($methods as $method) {
             if ('get' === substr($method, 0, 3)) {
-                $val = $paymentRequest->{$method}();
+                $val = $dandomainPayment->{$method}();
                 $property = substr($method, 3);
             } elseif ('is' === substr($method, 0, 2)) {
-                $val = $paymentRequest->{$method}();
+                $val = $dandomainPayment->{$method}();
                 $property = substr($method, 2);
             } else {
                 continue;
@@ -48,7 +48,7 @@ class PaymentManager extends Manager
             }
         }
 
-        foreach ($paymentRequest->getPaymentLines() as $paymentLine) {
+        foreach ($dandomainPayment->getPaymentLines() as $paymentLine) {
             $newPaymentLine = $this->paymentLineManager->createPaymentLineFromDandomainPaymentRequest($paymentLine);
             $payment->addPaymentLine($newPaymentLine);
         }

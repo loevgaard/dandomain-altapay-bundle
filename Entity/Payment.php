@@ -5,7 +5,7 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 use Brick\Math\BigDecimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Loevgaard\Dandomain\Pay\PaymentRequest;
+use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
 
 /**
  * The Payment entity is a special entity since it maps a payment from the Dandomain Payment API
@@ -18,7 +18,7 @@ use Loevgaard\Dandomain\Pay\PaymentRequest;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Payment extends PaymentRequest
+abstract class Payment extends BasePayment
 {
     /**
      * @var int

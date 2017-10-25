@@ -51,5 +51,7 @@ class ExceptionListener
         $response->setContent($responseText);
 
         $event->setResponse($response);
+
+        return true;
     }
 }

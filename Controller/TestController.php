@@ -2,15 +2,14 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
-use Loevgaard\Dandomain\Pay\Handler;
-use Loevgaard\Dandomain\Pay\PaymentRequest;
+use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
+use Loevgaard\Dandomain\Pay\Model\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use Loevgaard\DandomainAltapayBundle\Form\TestType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -22,11 +21,9 @@ class TestController extends Controller
      * @Method("GET")
      * @Route("", name="loevgaard_dandomain_altapay_test_index")
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         /** @var TerminalInterface[] $terminals */
         $terminals = $this->get('loevgaard_dandomain_altapay.terminal_manager')->getRepository()->findAll();
@@ -54,8 +51,8 @@ class TestController extends Controller
      */
     public function checksum1Action($orderId, $amount, $sharedKey, $currency)
     {
-        $amount = PaymentRequest::currencyStringToFloat($amount);
+        $amount = Payment::currencyStringToFloat($amount);
 
-        return new JsonResponse(Handler::generateChecksum1((int) $orderId, $amount, $sharedKey, (int) $currency));
+        return new JsonResponse(ChecksumHelper::generateChecksum1((int) $orderId, $amount, $sharedKey, (int) $currency));
     }
 }

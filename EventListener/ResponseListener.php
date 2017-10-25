@@ -25,5 +25,7 @@ class ResponseListener
 
         $this->transactionLogger->setResponse($event->getRequest(), $event->getResponse());
         $this->transactionLogger->flush();
+
+        return true;
     }
 }

@@ -33,8 +33,7 @@ final class TransactionLoggerTest extends TestCase
         $httpTransactionManager
             ->expects($this->any())
             ->method('update')
-            ->willReturnCallback(function ($entity) use ($request, $response, &$transactionCounter) {
-                /* @var HttpTransaction $entity */
+            ->willReturnCallback(function () use (&$transactionCounter) {
                 ++$transactionCounter;
             })
         ;

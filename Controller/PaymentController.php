@@ -2,7 +2,8 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
-use Loevgaard\Dandomain\Pay\Handler;
+use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
+use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
@@ -91,16 +92,15 @@ class PaymentController extends Controller
         $translator = $this->getTranslator();
 
         $psrRequest = $this->createPsrRequest($request);
+        $dandomainPayment = DandomainPayment::createFromRequest($psrRequest);
 
-        $handler = new Handler(
-            $psrRequest,
+        $checksumHelper = new ChecksumHelper(
+            $dandomainPayment,
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_1'),
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_2')
         );
 
-        $dandomainPaymentRequest = $handler->getPaymentRequest();
-
-        $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($dandomainPaymentRequest);
+        $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($dandomainPayment);
         $paymentManager->update($paymentEntity);
 
         $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
@@ -108,11 +108,11 @@ class PaymentController extends Controller
             throw TerminalNotFoundException::create($translator->trans('payment.exception.terminal_not_found', ['%terminal%' => $terminal], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
-        if (!$handler->checksumMatches()) {
+        if (!$checksumHelper->checksumMatches()) {
             throw ChecksumMismatchException::create($translator->trans('payment.exception.checksum_mismatch', [], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
-        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $dandomainPaymentRequest, $terminalEntity, $paymentEntity, $handler);
+        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $dandomainPayment, $terminalEntity, $paymentEntity, $checksumHelper);
         $paymentRequestPayload = $paymentRequestPayloadGenerator->generate();
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');
@@ -187,12 +187,11 @@ class PaymentController extends Controller
      * @Method("GET")
      * @Route("/{paymentId}/redirectToAltapay", name="loevgaard_dandomain_altapay_redirect_to_altapay_payment")
      *
-     * @param int     $paymentId
-     * @param Request $request
+     * @param int $paymentId
      *
      * @return RedirectResponse
      */
-    public function redirectToAltapayPaymentAction(int $paymentId, Request $request)
+    public function redirectToAltapayPaymentAction(int $paymentId)
     {
         $payment = $this->getPaymentFromId($paymentId);
 

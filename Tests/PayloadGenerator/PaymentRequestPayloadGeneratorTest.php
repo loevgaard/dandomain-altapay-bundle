@@ -5,13 +5,12 @@ namespace Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator;
 use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
-use Loevgaard\Dandomain\Pay\Handler;
-use Loevgaard\Dandomain\Pay\PaymentRequest as DandomainPaymentRequest;
+use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
+use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
 use Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator\Fixture\Gateway;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class PaymentRequestPayloadGeneratorTest extends TestCase
@@ -113,12 +112,12 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
     private function getGenerator()
     {
         $container = $this->getContainer();
-        $paymentRequest = $this->getPaymentRequest();
+        $dandomainPayment = $this->getDandomainPayment();
         $terminal = $this->getTerminal();
         $payment = $this->getPayment();
-        $handler = $this->getHandler();
+        $handler = $this->getChecksumHelper($dandomainPayment);
 
-        $generator = new Gateway($container, $paymentRequest, $terminal, $payment, $handler);
+        $generator = new Gateway($container, $dandomainPayment, $terminal, $payment, $handler);
 
         return $generator;
     }
@@ -133,9 +132,9 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
         return $container;
     }
 
-    private function getPaymentRequest()
+    private function getDandomainPayment()
     {
-        $paymentRequest = new DandomainPaymentRequest();
+        $paymentRequest = new DandomainPayment();
 
         return $paymentRequest;
     }
@@ -160,11 +159,10 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
         return $payment;
     }
 
-    private function getHandler()
+    private function getChecksumHelper(DandomainPayment $payment)
     {
-        $request = $this->getMockForAbstractClass(ServerRequestInterface::class);
-        $handler = new Handler($request, 'sharedkey1', 'sharedkey2');
+        $checksumHelper = new ChecksumHelper($payment, 'sharedkey1', 'sharedkey2');
 
-        return $handler;
+        return $checksumHelper;
     }
 }

@@ -40,5 +40,7 @@ class ControllerListener
             $request = $event->getRequest();
             $this->transactionLogger->setRequest($request);
         }
+
+        return true;
     }
 }

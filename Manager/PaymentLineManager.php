@@ -2,7 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Manager;
 
-use Loevgaard\Dandomain\Pay\PaymentRequest\PaymentLine as DandomainPaymentLine;
+use Loevgaard\Dandomain\Pay\Model\PaymentLine as DandomainPaymentLine;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
 use Loevgaard\DoctrineManager\Manager;
 

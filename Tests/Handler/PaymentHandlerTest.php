@@ -231,6 +231,8 @@ final class PaymentHandlerTest extends TestCase
     }
 
     /**
+     * @param $altapayClient
+     *
      * @return PaymentHandler
      */
     private function getPaymentHandler($altapayClient): PaymentHandler

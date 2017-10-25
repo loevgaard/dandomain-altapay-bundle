@@ -3,7 +3,7 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Loevgaard\Dandomain\Pay\PaymentRequest\PaymentLine as BasePaymentLine;
+use Loevgaard\Dandomain\Pay\Model\PaymentLine as BasePaymentLine;
 
 /**
  * @ORM\MappedSuperclass
