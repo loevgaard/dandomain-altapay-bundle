@@ -1,0 +1,11 @@
+{% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
+
+{% if siteSetting.id %}
+    <h1>{{ 'site_setting.edit.heading'|trans }}</h1>
+{% else %}
+    <h1>{{ 'site_setting.new.heading'|trans }}</h1>
+{% endif %}
+
+{{ form_start(form) }}
+    {{ form_rest(form) }}
+{{ form_end(form) }}

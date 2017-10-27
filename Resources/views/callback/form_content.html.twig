@@ -1,5 +1,10 @@
 {% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
 
-<div class="order-id">{{ 'callback.form.order_id'|trans }}: {{ payment.orderId }}</div>
-<div class="amount">{{ 'callback.form.total'|trans }}: {{ payment.currencySymbol }} {{ payment.totalAmount }}</div>
-<form id="PensioPaymentForm"></form>
+<div class="dandomain-altapay-callback-form">
+    <div class="logo">{{ siteSettings['layout.logo'] }}</div>
+    <div class="order-id">{{ 'callback.form.order_id'|trans }}: {{ payment.orderId }}</div>
+    <div class="amount-currency">
+        {{ 'callback.form.total'|trans }}: <span class="amount">{{ payment.totalAmount|localizedcurrency(payment.currencySymbol) }}</span>
+    </div>
+    <form id="PensioPaymentForm"></form>
+</div>

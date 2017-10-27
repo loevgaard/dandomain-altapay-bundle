@@ -1,4 +1,10 @@
 services:
+    # Twig extensions
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+
     # Listeners
     loevgaard_dandomain_altapay.exception_listener:
         class: Loevgaard\DandomainAltapayBundle\EventListener\ExceptionListener
@@ -57,6 +63,14 @@ services:
             - "@doctrine"
             - "%loevgaard_dandomain_altapay.payment_line_class%"
 
+    # Repositories
+    loevgaard_dandomain_altapay.site_setting_repository:
+        class: Loevgaard\DandomainAltapayBundle\Entity\SiteSettingRepository
+        arguments:
+            - "@doctrine"
+            - "@knp_paginator"
+            - Loevgaard\DandomainAltapayBundle\Entity\SiteSetting
+
     # Misc
     loevgaard_dandomain_altapay.transaction_logger:
         class: Loevgaard\DandomainAltapayBundle\Http\TransactionLogger
@@ -89,3 +103,9 @@ services:
         tags: [console.command]
         calls:
             - [setTerminalSynchronizer, ["@loevgaard_dandomain_altapay.terminal_synchronizer"]]
+
+    loevgaard_dandomain_altapay.site_settings_provider:
+        class: Loevgaard\DandomainAltapayBundle\Provider\SiteSettingsProvider
+        arguments:
+            - "@service_container"
+            - "@loevgaard_dandomain_altapay.site_setting_repository"

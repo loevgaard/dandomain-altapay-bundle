@@ -25,6 +25,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="{{ path('loevgaard_dandomain_altapay_terminal_index') }}">Terminals</a></li>
                         <li><a href="{{ path('loevgaard_dandomain_altapay_payment_index') }}">Payments</a></li>
+                        <li><a href="{{ path('loevgaard_dandomain_altapay_site_setting_index') }}">Site Settings</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ path('loevgaard_dandomain_altapay_test_index') }}">Test</a></li>
@@ -34,7 +35,7 @@
         </nav>
         <div class="container">
             {% if app.request.hasPreviousSession %}
-                {% for type, messages in app.flashbag.all() %}
+                {% for type, messages in app.session.flashbag.all() %}
                     {% for message in messages %}
                         <div class="alert alert-{{ type }}">
                             {{ message }}

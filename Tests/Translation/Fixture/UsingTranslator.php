@@ -4,7 +4,7 @@ namespace Loevgaard\DandomainAltapayBundle\Tests\Translation\Fixture;
 
 use Loevgaard\DandomainAltapayBundle\Translation\TranslatorTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Translation\IdentityTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UsingTranslator
 {
@@ -21,7 +21,7 @@ class UsingTranslator
     }
 
     /**
-     * @return IdentityTranslator
+     * @return TranslatorInterface
      */
     public function getIt()
     {

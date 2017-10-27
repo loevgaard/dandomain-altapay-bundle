@@ -38,9 +38,15 @@ class CallbackController extends Controller
     public function formAction(Request $request)
     {
         $payment = $this->handleCallback($request);
+        $siteSettings = $this
+            ->get('loevgaard_dandomain_altapay.site_settings_provider')
+            ->findBySiteIdIndexedBySetting($payment->getLanguageId());
+
+
 
         return $this->render('@LoevgaardDandomainAltapay/callback/form.html.twig', [
             'payment' => $payment,
+            'siteSettings' => $siteSettings
         ]);
     }
 

@@ -103,6 +103,22 @@ payment:
         checksum_mismatch: Checksum mismatch. Try again
         altapay_payment_request: "An error occured during payment request. Try again. Message from gateway: %gateway_message%"
 
+site_setting:
+    new:
+        heading: New site setting
+    edit:
+        heading: Edit site setting
+        updated: The site setting has been saved
+    show:
+        heading: Site Setting
+    label:
+        site_id: Site id
+        setting: Setting
+        val: Value
+    settings:
+        layout:
+            logo: Logo URL
+
 terminal:
     index:
         heading: Terminals
@@ -122,3 +138,5 @@ layout:
     actions: Actions
     show: Show
     cancel: Cancel
+    edit: Edit
+    save: Save

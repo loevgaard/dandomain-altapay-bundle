@@ -2,19 +2,19 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Translation;
 
-use Symfony\Component\Translation\IdentityTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 trait TranslatorTrait
 {
     /**
-     * @var IdentityTranslator
+     * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @return IdentityTranslator
+     * @return TranslatorInterface
      */
-    private function getTranslator(): IdentityTranslator
+    private function getTranslator(): TranslatorInterface
     {
         if (!$this->translator) {
             $this->translator = $this->container->get('translator');
