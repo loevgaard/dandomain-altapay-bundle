@@ -34,9 +34,10 @@ class LoevgaardDandomainAltapayExtension extends Extension
     }
 
     /**
-     * This method will verify that all available settings in the SiteSetting are defined as parameters
+     * This method will verify that all available settings in the SiteSetting are defined as parameters.
      *
      * @param ContainerBuilder $container
+     *
      * @throws \RuntimeException
      */
     private function verifyDefaultSettings(ContainerBuilder $container)
@@ -44,7 +45,7 @@ class LoevgaardDandomainAltapayExtension extends Extension
         $settings = SiteSetting::getSettings();
         foreach ($settings as $setting) {
             $parameter = 'loevgaard_dandomain_altapay.default_settings.'.$setting;
-            if(!$container->hasParameter($parameter)) {
+            if (!$container->hasParameter($parameter)) {
                 throw new \RuntimeException('The parameter `'.$parameter.'` is not configured in the code');
             }
         }

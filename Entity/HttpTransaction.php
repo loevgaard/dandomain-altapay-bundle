@@ -59,11 +59,13 @@ class HttpTransaction
 
     /**
      * @param int $id
+     *
      * @return HttpTransaction
      */
-    public function setId(int $id) : HttpTransaction
+    public function setId(int $id): HttpTransaction
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -77,6 +79,7 @@ class HttpTransaction
 
     /**
      * @param string $ip
+     *
      * @return HttpTransaction
      */
     public function setIp(string $ip): HttpTransaction
@@ -96,6 +99,7 @@ class HttpTransaction
 
     /**
      * @param $request
+     *
      * @return HttpTransaction
      */
     public function setRequest($request): HttpTransaction
@@ -131,6 +135,7 @@ class HttpTransaction
 
     /**
      * @param string $response
+     *
      * @return HttpTransaction
      */
     public function setResponse(string $response): HttpTransaction

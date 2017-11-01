@@ -37,9 +37,9 @@ class SiteSettingsProvider
 
         // fetch settings and set default settings if not set
         $settings = $this->siteSettingRepository->findBySiteIdIndexedBySetting($siteId);
-        if($settings) {
+        if ($settings) {
             foreach ($availableSettings as $availableSetting) {
-                if(!isset($settings[$availableSetting])) {
+                if (!isset($settings[$availableSetting])) {
                     $settings[$availableSetting] = $defaultSettings[$availableSetting];
                 }
             }

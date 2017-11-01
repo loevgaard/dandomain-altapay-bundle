@@ -75,7 +75,7 @@ class SiteSettingController extends Controller
      * @Route("/{id}/edit", name="loevgaard_dandomain_altapay_site_setting_edit")
      *
      * @param SiteSetting $siteSetting
-     * @param Request        $request
+     * @param Request     $request
      *
      * @return Response
      */
@@ -91,9 +91,9 @@ class SiteSettingController extends Controller
     }
 
     /**
-     * @param Form           $form
+     * @param Form        $form
      * @param SiteSetting $siteSetting
-     * @param Request        $request
+     * @param Request     $request
      *
      * @return null|RedirectResponse
      */
@@ -102,7 +102,6 @@ class SiteSettingController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($siteSetting);
             $em->flush();
@@ -121,7 +120,7 @@ class SiteSettingController extends Controller
 
     /**
      * @param SiteSetting $siteSetting
-     * @param Form           $form
+     * @param Form        $form
      *
      * @return Response
      */

@@ -4,8 +4,8 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Loevgaard\Dandomain\Pay\Model\PaymentLine as BasePaymentLine;
-use Symfony\Component\Validator\Constraints as Assert;
 use Loevgaard\Dandomain\Pay\Model\PaymentLine as DandomainPaymentLine;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="dandomain_altapay_payment_lines")
@@ -99,24 +99,27 @@ class PaymentLine extends BasePaymentLine
                 $paymentLine->{$setter}($val);
             }
         }
+
         return $paymentLine;
     }
 
     /**
      * @return int
      */
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
      * @param mixed $id
+     *
      * @return PaymentLine
      */
-    public function setId($id) : self
+    public function setId($id): self
     {
         $this->id = $id;
+
         return $this;
     }
 }

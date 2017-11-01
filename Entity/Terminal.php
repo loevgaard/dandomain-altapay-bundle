@@ -4,8 +4,8 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
@@ -94,6 +94,7 @@ class Terminal
 
     /**
      * @param $id
+     *
      * @return Terminal
      */
     public function setId($id): self
@@ -113,6 +114,7 @@ class Terminal
 
     /**
      * @param string $title
+     *
      * @return Terminal
      */
     public function setTitle(string $title): self
@@ -132,6 +134,7 @@ class Terminal
 
     /**
      * @param string $slug
+     *
      * @return Terminal
      */
     public function setSlug(string $slug): self
@@ -151,6 +154,7 @@ class Terminal
 
     /**
      * @param string $country
+     *
      * @return Terminal
      */
     public function setCountry(string $country): self
@@ -170,6 +174,7 @@ class Terminal
 
     /**
      * @param array $natures
+     *
      * @return Terminal
      */
     public function setNatures(array $natures): self
@@ -189,6 +194,7 @@ class Terminal
 
     /**
      * @param array $currencies
+     *
      * @return Terminal
      */
     public function setCurrencies(array $currencies): self

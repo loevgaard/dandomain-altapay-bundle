@@ -5,29 +5,31 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 class SiteSettingRepository extends EntityRepository
 {
     /**
-     * @param int $siteId
+     * @param int    $siteId
      * @param string $setting
+     *
      * @return SiteSetting|null
      */
-    public function findBySiteIdAndSetting(int $siteId, string $setting) : ?SiteSetting
+    public function findBySiteIdAndSetting(int $siteId, string $setting): ?SiteSetting
     {
         /** @var SiteSetting $obj */
         $obj = $this->repository->findOneBy([
             'siteId' => $siteId,
-            'setting' => $setting
+            'setting' => $setting,
         ]);
 
         return $obj;
     }
 
     /**
-     * @param int $siteId
+     * @param int        $siteId
      * @param array|null $orderBy
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param int|null   $limit
+     * @param int|null   $offset
+     *
      * @return SiteSetting[]|null
      */
-    public function findBySiteId(int $siteId, array $orderBy = null, int $limit = null, int $offset = null) : ?array
+    public function findBySiteId(int $siteId, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
         /** @var SiteSetting[] $objs */
         $objs = $this->repository->findBy([
@@ -40,12 +42,13 @@ class SiteSettingRepository extends EntityRepository
     /**
      * Usage:
      * $collection = SiteSettingRepository::findBySiteIdIndexedBySetting($siteId)
-     * echo $collection['setting']->getVal();
+     * echo $collection['setting']->getVal();.
      *
      * @param int $siteId
+     *
      * @return SiteSetting[]|null
      */
-    public function findBySiteIdIndexedBySetting(int $siteId) : ?array
+    public function findBySiteIdIndexedBySetting(int $siteId): ?array
     {
         $qb = $this->repository->createQueryBuilder('s');
         $qb
@@ -57,13 +60,14 @@ class SiteSettingRepository extends EntityRepository
     }
 
     /**
-     * @param string $setting
+     * @param string     $setting
      * @param array|null $orderBy
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param int|null   $limit
+     * @param int|null   $offset
+     *
      * @return SiteSetting[]|null
      */
-    public function findBySetting(string $setting, array $orderBy = null, int $limit = null, int $offset = null) : ?array
+    public function findBySetting(string $setting, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
         /** @var SiteSetting[] $objs */
         $objs = $this->repository->findBy([

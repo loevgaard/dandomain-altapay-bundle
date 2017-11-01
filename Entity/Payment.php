@@ -5,9 +5,9 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 use Brick\Math\BigDecimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
 use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * The Payment entity is a special entity since it maps a payment from the Dandomain Payment API

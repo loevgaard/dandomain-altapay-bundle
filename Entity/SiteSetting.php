@@ -59,10 +59,10 @@ class SiteSetting
 
     public function __toString()
     {
-        return (string)$this->val;
+        return (string) $this->val;
     }
 
-    public static function getSettings() : array
+    public static function getSettings(): array
     {
         return [
             self::SETTING_LAYOUT_LOGO => self::SETTING_LAYOUT_LOGO,
@@ -79,11 +79,13 @@ class SiteSetting
 
     /**
      * @param int $id
+     *
      * @return SiteSetting
      */
-    public function setId(int $id) : SiteSetting
+    public function setId(int $id): SiteSetting
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -97,11 +99,13 @@ class SiteSetting
 
     /**
      * @param int $siteId
+     *
      * @return SiteSetting
      */
-    public function setSiteId(int $siteId) : SiteSetting
+    public function setSiteId(int $siteId): SiteSetting
     {
         $this->siteId = $siteId;
+
         return $this;
     }
 
@@ -115,11 +119,13 @@ class SiteSetting
 
     /**
      * @param string $setting
+     *
      * @return SiteSetting
      */
-    public function setSetting(string $setting) : SiteSetting
+    public function setSetting(string $setting): SiteSetting
     {
         $this->setting = $setting;
+
         return $this;
     }
 
@@ -133,11 +139,13 @@ class SiteSetting
 
     /**
      * @param string $val
+     *
      * @return SiteSetting
      */
-    public function setVal(string $val) : SiteSetting
+    public function setVal(string $val): SiteSetting
     {
         $this->val = $val;
+
         return $this;
     }
 }

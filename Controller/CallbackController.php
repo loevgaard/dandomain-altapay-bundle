@@ -42,11 +42,9 @@ class CallbackController extends Controller
             ->get('loevgaard_dandomain_altapay.site_settings_provider')
             ->findBySiteIdIndexedBySetting($payment->getLanguageId());
 
-
-
         return $this->render('@LoevgaardDandomainAltapay/callback/form.html.twig', [
             'payment' => $payment,
-            'siteSettings' => $siteSettings
+            'siteSettings' => $siteSettings,
         ]);
     }
 

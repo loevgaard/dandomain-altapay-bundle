@@ -9,7 +9,7 @@ class PaymentRepository extends EntityRepository
      *
      * @return null|Payment
      */
-    public function findByOrderIdOrAltapayId($id) : ?Payment
+    public function findByOrderIdOrAltapayId($id): ?Payment
     {
         /** @var Payment $payment */
         $payment = $this->findOneBy([

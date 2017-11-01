@@ -22,9 +22,9 @@ class SiteSettingType extends AbstractType
             ->add('setting', ChoiceType::class, [
                 'label' => 'site_setting.label.setting',
                 'choices' => SiteSetting::getSettings(),
-                'choice_label' => function($value, $key, $index) {
+                'choice_label' => function ($value, $key, $index) {
                     return SiteSetting::SETTING_TRANSLATION_PREFIX.$key;
-                }
+                },
             ])
             ->add('val', TextareaType::class, [
                 'label' => 'site_setting.label.val',
@@ -33,7 +33,7 @@ class SiteSettingType extends AbstractType
              * Save button
              */
             ->add('save', SubmitType::class, [
-                'label' => 'layout.save'
+                'label' => 'layout.save',
             ])
         ;
     }
@@ -42,7 +42,7 @@ class SiteSettingType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SiteSetting::class,
-            'translation_domain' => 'LoevgaardDandomainAltapayBundle'
+            'translation_domain' => 'LoevgaardDandomainAltapayBundle',
         ]);
     }
 }

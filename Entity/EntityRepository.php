@@ -11,7 +11,7 @@ use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * This entity repository is implemented using the principles described here:
- * https://www.tomasvotruba.cz/blog/2017/10/16/how-to-use-repository-with-doctrine-as-service-in-symfony/
+ * https://www.tomasvotruba.cz/blog/2017/10/16/how-to-use-repository-with-doctrine-as-service-in-symfony/.
  *
  * @todo this class should probably be in a separate library
  *
@@ -40,7 +40,8 @@ abstract class EntityRepository
      */
     protected $paginator;
 
-    public function __construct(ManagerRegistry $managerRegistry, PaginatorInterface $paginator, string $class) {
+    public function __construct(ManagerRegistry $managerRegistry, PaginatorInterface $paginator, string $class)
+    {
         $this->manager = $managerRegistry->getManagerForClass($class);
         $this->repository = $this->manager->getRepository($class);
         $this->paginator = $paginator;
@@ -48,7 +49,8 @@ abstract class EntityRepository
 
     /**
      * @param string $name
-     * @param array $arguments
+     * @param array  $arguments
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -63,7 +65,7 @@ abstract class EntityRepository
     }
 
     /**
-     * Saves the $object
+     * Saves the $object.
      *
      * @param $object
      */
@@ -74,15 +76,16 @@ abstract class EntityRepository
     }
 
     /**
-     * @param int $page
-     * @param int $itemsPerPage
-     * @param array $orderBy
+     * @param int          $page
+     * @param int          $itemsPerPage
+     * @param array        $orderBy
      * @param QueryBuilder $qb
+     *
      * @return PaginationInterface
      */
-    public function findAllWithPaging($page = 1, $itemsPerPage = 100, array $orderBy = [], QueryBuilder $qb = null) : PaginationInterface
+    public function findAllWithPaging($page = 1, $itemsPerPage = 100, array $orderBy = [], QueryBuilder $qb = null): PaginationInterface
     {
-        if(!$qb) {
+        if (!$qb) {
             $qb = $this->getQueryBuilder('e');
         }
 
@@ -101,9 +104,10 @@ abstract class EntityRepository
 
     /**
      * @param string $alias
+     *
      * @return QueryBuilder
      */
-    public function getQueryBuilder(string $alias) : QueryBuilder
+    public function getQueryBuilder(string $alias): QueryBuilder
     {
         return $this->repository->createQueryBuilder($alias);
     }
