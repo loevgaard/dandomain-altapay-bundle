@@ -38,6 +38,7 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
         // ...
@@ -64,6 +65,9 @@ loevgaard_dandomain_altapay:
     shared_key_1: insert shared key 1 from Dandomain
     shared_key_2: insert shared key 2 from Dandomain
     altapay_ips: ['77.66.40.133', '77.66.62.133']
+    default_settings:
+        layout:
+            logo: https://example.com/logo_default.png
     
 knp_doctrine_behaviors:
     timestampable: true
