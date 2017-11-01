@@ -17,7 +17,7 @@ Via Composer
 $ composer require loevgaard/dandomain-altapay-bundle
 ```
 
-## Usage
+### Update AppKernel.php
 
 Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project:
@@ -71,6 +71,13 @@ loevgaard_dandomain_altapay:
     
 knp_doctrine_behaviors:
     timestampable: true
+    
+    
+# Enable translator
+framework:
+    # ...
+    translator: { fallbacks: ['%locale%'] }
+    # ...
 ```
 
 ## Change log

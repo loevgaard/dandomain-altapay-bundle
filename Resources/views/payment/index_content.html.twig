@@ -23,8 +23,8 @@
             <td>{{ payment.customerName }}</td>
             <td><a href="mailto:{{ payment.customerEmail }}">{{ payment.customerEmail }}</a></td>
             <td>{{ payment.customerPhone }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.totalAmount }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.refundedAmount }}</td>
+            <td>{{ payment.totalAmount|localizedcurrency(payment.currencySymbol) }}</td>
+            <td>{{ payment.refundedAmount|localizedcurrency(payment.currencySymbol) }}</td>
             <td nowrap>
                 <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_show', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
                 {% if payment.captureable %}
