@@ -8,12 +8,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(
- *     name="dandomain_altapay_callbacks",
- *     indexes={@ORM\Index(columns={"slug"})}
- *     )
+ * @ORM\Table(name="dandomain_altapay_terminals")
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
+ *
+ * We don't get any identifying information from Altapay other than the title of the terminal
+ * therefore both the title and slug should be unique
+ *
+ * @UniqueEntity("title")
  * @UniqueEntity("slug")
  */
 class Terminal
@@ -33,7 +35,7 @@ class Terminal
      * @Assert\NotBlank()
      * @Assert\Length(max="191")
      *
-     * @ORM\Column(type="string", length=191)
+     * @ORM\Column(type="string", unique=true, length=191)
      */
     protected $title;
 
