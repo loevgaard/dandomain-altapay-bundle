@@ -3,6 +3,7 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
@@ -30,6 +31,9 @@ class SiteSetting
     /**
      * @var int
      *
+     * @Assert\NotBlank()
+     * @Assert\GreaterThan(0)
+     *
      * @ORM\Column(name="site_id", type="integer")
      */
     protected $siteId;
@@ -37,12 +41,17 @@ class SiteSetting
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
      * @ORM\Column(name="setting", type="string", length=191)
      */
     protected $setting;
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
      *
      * @ORM\Column(type="text")
      */

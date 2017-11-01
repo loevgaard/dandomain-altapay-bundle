@@ -5,7 +5,9 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 use Brick\Math\BigDecimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
+use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 
 /**
  * The Payment entity is a special entity since it maps a payment from the Dandomain Payment API
@@ -16,24 +18,33 @@ use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
  * POST request is not complete with all information needed to populate all the related entities, i.e. customers,
  * deliveries etc.
  *
- * @ORM\MappedSuperclass
+ * @ORM\Table(name="dandomain_altapay_payments")
+ * @ORM\Entity()
  */
-abstract class Payment extends BasePayment
+class Payment extends BasePayment
 {
     /**
      * @var int
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $apiKey;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $merchant;
 
@@ -48,259 +59,326 @@ abstract class Payment extends BasePayment
     protected $sessionId;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $currencySymbol;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="decimal", precision=12, scale=2)
      */
     protected $totalAmount;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $callBackUrl;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $fullCallBackOkUrl;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $callBackOkUrl;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $callBackServerUrl;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="integer")
      */
     protected $languageId;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $testMode;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="integer")
      */
     protected $paymentGatewayCurrencyCode;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="integer")
      */
     protected $cardTypeId;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerRekvNr;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerName;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $customerCompany;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerAddress;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $customerAddress2;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerZipCode;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerCity;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="integer")
      */
     protected $customerCountryId;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerCountry;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerPhone;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $customerFax;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerEmail;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $customerNote;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerCvrnr;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="integer")
      */
     protected $customerCustTypeId;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerEan;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerRes1;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerRes2;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerRes3;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerRes4;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $customerRes5;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $customerIp;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryName;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryCompany;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryAddress;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryAddress2;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryZipCode;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryCity;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $deliveryCountryID;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryCountry;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryPhone;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryFax;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryEmail;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $deliveryEan;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $shippingMethod;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="decimal", precision=12, scale=2)
      */
     protected $shippingFee;
 
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $paymentMethod;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="decimal", precision=12, scale=2)
      */
     protected $paymentFee;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $loadBalancerRealIp;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $referrer;
 
     /**
-     * @ORM\OneToMany(targetEntity="PaymentLine", mappedBy="payment")
+     * @ORM\OneToMany(targetEntity="PaymentLine", mappedBy="payment", cascade={"persist", "remove"}, fetch="EAGER")
      */
     protected $paymentLines;
 
@@ -311,77 +389,77 @@ abstract class Payment extends BasePayment
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true, unique=true)
+     * @ORM\Column(type="string", nullable=true, unique=true, length=191)
      */
     protected $altapayId;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $cardStatus;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $creditCardToken;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $creditCardMaskedPan;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $threeDSecureResult;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $liableForChargeback;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $blacklistToken;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $shop;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $terminal;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $transactionStatus;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $reasonCode;
 
@@ -395,7 +473,7 @@ abstract class Payment extends BasePayment
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $merchantCurrencyAlpha;
 
@@ -409,7 +487,7 @@ abstract class Payment extends BasePayment
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $cardHolderCurrencyAlpha;
 
@@ -458,7 +536,7 @@ abstract class Payment extends BasePayment
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $paymentNature;
 
@@ -500,7 +578,7 @@ abstract class Payment extends BasePayment
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=191)
      */
     protected $fraudExplanation;
 
@@ -513,6 +591,49 @@ abstract class Payment extends BasePayment
         $this->capturedAmount = 0;
         $this->refundedAmount = 0;
         $this->recurringDefaultAmount = 0;
+    }
+
+    /**
+     * This will transform a Dandomain Payment (parent) to a Payment (child).
+     *
+     * @param DandomainPayment $dandomainPayment
+     *
+     * @return Payment
+     */
+    public static function createFromDandomainPayment(DandomainPayment $dandomainPayment)
+    {
+        $payment = new self();
+
+        $methods = get_class_methods($dandomainPayment);
+
+        foreach ($methods as $method) {
+            if ('get' === substr($method, 0, 3)) {
+                $val = $dandomainPayment->{$method}();
+                $property = substr($method, 3);
+            } elseif ('is' === substr($method, 0, 2)) {
+                $val = $dandomainPayment->{$method}();
+                $property = substr($method, 2);
+            } else {
+                continue;
+            }
+
+            if (!is_scalar($val)) {
+                continue;
+            }
+
+            $setter = 'set'.$property;
+
+            if (method_exists($payment, $setter)) {
+                $payment->{$setter}($val);
+            }
+        }
+
+        foreach ($dandomainPayment->getPaymentLines() as $paymentLine) {
+            $newPaymentLine = PaymentLine::createFromDandomainPaymentLine($paymentLine);
+            $payment->addPaymentLine($newPaymentLine);
+        }
+
+        return $payment;
     }
 
     /**

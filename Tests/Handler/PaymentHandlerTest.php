@@ -10,8 +10,8 @@ use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
 use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
+use Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository;
 use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
-use Loevgaard\DandomainAltapayBundle\Manager\PaymentManager;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentHandlerTest extends TestCase
@@ -237,12 +237,12 @@ final class PaymentHandlerTest extends TestCase
      */
     private function getPaymentHandler($altapayClient): PaymentHandler
     {
-        /** @var PaymentManager|\PHPUnit_Framework_MockObject_MockObject $paymentManager */
-        $paymentManager = $this->getMockBuilder(PaymentManager::class)
+        /** @var PaymentRepository|\PHPUnit_Framework_MockObject_MockObject $paymentRepository */
+        $paymentRepository = $this->getMockBuilder(PaymentRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        return new PaymentHandler($altapayClient, $paymentManager);
+        return new PaymentHandler($altapayClient, $paymentRepository);
     }
 }

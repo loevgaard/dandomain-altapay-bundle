@@ -3,7 +3,7 @@
 <h1>{{ 'site_setting.index.heading'|trans }}</h1>
 
 <div class="actions">
-    <a href="{{ path('loevgaard_dandomain_altapay_site_setting_new') }}" class="btn btn-primary">{{ 'site_setting.index.new'|trans }}</a>
+    <a href="{{ path('loevgaard_dandomain_altapay_site_setting_new') }}" class="btn btn-primary">{{ 'layout.create'|trans }}</a>
 </div>
 
 <table class="table table-hover table-striped">
@@ -24,8 +24,8 @@
             <td>{{ siteSetting.setting }}</td>
             <td>{{ siteSetting.val }}</td>
             <td nowrap>
-                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_pakkelabels_shipping_method_mapping_show', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
-                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_pakkelabels_shipping_method_mapping_edit', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-edit"></span> {{ 'layout.edit'|trans }}</a>
+                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_site_setting_show', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
+                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_site_setting_edit', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-edit"></span> {{ 'layout.edit'|trans }}</a>
             </td>
         </tr>
         {% endfor %}

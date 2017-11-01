@@ -50,26 +50,6 @@ class LoevgaardDandomainAltapayExtensionTest extends TestCase
         $loader->load([$config], new ContainerBuilder());
     }
 
-    public function testThrowsExceptionUnlessTerminalClassSet()
-    {
-        $this->expectException(InvalidConfigurationException::class);
-
-        $loader = new LoevgaardDandomainAltapayExtension();
-        $config = $this->getEmptyConfig();
-        unset($config['terminal_class']);
-        $loader->load([$config], new ContainerBuilder());
-    }
-
-    public function testThrowsExceptionUnlessCallbackClassSet()
-    {
-        $this->expectException(InvalidConfigurationException::class);
-
-        $loader = new LoevgaardDandomainAltapayExtension();
-        $config = $this->getEmptyConfig();
-        unset($config['callback_class']);
-        $loader->load([$config], new ContainerBuilder());
-    }
-
     public function testThrowsExceptionUnlessAltapayIpsSet()
     {
         $this->expectException(InvalidConfigurationException::class);
@@ -92,11 +72,6 @@ class LoevgaardDandomainAltapayExtensionTest extends TestCase
         $this->assertSame($config['altapay_ips'], $container->getParameter('loevgaard_dandomain_altapay.altapay_ips'));
         $this->assertSame($config['shared_key_1'], $container->getParameter('loevgaard_dandomain_altapay.shared_key_1'));
         $this->assertSame($config['shared_key_2'], $container->getParameter('loevgaard_dandomain_altapay.shared_key_2'));
-        $this->assertSame($config['terminal_class'], $container->getParameter('loevgaard_dandomain_altapay.terminal_class'));
-        $this->assertSame($config['callback_class'], $container->getParameter('loevgaard_dandomain_altapay.callback_class'));
-        $this->assertSame($config['http_transaction_class'], $container->getParameter('loevgaard_dandomain_altapay.http_transaction_class'));
-        $this->assertSame($config['payment_class'], $container->getParameter('loevgaard_dandomain_altapay.payment_class'));
-        $this->assertSame($config['payment_line_class'], $container->getParameter('loevgaard_dandomain_altapay.payment_line_class'));
     }
 
     /**
@@ -111,11 +86,9 @@ altapay_url: https://altapayurl.com
 altapay_ips: ['123.123.123.123']
 shared_key_1: key1
 shared_key_2: key2
-terminal_class: TerminalClass
-callback_class: CallbackClass
-http_transaction_class: HttpTransactionClass
-payment_class: PaymentClass
-payment_line_class: PaymentLineClass
+default_settings:
+    layout:
+        logo: logo_default.jpg
 EOF;
         $parser = new Parser();
 

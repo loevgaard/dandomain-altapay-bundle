@@ -3,8 +3,8 @@
 namespace Loevgaard\DandomainAltapayBundle\Tests\Http;
 
 use Loevgaard\DandomainAltapayBundle\Entity\HttpTransaction;
+use Loevgaard\DandomainAltapayBundle\Entity\HttpTransactionRepository;
 use Loevgaard\DandomainAltapayBundle\Http\TransactionLogger;
-use Loevgaard\DandomainAltapayBundle\Manager\HttpTransactionManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,29 +16,23 @@ final class TransactionLoggerTest extends TestCase
         $request = new Request();
         $response = new Response();
 
-        /** @var HttpTransactionManager|\PHPUnit_Framework_MockObject_MockObject $httpTransactionManager */
-        $httpTransactionManager = $this->getMockBuilder(HttpTransactionManager::class)
+        /** @var HttpTransactionRepository|\PHPUnit_Framework_MockObject_MockObject $httpTransactionRepository */
+        $httpTransactionRepository = $this->getMockBuilder(HttpTransactionRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $httpTransactionManager
-            ->expects($this->any())
-            ->method('create')
-            ->willReturnCallback([$this, 'createHttpTransaction'])
-        ;
-
         $transactionCounter = 0;
 
-        $httpTransactionManager
+        $httpTransactionRepository
             ->expects($this->any())
-            ->method('update')
+            ->method('save')
             ->willReturnCallback(function () use (&$transactionCounter) {
                 ++$transactionCounter;
             })
         ;
 
-        $transactionLogger = new TransactionLogger($httpTransactionManager);
+        $transactionLogger = new TransactionLogger($httpTransactionRepository);
         $transactionLogger->setRequest($request);
         $transactionLogger->setResponse($request, $response);
         $transactionLogger->flush();
@@ -51,6 +45,6 @@ final class TransactionLoggerTest extends TestCase
      */
     public function createHttpTransaction()
     {
-        return $this->getMockForAbstractClass(HttpTransaction::class);
+        return new HttpTransaction();
     }
 }

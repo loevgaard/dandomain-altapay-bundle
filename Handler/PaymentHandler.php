@@ -10,7 +10,7 @@ use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReserva
 use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
-use Loevgaard\DandomainAltapayBundle\Manager\PaymentManager;
+use Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository;
 
 class PaymentHandler
 {
@@ -20,14 +20,14 @@ class PaymentHandler
     private $altapayClient;
 
     /**
-     * @var PaymentManager
+     * @var PaymentRepository
      */
-    private $paymentManager;
+    private $paymentRepository;
 
-    public function __construct(Client $client, PaymentManager $paymentManager)
+    public function __construct(Client $client, PaymentRepository $paymentRepository)
     {
         $this->altapayClient = $client;
-        $this->paymentManager = $paymentManager;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function capture(Payment $payment, float $amount = null)
@@ -113,7 +113,7 @@ class PaymentHandler
             $payment->setCapturedAmount($transaction->getCapturedAmount());
             $payment->setRefundedAmount($transaction->getRefundedAmount());
 
-            $this->paymentManager->update($payment);
+            $this->paymentRepository->save($payment);
         }
     }
 }

@@ -21,11 +21,6 @@ class LoevgaardDandomainAltapayExtension extends Extension
         $container->setParameter('loevgaard_dandomain_altapay.altapay_url', $config['altapay_url']);
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_1', $config['shared_key_1']);
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_2', $config['shared_key_2']);
-        $container->setParameter('loevgaard_dandomain_altapay.terminal_class', $config['terminal_class']);
-        $container->setParameter('loevgaard_dandomain_altapay.callback_class', $config['callback_class']);
-        $container->setParameter('loevgaard_dandomain_altapay.http_transaction_class', $config['http_transaction_class']);
-        $container->setParameter('loevgaard_dandomain_altapay.payment_class', $config['payment_class']);
-        $container->setParameter('loevgaard_dandomain_altapay.payment_line_class', $config['payment_line_class']);
         $container->setParameter('loevgaard_dandomain_altapay.cookie_payment_id', $config['cookie_payment_id']);
         $container->setParameter('loevgaard_dandomain_altapay.cookie_checksum_complete', $config['cookie_checksum_complete']);
 
@@ -40,6 +35,9 @@ class LoevgaardDandomainAltapayExtension extends Extension
 
     /**
      * This method will verify that all available settings in the SiteSetting are defined as parameters
+     *
+     * @param ContainerBuilder $container
+     * @throws \RuntimeException
      */
     private function verifyDefaultSettings(ContainerBuilder $container)
     {

@@ -2,7 +2,8 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Http;
 
-use Loevgaard\DandomainAltapayBundle\Manager\HttpTransactionManager;
+use Loevgaard\DandomainAltapayBundle\Entity\HttpTransaction;
+use Loevgaard\DandomainAltapayBundle\Entity\HttpTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,14 +15,14 @@ class TransactionLogger
     private $transactions;
 
     /**
-     * @var HttpTransactionManager
+     * @var HttpTransactionRepository
      */
-    private $httpTransactionManager;
+    private $httpTransactionRepository;
 
-    public function __construct(HttpTransactionManager $httpTransactionManager)
+    public function __construct(HttpTransactionRepository $httpTransactionRepository)
     {
         $this->transactions = [];
-        $this->httpTransactionManager = $httpTransactionManager;
+        $this->httpTransactionRepository = $httpTransactionRepository;
     }
 
     public function setRequest(Request $request)
@@ -51,11 +52,11 @@ class TransactionLogger
     public function flush()
     {
         foreach ($this->transactions as $transaction) {
-            $entity = $this->httpTransactionManager->create();
+            $entity = new HttpTransaction();
             $entity->setRequest($transaction['request'])
                 ->setResponse((string) $transaction['response']);
 
-            $this->httpTransactionManager->update($entity);
+            $this->httpTransactionRepository->save($entity);
         }
     }
 

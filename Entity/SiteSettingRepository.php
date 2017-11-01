@@ -2,10 +2,6 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
-/**
- * This repository is implemented using the principles described here:
- * https://www.tomasvotruba.cz/blog/2017/10/16/how-to-use-repository-with-doctrine-as-service-in-symfony/
- */
 class SiteSettingRepository extends EntityRepository
 {
     /**

@@ -28,41 +28,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response }
 
-    # Managers
-    loevgaard_dandomain_altapay.terminal_manager:
-        class: Loevgaard\DandomainAltapayBundle\Manager\TerminalManager
-        arguments:
-            - "@doctrine"
-            - "%loevgaard_dandomain_altapay.terminal_class%"
-        calls:
-            - [setContainer, ["@service_container"]]
-
-    loevgaard_dandomain_altapay.callback_manager:
-        class: Loevgaard\DandomainAltapayBundle\Manager\CallbackManager
-        arguments:
-            - "@doctrine"
-            - "%loevgaard_dandomain_altapay.callback_class%"
-
-    loevgaard_dandomain_altapay.http_transaction_manager:
-        class: Loevgaard\DandomainAltapayBundle\Manager\HttpTransactionManager
-        arguments:
-            - "@doctrine"
-            - "%loevgaard_dandomain_altapay.http_transaction_class%"
-
-    loevgaard_dandomain_altapay.payment_manager:
-        class: Loevgaard\DandomainAltapayBundle\Manager\PaymentManager
-        arguments:
-            - "@doctrine"
-            - "%loevgaard_dandomain_altapay.payment_class%"
-        calls:
-            - [setPaymentLineManager, ["@loevgaard_dandomain_altapay.payment_line_manager"]]
-
-    loevgaard_dandomain_altapay.payment_line_manager:
-        class: Loevgaard\DandomainAltapayBundle\Manager\PaymentLineManager
-        arguments:
-            - "@doctrine"
-            - "%loevgaard_dandomain_altapay.payment_line_class%"
-
     # Repositories
     loevgaard_dandomain_altapay.site_setting_repository:
         class: Loevgaard\DandomainAltapayBundle\Entity\SiteSettingRepository
@@ -71,11 +36,34 @@ services:
             - "@knp_paginator"
             - Loevgaard\DandomainAltapayBundle\Entity\SiteSetting
 
+    loevgaard_dandomain_altapay.http_transaction_repository:
+        class: Loevgaard\DandomainAltapayBundle\Entity\HttpTransactionRepository
+        arguments:
+            - "@doctrine"
+            - "@knp_paginator"
+            - Loevgaard\DandomainAltapayBundle\Entity\HttpTransaction
+
+    loevgaard_dandomain_altapay.terminal_repository:
+        class: Loevgaard\DandomainAltapayBundle\Entity\TerminalRepository
+        arguments:
+            - "@doctrine"
+            - "@knp_paginator"
+            - Loevgaard\DandomainAltapayBundle\Entity\Terminal
+        calls:
+            - [setContainer, ["@service_container"]]
+
+    loevgaard_dandomain_altapay.payment_repository:
+        class: Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository
+        arguments:
+            - "@doctrine"
+            - "@knp_paginator"
+            - Loevgaard\DandomainAltapayBundle\Entity\Payment
+
     # Misc
     loevgaard_dandomain_altapay.transaction_logger:
         class: Loevgaard\DandomainAltapayBundle\Http\TransactionLogger
         arguments:
-            - "@loevgaard_dandomain_altapay.http_transaction_manager"
+            - "@loevgaard_dandomain_altapay.http_transaction_repository"
 
     loevgaard_dandomain_altapay.altapay_client:
         class: Loevgaard\AltaPay\Client
@@ -89,14 +77,14 @@ services:
     loevgaard_dandomain_altapay.terminal_synchronizer:
         class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer
         arguments:
-            - "@loevgaard_dandomain_altapay.terminal_manager"
+            - "@loevgaard_dandomain_altapay.terminal_repository"
             - "@loevgaard_dandomain_altapay.altapay_client"
 
     loevgaard_dandomain_altapay.payment_handler:
         class: Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler
         arguments:
             - "@loevgaard_dandomain_altapay.altapay_client"
-            - "@loevgaard_dandomain_altapay.payment_manager"
+            - "@loevgaard_dandomain_altapay.payment_repository"
 
     loevgaard_dandomain_altapay.sync_terminals_command:
         class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand

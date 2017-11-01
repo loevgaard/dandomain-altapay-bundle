@@ -5,7 +5,7 @@ namespace Loevgaard\DandomainAltapayBundle\Tests\Synchronizer;
 use Loevgaard\AltaPay\Client;
 use Loevgaard\AltaPay\Response\GetTerminals;
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
-use Loevgaard\DandomainAltapayBundle\Manager\TerminalManager;
+use Loevgaard\DandomainAltapayBundle\Entity\TerminalRepository;
 use Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -65,26 +65,20 @@ XML;
             ;
         $getTerminalsResponse = new GetTerminals($psrResponse);
 
-        /** @var TerminalManager|\PHPUnit_Framework_MockObject_MockObject $terminalManager */
-        $terminalManager = $this->getMockBuilder(TerminalManager::class)
+        /** @var TerminalRepository|\PHPUnit_Framework_MockObject_MockObject $terminalRepository */
+        $terminalRepository = $this->getMockBuilder(TerminalRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create', 'update', 'findTerminalByTitle'])
+            ->setMethods(['save', 'findTerminalByTitle'])
             ->getMock()
         ;
 
-        $terminalManager
+        $terminalRepository
             ->expects($this->any())
-            ->method('create')
-            ->willReturn($terminal)
-        ;
-
-        $terminalManager
-            ->expects($this->any())
-            ->method('update')
+            ->method('save')
             ->willReturn(null)
         ;
 
-        $terminalManager
+        $terminalRepository
             ->expects($this->any())
             ->method('findTerminalByTitle')
             ->willReturn(null)
@@ -97,7 +91,7 @@ XML;
             ->willReturn($getTerminalsResponse)
         ;
 
-        $terminalSynchronizer = new TerminalSynchronizer($terminalManager, $altapayClient);
+        $terminalSynchronizer = new TerminalSynchronizer($terminalRepository, $altapayClient);
         $terminalSynchronizer->syncAll();
 
         $this->assertTrue(true);

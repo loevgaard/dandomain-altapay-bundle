@@ -5,13 +5,24 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Table(name="dandomain_altapay_http_transactions")
+ * @ORM\Entity()
  */
-abstract class HttpTransaction implements HttpTransactionInterface
+class HttpTransaction
 {
     use ORMBehaviors\Timestampable\Timestampable;
+
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
 
     /**
      * @var string
@@ -23,6 +34,8 @@ abstract class HttpTransaction implements HttpTransactionInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="text")
      */
     protected $request;
@@ -30,12 +43,32 @@ abstract class HttpTransaction implements HttpTransactionInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="text")
      */
     protected $response;
 
     /**
-     * {@inheritdoc}
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return HttpTransaction
+     */
+    public function setId(int $id) : HttpTransaction
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return string
      */
     public function getIp(): string
     {
@@ -43,9 +76,10 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $ip
+     * @return HttpTransaction
      */
-    public function setIp(string $ip): HttpTransactionInterface
+    public function setIp(string $ip): HttpTransaction
     {
         $this->ip = $ip;
 
@@ -53,7 +87,7 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getRequest(): string
     {
@@ -61,9 +95,10 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param $request
+     * @return HttpTransaction
      */
-    public function setRequest($request): HttpTransactionInterface
+    public function setRequest($request): HttpTransaction
     {
         if ($request instanceof Request) {
             $this->ip = $request->getClientIp();
@@ -87,7 +122,7 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getResponse(): string
     {
@@ -95,9 +130,10 @@ abstract class HttpTransaction implements HttpTransactionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $response
+     * @return HttpTransaction
      */
-    public function setResponse(string $response): HttpTransactionInterface
+    public function setResponse(string $response): HttpTransaction
     {
         $this->response = $response;
 

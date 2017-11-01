@@ -8,7 +8,7 @@ use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload
 use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
-use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
+use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator\Fixture\Gateway;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -140,13 +140,11 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
     }
 
     /**
-     * @return TerminalInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return Terminal
      */
     private function getTerminal()
     {
-        $terminal = $this->getMockForAbstractClass(TerminalInterface::class);
-
-        return $terminal;
+        return new Terminal();
     }
 
     /**

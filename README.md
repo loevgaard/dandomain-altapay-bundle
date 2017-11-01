@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-A library for using the Dandomain Pay API to make payments in the Dandomain webshop system
+A bundle for coupling a Dandomain payment to Altapay
 
 ## Install
 
@@ -47,84 +47,6 @@ class AppKernel extends Kernel
 }
 ```
 
-### Doctrine ORM classes
-```php
-<?php
-// src/AppBundle/Entity/Terminal.php
-
-namespace AppBundle\Entity;
-
-use Loevgaard\DandomainAltapayBundle\Entity\Terminal as BaseTerminal;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="terminals")
- */
-class Terminal extends BaseTerminal
-{
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-}
-```
-
-```php
-<?php
-// src/AppBundle/Entity/HttpTransaction.php
-
-namespace AppBundle\Entity;
-
-use Loevgaard\DandomainAltapayBundle\Entity\HttpTransaction as BaseHttpTransaction;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="http_transactions")
- */
-class HttpTransaction extends BaseHttpTransaction
-{
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-}
-```
-
-
-```php
-<?php
-namespace AppBundle\Entity;
-
-use Loevgaard\DandomainAltapayBundle\Entity\Callback as BaseCallback;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="callbacks")
- */
-class Callback extends BaseCallback
-{
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Payment", inversedBy="callbacks")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $payment;
-}
-```
-
 ### Import routing
 ```yaml
 # app/config/routing.yml
@@ -136,12 +58,11 @@ loevgaard_dandomain_altapay:
 ```yaml
 # app/config/config.yml
 loevgaard_dandomain_altapay:
+    altapay_url: https://testgateway.altapaysecure.com
     altapay_username: insert username
     altapay_password: insert password
     shared_key_1: insert shared key 1 from Dandomain
     shared_key_2: insert shared key 2 from Dandomain
-    callback_class: AppBundle\Entity\Callback
-    terminal_class: AppBundle\Entity\Terminal
     altapay_ips: ['77.66.40.133', '77.66.62.133']
     
 knp_doctrine_behaviors:

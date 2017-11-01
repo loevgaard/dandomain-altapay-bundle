@@ -90,8 +90,8 @@ class ApiController extends FOSRestController
      */
     private function findPaymentByOrderIdOrAltapayId($id): Payment
     {
-        $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
-        $payment = $paymentManager->findByOrderIdOrAltapayId($id);
+        $paymentRepository = $this->get('loevgaard_dandomain_altapay.payment_repository');
+        $payment = $paymentRepository->findByOrderIdOrAltapayId($id);
         if (!$payment) {
             throw $this->createNotFoundException();
         }

@@ -9,7 +9,7 @@ use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload
 use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
-use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
+use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -32,7 +32,7 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
     protected $dandomainPayment;
 
     /**
-     * @var TerminalInterface
+     * @var Terminal
      */
     protected $terminal;
 
@@ -49,7 +49,7 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
     public function __construct(
         ContainerInterface $container,
         DandomainPayment $paymentRequest,
-        TerminalInterface $terminal,
+        Terminal $terminal,
         Payment $payment,
         ChecksumHelper $checksumHelper
     ) {

@@ -4,34 +4,54 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Table(
+ *     name="dandomain_altapay_callbacks",
+ *     indexes={@ORM\Index(columns={"slug"})}
+ *     )
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("slug")
  */
-abstract class Terminal implements TerminalInterface
+class Terminal
 {
     /**
-     * @var mixed
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(type="string", length=191)
      */
     protected $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Length(max="191")
+     *
+     * @ORM\Column(name="slug", type="string", unique=true, length=191)
      */
     protected $slug;
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
+     * @Assert\Country()
      *
      * @ORM\Column(type="string")
      */
@@ -65,7 +85,7 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
     public function getId()
     {
@@ -73,9 +93,10 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param $id
+     * @return Terminal
      */
-    public function setId($id): TerminalInterface
+    public function setId($id): self
     {
         $this->id = $id;
 
@@ -83,7 +104,7 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return null|string
      */
     public function getTitle(): ?string
     {
@@ -91,9 +112,10 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $title
+     * @return Terminal
      */
-    public function setTitle(string $title): TerminalInterface
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -101,7 +123,7 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return null|string
      */
     public function getSlug(): ?string
     {
@@ -109,9 +131,10 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $slug
+     * @return Terminal
      */
-    public function setSlug(string $slug): TerminalInterface
+    public function setSlug(string $slug): self
     {
         $this->slug = $slug;
 
@@ -119,7 +142,7 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return null|string
      */
     public function getCountry(): ?string
     {
@@ -127,9 +150,10 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $country
+     * @return Terminal
      */
-    public function setCountry(string $country): TerminalInterface
+    public function setCountry(string $country): self
     {
         $this->country = $country;
 
@@ -137,7 +161,7 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return array|null
      */
     public function getNatures(): ?array
     {
@@ -145,9 +169,10 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $natures
+     * @return Terminal
      */
-    public function setNatures(array $natures): TerminalInterface
+    public function setNatures(array $natures): self
     {
         $this->natures = $natures;
 
@@ -155,7 +180,7 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return array|null
      */
     public function getCurrencies(): ?array
     {
@@ -163,9 +188,10 @@ abstract class Terminal implements TerminalInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $currencies
+     * @return Terminal
      */
-    public function setCurrencies(array $currencies): TerminalInterface
+    public function setCurrencies(array $currencies): self
     {
         $this->currencies = $currencies;
 

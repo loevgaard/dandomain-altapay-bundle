@@ -4,7 +4,7 @@ namespace Loevgaard\DandomainAltapayBundle\Controller;
 
 use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\Dandomain\Pay\Model\Payment;
-use Loevgaard\DandomainAltapayBundle\Entity\TerminalInterface;
+use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Loevgaard\DandomainAltapayBundle\Form\TestType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,8 +25,8 @@ class TestController extends Controller
      */
     public function indexAction()
     {
-        /** @var TerminalInterface[] $terminals */
-        $terminals = $this->get('loevgaard_dandomain_altapay.terminal_manager')->getRepository()->findAll();
+        /** @var Terminal[] $terminals */
+        $terminals = $this->get('loevgaard_dandomain_altapay.terminal_repository')->findAll();
 
         $form = $this->createForm(TestType::class);
 

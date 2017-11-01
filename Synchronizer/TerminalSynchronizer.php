@@ -3,23 +3,24 @@
 namespace Loevgaard\DandomainAltapayBundle\Synchronizer;
 
 use Loevgaard\AltaPay\Client as AltapayClient;
-use Loevgaard\DandomainAltapayBundle\Manager\TerminalManager;
+use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
+use Loevgaard\DandomainAltapayBundle\Entity\TerminalRepository;
 
 class TerminalSynchronizer
 {
     /**
-     * @var TerminalManager
+     * @var TerminalRepository
      */
-    protected $terminalManager;
+    protected $terminalRepository;
 
     /**
      * @var AltapayClient
      */
     protected $altapayClient;
 
-    public function __construct(TerminalManager $terminalManager, AltapayClient $altapayClient)
+    public function __construct(TerminalRepository $terminalRepository, AltapayClient $altapayClient)
     {
-        $this->terminalManager = $terminalManager;
+        $this->terminalRepository = $terminalRepository;
         $this->altapayClient = $altapayClient;
     }
 
@@ -28,9 +29,9 @@ class TerminalSynchronizer
         $response = $this->altapayClient->getTerminals();
 
         foreach ($response->getTerminals() as $terminal) {
-            $entity = $this->terminalManager->findTerminalByTitle($terminal->getTitle());
+            $entity = $this->terminalRepository->findTerminalByTitle($terminal->getTitle());
             if (!$entity) {
-                $entity = $this->terminalManager->create();
+                $entity = new Terminal();
             }
             $entity
                 ->setTitle($terminal->getTitle())
@@ -43,7 +44,7 @@ class TerminalSynchronizer
                 }, $terminal->getCurrencies()))
             ;
 
-            $this->terminalManager->update($entity);
+            $this->terminalRepository->save($entity);
         }
     }
 }

@@ -104,6 +104,12 @@ payment:
         altapay_payment_request: "An error occured during payment request. Try again. Message from gateway: %gateway_message%"
 
 site_setting:
+    index:
+        heading: Site settings
+        id: Id
+        site_id: Site id
+        setting: Setting
+        val: Value
     new:
         heading: New site setting
     edit:
@@ -140,3 +146,4 @@ layout:
     cancel: Cancel
     edit: Edit
     save: Save
+    create: Create

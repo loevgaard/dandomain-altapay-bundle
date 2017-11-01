@@ -33,14 +33,16 @@ class PaymentController extends Controller
      * @Method("GET")
      * @Route("", name="loevgaard_dandomain_altapay_payment_index")
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
+        $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
 
         /** @var Payment[] $payments */
-        $payments = $paymentManager->getRepository()->findAll();
+        $payments = $paymentRepository->findAllWithPaging($request->query->getInt('page', 1));
 
         return $this->render('@LoevgaardDandomainAltapay/payment/index.html.twig', [
             'payments' => $payments,
@@ -87,8 +89,8 @@ class PaymentController extends Controller
      */
     public function newAction(string $terminal, Request $request)
     {
-        $terminalManager = $this->container->get('loevgaard_dandomain_altapay.terminal_manager');
-        $paymentManager = $this->container->get('loevgaard_dandomain_altapay.payment_manager');
+        $terminalRepository = $this->container->get('loevgaard_dandomain_altapay.terminal_repository');
+        $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
         $translator = $this->getTranslator();
 
         $psrRequest = $this->createPsrRequest($request);
@@ -100,10 +102,10 @@ class PaymentController extends Controller
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_2')
         );
 
-        $paymentEntity = $paymentManager->createPaymentFromDandomainPaymentRequest($dandomainPayment);
-        $paymentManager->update($paymentEntity);
+        $paymentEntity = Payment::createFromDandomainPayment($dandomainPayment);
+        $paymentRepository->save($paymentEntity);
 
-        $terminalEntity = $terminalManager->findTerminalBySlug($terminal, true);
+        $terminalEntity = $terminalRepository->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
             throw TerminalNotFoundException::create($translator->trans('payment.exception.terminal_not_found', ['%terminal%' => $terminal], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
@@ -207,10 +209,10 @@ class PaymentController extends Controller
      */
     private function getPaymentFromId(int $paymentId): Payment
     {
-        $paymentManager = $this->get('loevgaard_dandomain_altapay.payment_manager');
+        $paymentRepository = $this->get('loevgaard_dandomain_altapay.payment_repository');
 
         /** @var Payment $payment */
-        $payment = $paymentManager->getRepository()->find($paymentId);
+        $payment = $paymentRepository->find($paymentId);
 
         if (!$payment) {
             throw $this->createNotFoundException('Payment with id `'.$paymentId.'` not found');

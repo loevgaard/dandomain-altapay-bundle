@@ -6,10 +6,10 @@ use Loevgaard\AltaPay\Callback\Xml as XmlCallback;
 use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository;
 use Loevgaard\DandomainAltapayBundle\Exception\CallbackException;
 use Loevgaard\DandomainAltapayBundle\Exception\NotAllowedIpException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
-use Loevgaard\DandomainAltapayBundle\Manager\PaymentManager;
 use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -178,7 +178,7 @@ class CallbackController extends Controller
                 /** @var Transaction $transaction */
                 $transaction = $transactions[0];
 
-                $paymentManager = $this->getPaymentManager();
+                $paymentRepository = $this->getPaymentRepository();
 
                 $payment
                     ->setAltapayId($transaction->getPaymentId())
@@ -210,15 +210,11 @@ class CallbackController extends Controller
                     ->setFraudRiskScore($transaction->getFraudRiskScore())
                     ->setFraudExplanation($transaction->getFraudExplanation())
                 ;
-                $paymentManager->update($payment);
+
+                $paymentRepository->persist($payment);
+                $paymentRepository->flush();
             }
         }
-
-        $callbackManager = $this->container->get('loevgaard_dandomain_altapay.callback_manager');
-        $callback = $callbackManager->createCallbackFromRequest($request);
-        $callback->setPayment($payment);
-
-        $callbackManager->update($callback);
 
         $allowedIps = $this->container->getParameter('loevgaard_dandomain_altapay.altapay_ips');
         if ('prod' === $this->container->get('kernel')->getEnvironment() && !in_array($request->getClientIp(), $allowedIps)) {
@@ -238,10 +234,10 @@ class CallbackController extends Controller
     protected function getPaymentFromRequest(Request $request)
     {
         $paymentId = $request->cookies->getInt($this->getParameter('loevgaard_dandomain_altapay.cookie_payment_id'));
-        $paymentManager = $this->getPaymentManager();
+        $paymentRepository = $this->getPaymentRepository();
 
         /** @var Payment $payment */
-        $payment = $paymentManager->getRepository()->find($paymentId);
+        $payment = $paymentRepository->find($paymentId);
 
         if (!$payment) {
             throw new CallbackException('Payment '.$paymentId.' does not exist');
@@ -251,26 +247,10 @@ class CallbackController extends Controller
     }
 
     /**
-     * Add a callback request to the payment for logging purposes.
-     *
-     * @param Payment $payment
-     * @param Request $request
+     * @return PaymentRepository
      */
-    protected function logCallback($payment, Request $request)
+    protected function getPaymentRepository()
     {
-        $callbackManager = $this->container->get('loevgaard_dandomain_altapay.callback_manager');
-        $callback = $callbackManager->create();
-        $callback->setPayment($payment)
-            ->setRequest((string) $request);
-
-        $callbackManager->update($callback);
-    }
-
-    /**
-     * @return PaymentManager
-     */
-    protected function getPaymentManager()
-    {
-        return $this->container->get('loevgaard_dandomain_altapay.payment_manager');
+        return $this->container->get('loevgaard_dandomain_altapay.payment_repository');
     }
 }
