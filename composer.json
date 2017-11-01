@@ -1,6 +1,6 @@
 {
     "name": "loevgaard/dandomain-altapay-bundle",
-    "description": "Symfony bundle for handling payments on Dandomain using AltaPay",
+    "description": "Symfony bundle for handling payments on Dandomain using Altapay",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -9,7 +9,6 @@
             "email": "joachim@loevgaard.dk"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": "^7.1",
         "cocur/slugify": "^2.5",
@@ -21,7 +20,6 @@
         "knplabs/knp-paginator-bundle": "^2.6",
         "loevgaard/altapay-php-sdk": "^1.0",
         "loevgaard/dandomain-pay-php-sdk": "^2.0",
-        "loevgaard/doctrine-manager": "~1.0",
         "sensio/framework-extra-bundle": "^3.0",
         "symfony/form": "^3.0",
         "symfony/framework-bundle": "^3.0",
