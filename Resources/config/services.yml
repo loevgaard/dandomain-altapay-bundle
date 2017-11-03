@@ -59,6 +59,37 @@ services:
             - "@knp_paginator"
             - Loevgaard\DandomainAltapayBundle\Entity\Payment
 
+    loevgaard_dandomain_altapay.event_repository:
+        class: Loevgaard\DandomainAltapayBundle\Entity\EventRepository
+        arguments:
+            - "@doctrine"
+            - "@knp_paginator"
+            - Loevgaard\DandomainAltapayBundle\Entity\Event
+            - "@jms_serializer.serializer"
+
+    loevgaard_dandomain_altapay.webhook_exchange_repository:
+        class: Loevgaard\DandomainAltapayBundle\Entity\WebhookExchangeRepository
+        arguments:
+            - "@doctrine"
+            - "@knp_paginator"
+            - Loevgaard\DandomainAltapayBundle\Entity\WebhookExchange
+
+    # Commands
+    loevgaard_dandomain_altapay.sync_terminals_command:
+        class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand
+        tags: [console.command]
+        calls:
+            - [setTerminalSynchronizer, ["@loevgaard_dandomain_altapay.terminal_synchronizer"]]
+
+    loevgaard_dandomain_altapay.call_webhooks_command:
+        class: Loevgaard\DandomainAltapayBundle\Command\CallWebhooksCommand
+        arguments:
+            - "@loevgaard_dandomain_altapay.webhook_exchange_repository"
+            - "@loevgaard_dandomain_altapay.event_repository"
+            - "@jms_serializer.serializer"
+            - "@logger"
+        tags: [console.command]
+
     # Misc
     loevgaard_dandomain_altapay.transaction_logger:
         class: Loevgaard\DandomainAltapayBundle\Http\TransactionLogger
@@ -85,12 +116,6 @@ services:
         arguments:
             - "@loevgaard_dandomain_altapay.altapay_client"
             - "@loevgaard_dandomain_altapay.payment_repository"
-
-    loevgaard_dandomain_altapay.sync_terminals_command:
-        class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand
-        tags: [console.command]
-        calls:
-            - [setTerminalSynchronizer, ["@loevgaard_dandomain_altapay.terminal_synchronizer"]]
 
     loevgaard_dandomain_altapay.site_settings_provider:
         class: Loevgaard\DandomainAltapayBundle\Provider\SiteSettingsProvider

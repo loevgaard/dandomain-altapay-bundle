@@ -6,6 +6,7 @@ use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Loevgaard\DandomainAltapayBundle\Event\PaymentCreated;
 use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
 use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
@@ -91,6 +92,7 @@ class PaymentController extends Controller
     {
         $terminalRepository = $this->container->get('loevgaard_dandomain_altapay.terminal_repository');
         $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
+        $eventRepository = $this->container->get('loevgaard_dandomain_altapay.event_repository');
         $translator = $this->getTranslator();
 
         $psrRequest = $this->createPsrRequest($request);
@@ -104,6 +106,8 @@ class PaymentController extends Controller
 
         $paymentEntity = Payment::createFromDandomainPayment($dandomainPayment);
         $paymentRepository->save($paymentEntity);
+
+        $eventRepository->saveEvent(new PaymentCreated($paymentEntity));
 
         $terminalEntity = $terminalRepository->findTerminalBySlug($terminal, true);
         if (!$terminalEntity) {
