@@ -57,6 +57,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('cookie_checksum_complete')
                     ->defaultValue('checksum_complete')
                 ->end()
+                ->arrayNode('webhook_urls')
+                    ->scalarPrototype()->end()
+                ->end()
                 ->arrayNode('default_settings')
                     ->isRequired()
                     ->children()
@@ -72,6 +75,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
+            ->fixXmlConfig('webhook_url')
             ->fixXmlConfig('altapay_ip')
         ;
 

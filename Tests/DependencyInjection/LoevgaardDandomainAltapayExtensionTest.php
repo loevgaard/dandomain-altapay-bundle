@@ -60,6 +60,16 @@ class LoevgaardDandomainAltapayExtensionTest extends TestCase
         $loader->load([$config], new ContainerBuilder());
     }
 
+    public function testThrowsExceptionUnlessDefaultSettingsSet()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+
+        $loader = new LoevgaardDandomainAltapayExtension();
+        $config = $this->getEmptyConfig();
+        unset($config['default_settings']);
+        $loader->load([$config], new ContainerBuilder());
+    }
+
     public function testGettersSetters()
     {
         $loader = new LoevgaardDandomainAltapayExtension();
@@ -69,9 +79,12 @@ class LoevgaardDandomainAltapayExtensionTest extends TestCase
 
         $this->assertSame($config['altapay_username'], $container->getParameter('loevgaard_dandomain_altapay.altapay_username'));
         $this->assertSame($config['altapay_password'], $container->getParameter('loevgaard_dandomain_altapay.altapay_password'));
+        $this->assertSame($config['altapay_url'], $container->getParameter('loevgaard_dandomain_altapay.altapay_url'));
         $this->assertSame($config['altapay_ips'], $container->getParameter('loevgaard_dandomain_altapay.altapay_ips'));
         $this->assertSame($config['shared_key_1'], $container->getParameter('loevgaard_dandomain_altapay.shared_key_1'));
         $this->assertSame($config['shared_key_2'], $container->getParameter('loevgaard_dandomain_altapay.shared_key_2'));
+        $this->assertSame($config['webhook_urls'], $container->getParameter('loevgaard_dandomain_altapay.webhook_urls'));
+        $this->assertSame($config['default_settings'], $container->getParameter('loevgaard_dandomain_altapay.default_settings'));
     }
 
     /**
@@ -86,6 +99,8 @@ altapay_url: https://altapayurl.com
 altapay_ips: ['123.123.123.123']
 shared_key_1: key1
 shared_key_2: key2
+webhook_urls:
+    ['http://www.example.com']
 default_settings:
     layout:
         logo: logo_default.jpg

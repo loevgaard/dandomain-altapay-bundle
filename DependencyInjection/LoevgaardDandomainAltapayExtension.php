@@ -23,8 +23,10 @@ class LoevgaardDandomainAltapayExtension extends Extension
         $container->setParameter('loevgaard_dandomain_altapay.shared_key_2', $config['shared_key_2']);
         $container->setParameter('loevgaard_dandomain_altapay.cookie_payment_id', $config['cookie_payment_id']);
         $container->setParameter('loevgaard_dandomain_altapay.cookie_checksum_complete', $config['cookie_checksum_complete']);
+        $container->setParameter('loevgaard_dandomain_altapay.webhook_urls', $config['webhook_urls']);
+        $container->setParameter('loevgaard_dandomain_altapay.default_settings', $config['default_settings']);
 
-        // set default settings
+        // set individual default settings
         $container->setParameter('loevgaard_dandomain_altapay.default_settings.layout.logo', $config['default_settings']['layout']['logo']);
 
         $this->verifyDefaultSettings($container);
