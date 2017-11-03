@@ -38,7 +38,7 @@ class Event
      *
      * @Assert\NotBlank()
      *
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="text")
      */
     protected $body;
 

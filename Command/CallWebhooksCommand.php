@@ -108,6 +108,8 @@ class CallWebhooksCommand extends ContainerAwareCommand
                 $this->webhookExchangeRepository->flush();
             }
         }
+
+        return 0;
     }
 
     /**
