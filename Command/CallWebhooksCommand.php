@@ -18,6 +18,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CallWebhooksCommand extends ContainerAwareCommand
 {
     /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
      * @var WebhookExchangeRepository
      */
     private $webhookExchangeRepository;
@@ -65,6 +70,8 @@ class CallWebhooksCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->output = $output;
+
         $maxCallsPerRun = 50;
 
         $webhookUrls = $this->getContainer()->getParameter('loevgaard_dandomain_altapay.webhook_urls');
@@ -79,6 +86,7 @@ class CallWebhooksCommand extends ContainerAwareCommand
         foreach ($webhookUrls as $webhookUrl) {
             $webhookExchange = $this->webhookExchangeRepository->findByUrl($webhookUrl);
             if(!$webhookExchange) {
+                $output->writeln('Webhook exchange with URL `'.$webhookUrl.'` is not created. Will be created now', OutputInterface::VERBOSITY_VERBOSE);
                 $webhookExchange = new WebhookExchange($webhookUrl);
                 $this->webhookExchangeRepository->save($webhookExchange);
             }
@@ -129,7 +137,9 @@ class CallWebhooksCommand extends ContainerAwareCommand
                 'body' => $serializedEvent
             ]);
         } catch (TransferException $e) {
-            $this->logger->error('Webhook URL ('.$url.') returned an error: '.$e->getMessage(), [
+            $this->output->writeln('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned an error: '.$e->getMessage(), OutputInterface::VERBOSITY_VERBOSE);
+
+            $this->logger->error('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned an error: '.$e->getMessage(), [
                 'event' => $serializedEvent
             ]);
 
@@ -137,7 +147,9 @@ class CallWebhooksCommand extends ContainerAwareCommand
         }
 
         if($response->getStatusCode() !== 200) {
-            $this->logger->error('Webhook URL ('.$url.') returned status code: '.$response->getStatusCode(), [
+            $this->output->writeln('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned status code: '.$response->getStatusCode(), OutputInterface::VERBOSITY_VERBOSE);
+
+            $this->logger->error('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned status code: '.$response->getStatusCode(), [
                 'event' => $serializedEvent
             ]);
 
