@@ -6,7 +6,6 @@ use Brick\Math\BigDecimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
-use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Money\Currency;
 use Money\Money;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -616,6 +615,11 @@ class Payment extends BasePayment
         $this->recurringDefaultAmount = 0;
     }
 
+    public static function createPaymentLine(string $productNumber, string $name, int $quantity, Money $price, int $vat)
+    {
+        return new PaymentLine($productNumber, $name, $quantity, $price, $vat);
+    }
+
     /**
      * Returns true if the payment can be captured.
      *
@@ -675,7 +679,7 @@ class Payment extends BasePayment
 
     // @todo create type hints for getters and setters
 
-    public function setTotalAmount(Money $totalAmount): DandomainPayment
+    public function setTotalAmount(Money $totalAmount): BasePayment
     {
         parent::setTotalAmount($totalAmount);
 
@@ -699,7 +703,7 @@ class Payment extends BasePayment
         return new Money($amount, new Currency($this->totalAmountCurrency));
     }
 
-    public function setShippingFee(Money $shippingFee): DandomainPayment
+    public function setShippingFee(Money $shippingFee): BasePayment
     {
         parent::setShippingFee($shippingFee);
 
@@ -723,7 +727,7 @@ class Payment extends BasePayment
         return new Money($amount, new Currency($this->shippingFeeCurrency));
     }
 
-    public function setPaymentFee(Money $paymentFee): DandomainPayment
+    public function setPaymentFee(Money $paymentFee): BasePayment
     {
         parent::setPaymentFee($paymentFee);
 

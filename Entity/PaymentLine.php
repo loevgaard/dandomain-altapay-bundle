@@ -79,30 +79,6 @@ class PaymentLine extends BasePaymentLine
     protected $payment;
 
     /**
-     * This will transform a Dandomain Payment Line (parent) to a Payment Line (child).
-     *
-     * @param DandomainPaymentLine $dandomainPaymentLine
-     *
-     * @return PaymentLine
-     */
-    public static function createFromDandomainPaymentLine(DandomainPaymentLine $dandomainPaymentLine)
-    {
-        $paymentLine = new self(
-            $dandomainPaymentLine->getProductNumber(),
-            $dandomainPaymentLine->getName(),
-            $dandomainPaymentLine->getQuantity(),
-            $dandomainPaymentLine->getPrice(),
-            $dandomainPaymentLine->getVat()
-        );
-
-        if ($dandomainPaymentLine->getPayment()) {
-            $paymentLine->setPayment($dandomainPaymentLine->getPayment());
-        }
-
-        return $paymentLine;
-    }
-
-    /**
      * @return int
      */
     public function getId(): ?int
