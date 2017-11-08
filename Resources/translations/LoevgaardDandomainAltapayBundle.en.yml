@@ -12,6 +12,7 @@ callback:
 payment:
     index:
         heading: Payments
+        empty_collection: No payments yet. Do some marketing please...
 
     show:
         heading: Payment
@@ -110,6 +111,7 @@ site_setting:
         site_id: Site id
         setting: Setting
         val: Value
+        empty_collection: No site settings created.
     new:
         heading: New site setting
     edit:
@@ -128,6 +130,7 @@ site_setting:
 terminal:
     index:
         heading: Terminals
+        empty_collection: No terminals created. Maybe you should sync with Altapay using the SyncTerminalsCommand?
     label:
         id: Id
         title: Title

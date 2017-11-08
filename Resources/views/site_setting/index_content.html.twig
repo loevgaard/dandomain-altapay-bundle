@@ -6,28 +6,32 @@
     <a href="{{ path('loevgaard_dandomain_altapay_site_setting_new') }}" class="btn btn-primary">{{ 'layout.create'|trans }}</a>
 </div>
 
-<table class="table table-hover table-striped">
-    <thead>
-        <tr>
-            <th>{{ 'site_setting.index.id'|trans }}</th>
-            <th>{{ 'site_setting.index.site_id'|trans }}</th>
-            <th>{{ 'site_setting.index.setting'|trans }}</th>
-            <th>{{ 'site_setting.index.val'|trans }}</th>
-            <th>{{ 'layout.actions'|trans }}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for siteSetting in siteSettings %}
-        <tr>
-            <td>{{ siteSetting.id }}</td>
-            <td>{{ siteSetting.siteId }}</td>
-            <td>{{ siteSetting.setting }}</td>
-            <td>{{ siteSetting.val }}</td>
-            <td nowrap>
-                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_site_setting_show', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
-                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_site_setting_edit', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-edit"></span> {{ 'layout.edit'|trans }}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if siteSettings|length %}
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>{{ 'site_setting.index.id'|trans }}</th>
+                <th>{{ 'site_setting.index.site_id'|trans }}</th>
+                <th>{{ 'site_setting.index.setting'|trans }}</th>
+                <th>{{ 'site_setting.index.val'|trans }}</th>
+                <th>{{ 'layout.actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for siteSetting in siteSettings %}
+            <tr>
+                <td>{{ siteSetting.id }}</td>
+                <td>{{ siteSetting.siteId }}</td>
+                <td>{{ siteSetting.setting }}</td>
+                <td>{{ siteSetting.val }}</td>
+                <td nowrap>
+                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_site_setting_show', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
+                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_site_setting_edit', {id: siteSetting.id}) }}"><span class="glyphicon glyphicon-edit"></span> {{ 'layout.edit'|trans }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">{{ 'site_setting.index.empty_collection'|trans }}</div>
+{% endif %}

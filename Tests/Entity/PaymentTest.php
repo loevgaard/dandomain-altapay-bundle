@@ -3,13 +3,16 @@
 namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
+use Loevgaard\Dandomain\Pay\Model\PaymentLine as DandomainPaymentLine;
+use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
 use PHPUnit\Framework\TestCase;
 
 class PaymentTest extends TestCase
 {
     public function testGettersSetters()
     {
-        $payment = $this->getPayment();
+        $payment = new Payment();
 
         $created = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2017-10-01 04:00:00');
         $updated = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2017-10-01 04:00:01');
@@ -77,11 +80,96 @@ class PaymentTest extends TestCase
         $this->assertSame('fraudexplanation', $payment->getFraudExplanation());
     }
 
-    /**
-     * @return Payment
-     */
-    public function getPayment()
+    public function testCreateFromDandomainPayment()
     {
-        return $this->getMockForAbstractClass(Payment::class);
+        // @todo set properties to test that they are transferred correctly
+        $payment = new Payment();
+        $payment->setShippingMethod('shippingmethod');
+        $payment->addPaymentLine(new PaymentLine());
+
+        $dandomainPayment = new DandomainPayment();
+        $dandomainPayment->setShippingMethod('shippingmethod');
+        $dandomainPayment->addPaymentLine(new DandomainPaymentLine());
+
+        $paymentFromDandomainPayment = Payment::createFromDandomainPayment($dandomainPayment);
+
+        $this->assertEquals($payment, $paymentFromDandomainPayment);
+    }
+
+    public function testIsCaptureable1()
+    {
+        $payment = new Payment();
+
+        $payment
+            ->setReservedAmount(100)
+            ->setCapturedAmount(100)
+            ->setRefundedAmount(0)
+        ;
+
+        $this->assertSame(false, $payment->isCaptureable());
+    }
+
+    public function testIsCaptureable2()
+    {
+        $payment = new Payment();
+
+        $payment
+            ->setReservedAmount(100)
+            ->setCapturedAmount(10)
+            ->setRefundedAmount(0)
+            ->setSupportsMultipleCaptures(false)
+        ;
+
+        $this->assertSame(false, $payment->isCaptureable());
+    }
+
+    public function testIsCaptureable3()
+    {
+        $payment = new Payment();
+
+        $payment
+            ->setReservedAmount(100)
+            ->setCapturedAmount(0)
+            ->setRefundedAmount(0)
+        ;
+
+        $this->assertSame(true, $payment->isCaptureable());
+    }
+
+    public function testIsRefundable1()
+    {
+        $payment = new Payment();
+
+        $payment
+            ->setCapturedAmount(100)
+            ->setRefundedAmount(100)
+        ;
+
+        $this->assertSame(false, $payment->isRefundable());
+    }
+
+    public function testIsRefundable2()
+    {
+        $payment = new Payment();
+
+        $payment
+            ->setCapturedAmount(100)
+            ->setRefundedAmount(50)
+            ->setSupportsMultipleRefunds(false)
+        ;
+
+        $this->assertSame(false, $payment->isRefundable());
+    }
+
+    public function testIsRefundable3()
+    {
+        $payment = new Payment();
+
+        $payment
+            ->setCapturedAmount(100)
+            ->setRefundedAmount(0)
+        ;
+
+        $this->assertSame(true, $payment->isRefundable());
     }
 }

@@ -44,8 +44,8 @@ class Event
 
     public function __construct(string $name, string $body)
     {
-        $this->name = $name;
-        $this->body = $body;
+        $this->setName($name);
+        $this->setBody($body);
     }
 
     /**

@@ -22,8 +22,8 @@ class TerminalRepository extends EntityRepository implements ContainerAwareInter
             'title' => $title,
         ]);
 
-        if ($fetch) {
-            $this->container->get('loevgaard_dandomain_altapay.terminal_synchronizer')->syncAll();
+        if (!$terminal && $fetch) {
+            $this->sync();
 
             return $this->findTerminalByTitle($title, false);
         }
@@ -44,12 +44,17 @@ class TerminalRepository extends EntityRepository implements ContainerAwareInter
             'slug' => $slug,
         ]);
 
-        if ($fetch) {
-            $this->container->get('loevgaard_dandomain_altapay.terminal_synchronizer')->syncAll();
+        if (!$terminal && $fetch) {
+            $this->sync();
 
             return $this->findTerminalBySlug($slug, false);
         }
 
         return $terminal;
+    }
+
+    private function sync()
+    {
+        $this->container->get('loevgaard_dandomain_altapay.terminal_synchronizer')->syncAll();
     }
 }

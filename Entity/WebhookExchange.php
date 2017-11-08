@@ -53,8 +53,8 @@ class WebhookExchange
 
     public function __construct(string $url, int $lastEventId = 0)
     {
-        $this->url = $url;
-        $this->lastEventId = $lastEventId;
+        $this->setUrl($url);
+        $this->setLastEventId($lastEventId);
     }
 
     /**

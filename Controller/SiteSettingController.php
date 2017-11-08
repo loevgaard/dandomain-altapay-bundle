@@ -128,7 +128,7 @@ class SiteSettingController extends Controller
     {
         return $this->render('@LoevgaardDandomainAltapay/site_setting/edit.html.twig', [
             'siteSetting' => $siteSetting,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 

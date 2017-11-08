@@ -18,11 +18,13 @@ class HttpTransactionTest extends TestCase
         $response = $this->getMockClass(ResponseInterface::class);
 
         $httpTransaction
+            ->setId(1)
             ->setRequest($request)
             ->setResponse($response)
             ->setIp('127.0.0.1')
         ;
 
+        $this->assertSame(1, $httpTransaction->getId());
         $this->assertSame($request, $httpTransaction->getRequest());
         $this->assertSame($response, $httpTransaction->getResponse());
         $this->assertSame('127.0.0.1', $httpTransaction->getIp());
