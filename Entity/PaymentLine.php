@@ -5,6 +5,8 @@ namespace Loevgaard\DandomainAltapayBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Loevgaard\Dandomain\Pay\Model\PaymentLine as BasePaymentLine;
 use Loevgaard\Dandomain\Pay\Model\PaymentLine as DandomainPaymentLine;
+use Money\Currency;
+use Money\Money;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -49,9 +51,16 @@ class PaymentLine extends BasePaymentLine
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\Column(type="decimal", precision=12, scale=2)
+     * @ORM\Column(type="integer")
      */
-    protected $price;
+    protected $priceAmount;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $priceCurrency;
 
     /**
      * @Assert\NotBlank()
@@ -78,26 +87,16 @@ class PaymentLine extends BasePaymentLine
      */
     public static function createFromDandomainPaymentLine(DandomainPaymentLine $dandomainPaymentLine)
     {
-        $paymentLine = new self();
+        $paymentLine = new self(
+            $dandomainPaymentLine->getProductNumber(),
+            $dandomainPaymentLine->getName(),
+            $dandomainPaymentLine->getQuantity(),
+            $dandomainPaymentLine->getPrice(),
+            $dandomainPaymentLine->getVat()
+        );
 
-        $methods = get_class_methods($dandomainPaymentLine);
-        foreach ($methods as $method) {
-            if ('get' === substr($method, 0, 3)) {
-                $val = $dandomainPaymentLine->{$method}();
-                $property = substr($method, 3);
-            } elseif ('is' === substr($method, 0, 2)) {
-                $val = $dandomainPaymentLine->{$method}();
-                $property = substr($method, 2);
-            } else {
-                continue;
-            }
-            if (!is_scalar($val)) {
-                continue;
-            }
-            $setter = 'set'.$property;
-            if (method_exists($paymentLine, $setter)) {
-                $paymentLine->{$setter}($val);
-            }
+        if ($dandomainPaymentLine->getPayment()) {
+            $paymentLine->setPayment($dandomainPaymentLine->getPayment());
         }
 
         return $paymentLine;
@@ -121,5 +120,29 @@ class PaymentLine extends BasePaymentLine
         $this->id = $id;
 
         return $this;
+    }
+
+    public function setPrice(Money $price): DandomainPaymentLine
+    {
+        parent::setPrice($price);
+
+        $this->priceAmount = $price->getAmount();
+        $this->priceCurrency = $price->getCurrency()->getCode();
+
+        return $this;
+    }
+
+    public function getPrice(): Money
+    {
+        if (!$this->priceCurrency) {
+            return null;
+        }
+
+        $amount = $this->priceAmount;
+        if (!$amount) {
+            $amount = 0;
+        }
+
+        return new Money($amount, new Currency($this->priceCurrency));
     }
 }

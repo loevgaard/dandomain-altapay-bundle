@@ -62,7 +62,7 @@ class HttpTransaction
      *
      * @return HttpTransaction
      */
-    public function setId(int $id): HttpTransaction
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -82,7 +82,7 @@ class HttpTransaction
      *
      * @return HttpTransaction
      */
-    public function setIp(string $ip): HttpTransaction
+    public function setIp(string $ip): self
     {
         $this->ip = $ip;
 
@@ -102,7 +102,7 @@ class HttpTransaction
      *
      * @return HttpTransaction
      */
-    public function setRequest($request): HttpTransaction
+    public function setRequest($request): self
     {
         if ($request instanceof Request) {
             $this->ip = $request->getClientIp();
@@ -138,7 +138,7 @@ class HttpTransaction
      *
      * @return HttpTransaction
      */
-    public function setResponse(string $response): HttpTransaction
+    public function setResponse(string $response): self
     {
         $this->response = $response;
 

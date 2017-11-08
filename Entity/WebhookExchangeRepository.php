@@ -6,13 +6,14 @@ class WebhookExchangeRepository extends EntityRepository
 {
     /**
      * @param string $url
+     *
      * @return WebhookExchange|null
      */
-    public function findByUrl(string $url) : ?WebhookExchange
+    public function findByUrl(string $url): ?WebhookExchange
     {
         /** @var WebhookExchange $obj */
         $obj = $this->findOneBy([
-            'url' => $url
+            'url' => $url,
         ]);
 
         return $obj;

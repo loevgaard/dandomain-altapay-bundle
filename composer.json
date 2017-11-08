@@ -20,7 +20,7 @@
         "knplabs/doctrine-behaviors": "~1.1",
         "knplabs/knp-paginator-bundle": "^2.6",
         "loevgaard/altapay-php-sdk": "^1.0",
-        "loevgaard/dandomain-pay-php-sdk": "^2.0",
+        "loevgaard/dandomain-pay-php-sdk": "^3.0",
         "sensio/framework-extra-bundle": "^3.0",
         "symfony/form": "^3.0",
         "symfony/framework-bundle": "^3.0",
@@ -31,6 +31,7 @@
         "symfony/twig-bundle": "^3.0",
         "symfony/validator": "^3.0",
         "symfony/yaml": "^3.0",
+        "tbbc/money-bundle": "^3.1",
         "twig/extensions": "^1.5",
         "zendframework/zend-diactoros": "~1.0"
     },

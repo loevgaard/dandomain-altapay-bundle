@@ -12,6 +12,8 @@ use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository;
 use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentHandlerTest extends TestCase
@@ -138,13 +140,7 @@ final class PaymentHandlerTest extends TestCase
         $payment->setAltapayId('altapayid');
 
         /** @var PaymentLine|\PHPUnit_Framework_MockObject_MockObject $paymentLine */
-        $paymentLine = $this->getMockForAbstractClass(PaymentLine::class);
-        $paymentLine->setPrice(79.96)
-            ->setVat(25)
-            ->setQuantity(1)
-            ->setName('name')
-            ->setProductNumber('productnumber')
-        ;
+        $paymentLine = new PaymentLine('productnumber', 'name', 1, new Money('7996', new Currency('DKK')), 25);
 
         $paymentHandler = $this->getPaymentHandler($altapayClient);
         $paymentHandler->refund($payment, [$paymentLine], 99.95);
@@ -186,14 +182,7 @@ final class PaymentHandlerTest extends TestCase
         $payment = $this->getPayment();
         $payment->setAltapayId('altapayid');
 
-        /** @var PaymentLine|\PHPUnit_Framework_MockObject_MockObject $paymentLine */
-        $paymentLine = $this->getMockForAbstractClass(PaymentLine::class);
-        $paymentLine->setPrice(100)
-            ->setVat(25)
-            ->setQuantity(1)
-            ->setName('name')
-            ->setProductNumber('productnumber')
-        ;
+        $paymentLine = new PaymentLine('productnumber', 'name', 1, new Money('10000', new Currency('DKK')), 25);
 
         $paymentHandler = $this->getPaymentHandler($altapayClient);
         $paymentHandler->refund($payment, [$paymentLine], 80);

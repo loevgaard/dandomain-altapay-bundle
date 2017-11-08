@@ -39,6 +39,7 @@ class AppKernel extends Kernel
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Tbbc\MoneyBundle\TbbcMoneyBundle(),
         );
 
         // ...

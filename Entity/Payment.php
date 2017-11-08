@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
 use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
+use Money\Currency;
+use Money\Money;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -69,9 +71,16 @@ class Payment extends BasePayment
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\Column(type="decimal", precision=12, scale=2)
+     * @ORM\Column(type="integer")
      */
-    protected $totalAmount;
+    protected $totalAmountAmount;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $totalAmountCurrency;
 
     /**
      * @Assert\NotBlank()
@@ -346,9 +355,16 @@ class Payment extends BasePayment
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\Column(type="decimal", precision=12, scale=2)
+     * @ORM\Column(type="integer")
      */
-    protected $shippingFee;
+    protected $shippingFeeAmount;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $shippingFeeCurrency;
 
     /**
      * @Assert\NotBlank()
@@ -361,9 +377,16 @@ class Payment extends BasePayment
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\Column(type="decimal", precision=12, scale=2)
+     * @ORM\Column(type="integer")
      */
-    protected $paymentFee;
+    protected $paymentFeeAmount;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $paymentFeeCurrency;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=191)
@@ -694,6 +717,78 @@ class Payment extends BasePayment
     }
 
     // @todo create type hints for getters and setters
+
+    public function setTotalAmount(Money $totalAmount): DandomainPayment
+    {
+        parent::setTotalAmount($totalAmount);
+
+        $this->totalAmountAmount = $totalAmount->getAmount();
+        $this->totalAmountCurrency = $totalAmount->getCurrency()->getCode();
+
+        return $this;
+    }
+
+    public function getTotalAmount(): ?Money
+    {
+        if (!$this->totalAmountCurrency) {
+            return null;
+        }
+
+        $amount = $this->totalAmountAmount;
+        if (!$amount) {
+            $amount = 0;
+        }
+
+        return new Money($amount, new Currency($this->totalAmountCurrency));
+    }
+
+    public function setShippingFee(Money $shippingFee): DandomainPayment
+    {
+        parent::setShippingFee($shippingFee);
+
+        $this->shippingFeeAmount = $shippingFee->getAmount();
+        $this->shippingFeeCurrency = $shippingFee->getCurrency()->getCode();
+
+        return $this;
+    }
+
+    public function getShippingFee(): ?Money
+    {
+        if (!$this->shippingFeeCurrency) {
+            return null;
+        }
+
+        $amount = $this->shippingFeeAmount;
+        if (!$amount) {
+            $amount = 0;
+        }
+
+        return new Money($amount, new Currency($this->shippingFeeCurrency));
+    }
+
+    public function setPaymentFee(Money $paymentFee): DandomainPayment
+    {
+        parent::setPaymentFee($paymentFee);
+
+        $this->paymentFeeAmount = $paymentFee->getAmount();
+        $this->paymentFeeCurrency = $paymentFee->getCurrency()->getCode();
+
+        return $this;
+    }
+
+    public function getPaymentFee(): ?Money
+    {
+        if (!$this->paymentFeeCurrency) {
+            return null;
+        }
+
+        $amount = $this->paymentFeeAmount;
+        if (!$amount) {
+            $amount = 0;
+        }
+
+        return new Money($amount, new Currency($this->paymentFeeCurrency));
+    }
 
     /**
      * @return int

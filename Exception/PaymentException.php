@@ -24,7 +24,7 @@ class PaymentException extends Exception
      *
      * @return PaymentException
      */
-    public static function create(string $message, Request $request, Payment $payment): PaymentException
+    public static function create(string $message, Request $request, Payment $payment): self
     {
         $e = new static($message);
         $e->setRequest($request);
@@ -46,7 +46,7 @@ class PaymentException extends Exception
      *
      * @return PaymentException
      */
-    public function setRequest(Request $request): PaymentException
+    public function setRequest(Request $request): self
     {
         $this->request = $request;
 
@@ -66,7 +66,7 @@ class PaymentException extends Exception
      *
      * @return PaymentException
      */
-    public function setPayment(Payment $payment): PaymentException
+    public function setPayment(Payment $payment): self
     {
         $this->payment = $payment;
 

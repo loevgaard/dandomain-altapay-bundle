@@ -30,9 +30,10 @@ class EventRepository extends EntityRepository
     /**
      * @param int $offsetEventId
      * @param int $limit
+     *
      * @return Event[]|null
      */
-    public function findRecentEvents(int $offsetEventId, int $limit = 0) : ?array
+    public function findRecentEvents(int $offsetEventId, int $limit = 0): ?array
     {
         $qb = $this->repository->createQueryBuilder('e');
         $qb
@@ -40,7 +41,7 @@ class EventRepository extends EntityRepository
             ->orderBy('e.id')
         ;
 
-        if($limit) {
+        if ($limit) {
             $qb->setMaxResults($limit);
         }
 

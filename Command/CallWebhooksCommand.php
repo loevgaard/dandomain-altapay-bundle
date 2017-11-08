@@ -75,8 +75,9 @@ class CallWebhooksCommand extends ContainerAwareCommand
         $maxCallsPerRun = 50;
 
         $webhookUrls = $this->getContainer()->getParameter('loevgaard_dandomain_altapay.webhook_urls');
-        if(empty($webhookUrls)) {
+        if (empty($webhookUrls)) {
             $output->writeln('No webhook URLs defined');
+
             return 0;
         }
 
@@ -85,7 +86,7 @@ class CallWebhooksCommand extends ContainerAwareCommand
 
         foreach ($webhookUrls as $webhookUrl) {
             $webhookExchange = $this->webhookExchangeRepository->findByUrl($webhookUrl);
-            if(!$webhookExchange) {
+            if (!$webhookExchange) {
                 $output->writeln('Webhook exchange with URL `'.$webhookUrl.'` is not created. Will be created now', OutputInterface::VERBOSITY_VERBOSE);
                 $webhookExchange = new WebhookExchange($webhookUrl);
                 $this->webhookExchangeRepository->save($webhookExchange);
@@ -100,7 +101,7 @@ class CallWebhooksCommand extends ContainerAwareCommand
             $events = $this->eventRepository->findRecentEvents($webhookExchange->getLastEventId(), $eventsPerExchange);
 
             foreach ($events as $event) {
-                if(!$this->callWebhook($webhookExchange->getUrl(), $event)) {
+                if (!$this->callWebhook($webhookExchange->getUrl(), $event)) {
                     break;
                 }
 
@@ -114,21 +115,21 @@ class CallWebhooksCommand extends ContainerAwareCommand
 
     /**
      * @param string $url
-     * @param Event $event
+     * @param Event  $event
      *
      * @return bool
      */
-    private function callWebhook(string $url, Event $event) : bool
+    private function callWebhook(string $url, Event $event): bool
     {
-        if(!$this->httpClient) {
+        if (!$this->httpClient) {
             $this->httpClient = new Client([
                 RequestOptions::ALLOW_REDIRECTS => false,
                 RequestOptions::CONNECT_TIMEOUT => 15,
                 RequestOptions::TIMEOUT => 30,
                 RequestOptions::HTTP_ERRORS => false,
                 RequestOptions::HEADERS => [
-                    'Content-Type' => 'application/json'
-                ]
+                    'Content-Type' => 'application/json',
+                ],
             ]);
         }
 
@@ -136,23 +137,23 @@ class CallWebhooksCommand extends ContainerAwareCommand
 
         try {
             $response = $this->httpClient->post($url, [
-                'body' => $serializedEvent
+                'body' => $serializedEvent,
             ]);
         } catch (TransferException $e) {
             $this->output->writeln('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned an error: '.$e->getMessage(), OutputInterface::VERBOSITY_VERBOSE);
 
             $this->logger->error('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned an error: '.$e->getMessage(), [
-                'event' => $serializedEvent
+                'event' => $serializedEvent,
             ]);
 
             return false;
         }
 
-        if($response->getStatusCode() !== 200) {
+        if (200 !== $response->getStatusCode()) {
             $this->output->writeln('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned status code: '.$response->getStatusCode(), OutputInterface::VERBOSITY_VERBOSE);
 
             $this->logger->error('[Event: '.$event->getId().'] Webhook URL ('.$url.') returned status code: '.$response->getStatusCode(), [
-                'event' => $serializedEvent
+                'event' => $serializedEvent,
             ]);
 
             return false;

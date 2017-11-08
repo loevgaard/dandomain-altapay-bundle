@@ -3,12 +3,12 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * We use the terminology from Message Queues where an exchange is where we publish events
+ * We use the terminology from Message Queues where an exchange is where we publish events.
  *
  * @ORM\Table(name="dandomain_altapay_webhook_exchanges")
  * @ORM\Entity()
@@ -28,7 +28,7 @@ class WebhookExchange
     private $id;
 
     /**
-     * This will hold the URL to where the events are published
+     * This will hold the URL to where the events are published.
      *
      * @var string
      *
@@ -41,7 +41,7 @@ class WebhookExchange
     private $url;
 
     /**
-     * This will hold the last event id published
+     * This will hold the last event id published.
      *
      * @var int
      *
@@ -67,11 +67,13 @@ class WebhookExchange
 
     /**
      * @param int $id
+     *
      * @return WebhookExchange
      */
-    public function setId(int $id) : self
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -85,11 +87,13 @@ class WebhookExchange
 
     /**
      * @param string $url
+     *
      * @return WebhookExchange
      */
-    public function setUrl(string $url) : self
+    public function setUrl(string $url): self
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -103,11 +107,13 @@ class WebhookExchange
 
     /**
      * @param int $lastEventId
+     *
      * @return WebhookExchange
      */
-    public function setLastEventId(int $lastEventId) : self
+    public function setLastEventId(int $lastEventId): self
     {
         $this->lastEventId = $lastEventId;
+
         return $this;
     }
 }

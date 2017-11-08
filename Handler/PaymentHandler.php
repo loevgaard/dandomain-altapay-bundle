@@ -69,14 +69,16 @@ class PaymentHandler
                     $paymentLine->getName(),
                     $paymentLine->getProductNumber(),
                     $paymentLine->getQuantity(),
-                    $paymentLine->getPriceInclVat()
+                    (float) $paymentLine->getPriceInclVat()->getAmount() / 100
                 );
                 $orderLine->setTaxPercent($paymentLine->getVat());
 
                 $payload->addOrderLine($orderLine);
 
-                $paymentLinesAmountInclVat += $paymentLine->getPriceInclVat();
+                $paymentLinesAmountInclVat += (float) $paymentLine->getPriceInclVat()->getAmount();
             }
+
+            $paymentLinesAmountInclVat = $paymentLinesAmountInclVat / 100;
 
             /*
              * If the amount is set, but does not match the payment lines amount we have to

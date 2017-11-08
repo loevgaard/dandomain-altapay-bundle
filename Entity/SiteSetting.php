@@ -82,7 +82,7 @@ class SiteSetting
      *
      * @return SiteSetting
      */
-    public function setId(int $id): SiteSetting
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -102,7 +102,7 @@ class SiteSetting
      *
      * @return SiteSetting
      */
-    public function setSiteId(int $siteId): SiteSetting
+    public function setSiteId(int $siteId): self
     {
         $this->siteId = $siteId;
 
@@ -122,7 +122,7 @@ class SiteSetting
      *
      * @return SiteSetting
      */
-    public function setSetting(string $setting): SiteSetting
+    public function setSetting(string $setting): self
     {
         $this->setting = $setting;
 
@@ -142,7 +142,7 @@ class SiteSetting
      *
      * @return SiteSetting
      */
-    public function setVal(string $val): SiteSetting
+    public function setVal(string $val): self
     {
         $this->val = $val;
 

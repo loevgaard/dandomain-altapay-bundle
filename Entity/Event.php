@@ -3,8 +3,8 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="dandomain_altapay_events")
@@ -58,11 +58,13 @@ class Event
 
     /**
      * @param int $id
+     *
      * @return Event
      */
-    public function setId(int $id) : self
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -76,11 +78,13 @@ class Event
 
     /**
      * @param string $name
+     *
      * @return Event
      */
-    public function setName(string $name) : self
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -94,11 +98,13 @@ class Event
 
     /**
      * @param string $body
+     *
      * @return Event
      */
-    public function setBody(string $body) : self
+    public function setBody(string $body): self
     {
         $this->body = $body;
+
         return $this;
     }
 }

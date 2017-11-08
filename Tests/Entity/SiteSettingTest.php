@@ -22,6 +22,6 @@ class SiteSettingTest extends TestCase
         $this->assertSame(SiteSetting::SETTING_LAYOUT_LOGO, $siteSetting->getSetting());
         $this->assertSame(26, $siteSetting->getSiteId());
         $this->assertSame('value', $siteSetting->getVal());
-        $this->assertSame('value', (string)$siteSetting);
+        $this->assertSame('value', (string) $siteSetting);
     }
 }
