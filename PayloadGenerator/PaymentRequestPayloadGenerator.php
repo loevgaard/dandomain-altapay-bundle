@@ -66,19 +66,23 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
      */
     public function generate(): PaymentRequestPayload
     {
+        $totalAmount = (float) $this->dandomainPayment->getTotalAmount()->getAmount() / 100;
+
         $paymentRequestPayload = new PaymentRequestPayload(
             $this->terminal->getTitle(),
             $this->dandomainPayment->getOrderId(),
-            $this->dandomainPayment->getTotalAmount(),
+            $totalAmount,
             $this->dandomainPayment->getCurrencySymbol()
         );
 
         foreach ($this->dandomainPayment->getPaymentLines() as $paymentLine) {
+            $priceExclVat = (float) $paymentLine->getPriceExclVat()->getAmount() / 100;
+
             $orderLinePayload = $this->createOrderLine(
                 $paymentLine->getName(),
                 $paymentLine->getProductNumber(),
                 $paymentLine->getQuantity(),
-                $paymentLine->getPriceExclVat(),
+                $priceExclVat,
                 $paymentLine->getVat()
             );
 
@@ -86,12 +90,14 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
         }
 
         // add payment fee as an order line if it's set
-        if ($this->dandomainPayment->getPaymentFee()) {
+        if ($this->dandomainPayment->getPaymentFee() && 0 !== (int) $this->dandomainPayment->getPaymentFee()->getAmount()) {
+            $paymentFee = (float) $this->dandomainPayment->getPaymentFee()->getAmount() / 100;
+
             $orderLinePayload = $this->createOrderLine(
                 $this->dandomainPayment->getPaymentMethod(),
                 $this->dandomainPayment->getPaymentMethod(),
                 1,
-                $this->dandomainPayment->getPaymentFee(),
+                $paymentFee,
                 null,
                 OrderLinePayload::GOODS_TYPE_HANDLING
             );
@@ -99,12 +105,14 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
         }
 
         // add shipping fee as an order line if it's set
-        if ($this->dandomainPayment->getShippingFee()) {
+        if ($this->dandomainPayment->getShippingFee() && 0 !== (int) $this->dandomainPayment->getShippingFee()->getAmount()) {
+            $shippingFee = (float) $this->dandomainPayment->getShippingFee()->getAmount() / 100;
+
             $orderLinePayload = $this->createOrderLine(
                 $this->dandomainPayment->getShippingMethod(),
                 $this->dandomainPayment->getShippingMethod(),
                 1,
-                $this->dandomainPayment->getShippingFee(),
+                $shippingFee,
                 null,
                 OrderLinePayload::GOODS_TYPE_SHIPMENT
             );

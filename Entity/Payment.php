@@ -617,49 +617,6 @@ class Payment extends BasePayment
     }
 
     /**
-     * This will transform a Dandomain Payment (parent) to a Payment (child).
-     *
-     * @param DandomainPayment $dandomainPayment
-     *
-     * @return Payment
-     */
-    public static function createFromDandomainPayment(DandomainPayment $dandomainPayment)
-    {
-        $payment = new self();
-
-        $methods = get_class_methods($dandomainPayment);
-
-        foreach ($methods as $method) {
-            if ('get' === substr($method, 0, 3)) {
-                $val = $dandomainPayment->{$method}();
-                $property = substr($method, 3);
-            } elseif ('is' === substr($method, 0, 2)) {
-                $val = $dandomainPayment->{$method}();
-                $property = substr($method, 2);
-            } else {
-                continue;
-            }
-
-            if (!is_scalar($val)) {
-                continue;
-            }
-
-            $setter = 'set'.$property;
-
-            if (method_exists($payment, $setter)) {
-                $payment->{$setter}($val);
-            }
-        }
-
-        foreach ($dandomainPayment->getPaymentLines() as $paymentLine) {
-            $newPaymentLine = PaymentLine::createFromDandomainPaymentLine($paymentLine);
-            $payment->addPaymentLine($newPaymentLine);
-        }
-
-        return $payment;
-    }
-
-    /**
      * Returns true if the payment can be captured.
      *
      * @return bool

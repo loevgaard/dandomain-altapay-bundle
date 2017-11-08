@@ -3,7 +3,6 @@
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
 use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
-use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Event\PaymentCreated;
@@ -96,15 +95,15 @@ class PaymentController extends Controller
         $translator = $this->getTranslator();
 
         $psrRequest = $this->createPsrRequest($request);
-        $dandomainPayment = DandomainPayment::createFromRequest($psrRequest);
+        /** @var Payment $paymentEntity */
+        $paymentEntity = Payment::createFromRequest($psrRequest);
 
         $checksumHelper = new ChecksumHelper(
-            $dandomainPayment,
+            $paymentEntity,
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_1'),
             $this->container->getParameter('loevgaard_dandomain_altapay.shared_key_2')
         );
 
-        $paymentEntity = Payment::createFromDandomainPayment($dandomainPayment);
         $paymentRepository->save($paymentEntity);
 
         $eventRepository->saveEvent(new PaymentCreated($paymentEntity));
@@ -118,7 +117,7 @@ class PaymentController extends Controller
             throw ChecksumMismatchException::create($translator->trans('payment.exception.checksum_mismatch', [], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
-        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $dandomainPayment, $terminalEntity, $paymentEntity, $checksumHelper);
+        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $paymentEntity, $terminalEntity, $paymentEntity, $checksumHelper);
         $paymentRequestPayload = $paymentRequestPayloadGenerator->generate();
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');

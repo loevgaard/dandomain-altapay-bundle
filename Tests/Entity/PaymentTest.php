@@ -2,12 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
-use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
-use Loevgaard\Dandomain\Pay\Model\PaymentLine as DandomainPaymentLine;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
-use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
-use Money\Currency;
-use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 class PaymentTest extends TestCase
@@ -80,22 +75,6 @@ class PaymentTest extends TestCase
         $this->assertSame(true, $payment->getSupportsMultipleRefunds());
         $this->assertSame(13.37, $payment->getFraudRiskScore());
         $this->assertSame('fraudexplanation', $payment->getFraudExplanation());
-    }
-
-    public function testCreateFromDandomainPayment()
-    {
-        // @todo set properties to test that they are transferred correctly
-        $payment = new Payment();
-        $payment->setShippingMethod('shippingmethod');
-        $payment->addPaymentLine(new PaymentLine('productnumber', 'name', 1, new Money('100', new Currency('DKK')), 25));
-
-        $dandomainPayment = new DandomainPayment();
-        $dandomainPayment->setShippingMethod('shippingmethod');
-        $dandomainPayment->addPaymentLine(new DandomainPaymentLine('productnumber', 'name', 1, new Money('100', new Currency('DKK')), 25));
-
-        $paymentFromDandomainPayment = Payment::createFromDandomainPayment($dandomainPayment);
-
-        $this->assertEquals($payment, $paymentFromDandomainPayment);
     }
 
     public function testIsCaptureable1()
