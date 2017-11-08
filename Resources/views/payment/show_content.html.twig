@@ -71,7 +71,7 @@ set delivery_fields = [
     <table class="table table-bordered table-hover">
         <tr>
             <td>{{ 'payment.show.data.total_amount'|trans }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.totalAmount }}</td>
+            <td>{{ payment.totalAmount|money_localized_format }}</td>
         </tr>
         <tr>
             <td>{{ 'payment.show.data.capturable_amount'|trans }}</td>
@@ -150,7 +150,7 @@ set delivery_fields = [
             {% if payment.paymentFee %}
                 <tr>
                     <td>{{ ('payment.show.payment_info.payment_fee')|trans }}</td>
-                    <td>{{ payment.currencySymbol }} {{ payment.paymentFee }}</td>
+                    <td>{{ payment.paymentFee|money_localized_format }}</td>
                 </tr>
             {% endif %}
             <tr>
@@ -169,7 +169,7 @@ set delivery_fields = [
             {% if payment.shippingFee %}
                 <tr>
                     <td>{{ ('payment.show.shipping_info.shipping_fee')|trans }}</td>
-                    <td>{{ payment.currencySymbol }} {{ payment.shippingFee }}</td>
+                    <td>{{ payment.shippingFee|money_localized_format }}</td>
                 </tr>
             {% endif %}
         </table>
