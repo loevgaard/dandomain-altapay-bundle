@@ -6,6 +6,7 @@ use Loevgaard\AltaPay\Payload\OrderLine as OrderLinePayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config as ConfigPayload;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo as CustomerInfoPayload;
 use Loevgaard\DandomainAltapayBundle\PayloadGenerator\PaymentRequestPayloadGenerator;
+use Money\Money;
 
 final class Gateway extends PaymentRequestPayloadGenerator
 {
@@ -13,7 +14,7 @@ final class Gateway extends PaymentRequestPayloadGenerator
         string $description,
         string $itemId,
         string $quantity,
-        float $unitPrice,
+        Money $unitPrice,
         float $taxPercent = null,
         string $goodsType = null
     ): OrderLinePayload {

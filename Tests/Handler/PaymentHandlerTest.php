@@ -38,7 +38,7 @@ final class PaymentHandlerTest extends TestCase
         ;
 
         $paymentHandler = $this->getPaymentHandler($altapayClient);
-        $res = $paymentHandler->capture($payment, 99.95);
+        $res = $paymentHandler->capture($payment, new Money(9995, new Currency('DKK')));
 
         $this->assertInstanceOf(CaptureReservationResponse::class, $res);
     }
@@ -107,9 +107,9 @@ final class PaymentHandlerTest extends TestCase
         $payment->setAltapayId('altapayid');
 
         $paymentHandler = $this->getPaymentHandler($altapayClient);
-        $paymentHandler->refund($payment, null, 100.55);
+        $paymentHandler->refund($payment, null, new Money(10055, new Currency('DKK')));
 
-        $this->assertSame(100.55, $amount);
+        $this->assertEquals(new Money(10055, new Currency('DKK')), $amount);
         $this->assertSame([], $orderLines);
     }
 
@@ -143,13 +143,13 @@ final class PaymentHandlerTest extends TestCase
         $paymentLine = new PaymentLine('productnumber', 'name', 1, new Money('7996', new Currency('DKK')), 25);
 
         $paymentHandler = $this->getPaymentHandler($altapayClient);
-        $paymentHandler->refund($payment, [$paymentLine], 99.95);
+        $paymentHandler->refund($payment, [$paymentLine], new Money(9995, new Currency('DKK')));
 
-        $this->assertSame(99.95, $amount);
+        $this->assertEquals(new Money(9995, new Currency('DKK')), $amount);
 
         /** @var OrderLine $orderLine */
         $orderLine = $orderLines[0];
-        $this->assertSame(99.95, $orderLine->getUnitPrice());
+        $this->assertEquals(new Money(9995, new Currency('DKK')), $orderLine->getUnitPrice());
         $this->assertSame(25.0, $orderLine->getTaxPercent());
         $this->assertSame(1.0, $orderLine->getQuantity());
         $this->assertSame('name', $orderLine->getDescription());
@@ -185,13 +185,13 @@ final class PaymentHandlerTest extends TestCase
         $paymentLine = new PaymentLine('productnumber', 'name', 1, new Money('10000', new Currency('DKK')), 25);
 
         $paymentHandler = $this->getPaymentHandler($altapayClient);
-        $paymentHandler->refund($payment, [$paymentLine], 80);
+        $paymentHandler->refund($payment, [$paymentLine], new Money(8000, new Currency('DKK')));
 
-        $this->assertSame(80.0, $amount);
+        $this->assertEquals(new Money(8000, new Currency('DKK')), $amount);
 
         /** @var OrderLine $orderLine */
         $orderLine = $orderLines[0];
-        $this->assertSame(80.0, $orderLine->getUnitPrice());
+        $this->assertEquals(new Money(8000, new Currency('DKK')), $orderLine->getUnitPrice());
         $this->assertSame(1.0, $orderLine->getQuantity());
         $this->assertSame('refund', $orderLine->getDescription());
         $this->assertSame('refund', $orderLine->getItemId());

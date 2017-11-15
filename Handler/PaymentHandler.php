@@ -11,6 +11,8 @@ use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReserv
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository;
+use Money\Currency;
+use Money\Money;
 
 class PaymentHandler
 {
@@ -30,7 +32,7 @@ class PaymentHandler
         $this->paymentRepository = $paymentRepository;
     }
 
-    public function capture(Payment $payment, float $amount = null)
+    public function capture(Payment $payment, Money $amount = null)
     {
         $payload = new CaptureReservationPayload($payment->getAltapayId());
         if ($amount) {
@@ -49,11 +51,11 @@ class PaymentHandler
     /**
      * @param Payment            $payment      The payment to refund
      * @param PaymentLine[]|null $paymentLines The payment lines to refund
-     * @param float|null         $amount       The amount to refund
+     * @param Money|null         $amount       The amount to refund
      *
      * @return RefundCapturedReservationResponse
      */
-    public function refund(Payment $payment, array $paymentLines = null, float $amount = null)
+    public function refund(Payment $payment, array $paymentLines = null, Money $amount = null)
     {
         $payload = new RefundCapturedReservationPayload($payment->getAltapayId());
 
@@ -62,30 +64,28 @@ class PaymentHandler
         }
 
         if ($paymentLines && count($paymentLines)) {
-            $paymentLinesAmountInclVat = 0;
+            $paymentLinesAmountInclVat = new Money(0, new Currency($amount->getCurrency()->getCode()));
 
             foreach ($paymentLines as $paymentLine) {
                 $orderLine = new OrderLine(
                     $paymentLine->getName(),
                     $paymentLine->getProductNumber(),
                     $paymentLine->getQuantity(),
-                    (float) $paymentLine->getPriceInclVat()->getAmount() / 100
+                    $paymentLine->getPriceInclVat()
                 );
                 $orderLine->setTaxPercent($paymentLine->getVat());
 
                 $payload->addOrderLine($orderLine);
 
-                $paymentLinesAmountInclVat += (float) $paymentLine->getPriceInclVat()->getAmount();
+                $paymentLinesAmountInclVat = $paymentLinesAmountInclVat->add($paymentLine->getPriceInclVat());
             }
-
-            $paymentLinesAmountInclVat = $paymentLinesAmountInclVat / 100;
 
             /*
              * If the amount is set, but does not match the payment lines amount we have to
              * make a 'good will' refund which according to Altapay is made by adding an order line
              * with goods type equals 'refund' and the amount has to equal the refund amount including vat
              */
-            if ($amount && $amount !== $paymentLinesAmountInclVat) {
+            if ($amount && !$amount->equals($paymentLinesAmountInclVat)) {
                 $orderLine = new OrderLine('refund', 'refund', 1, $amount);
                 $orderLine->setGoodsType(OrderLine::GOODS_TYPE_REFUND);
 
@@ -112,8 +112,13 @@ class PaymentHandler
         if (count($transactions)) {
             $transaction = $transactions[0];
 
-            $payment->setCapturedAmount($transaction->getCapturedAmount());
-            $payment->setRefundedAmount($transaction->getRefundedAmount());
+            if ($transaction->getCapturedAmount()) {
+                $payment->setCapturedAmount($transaction->getCapturedAmount());
+            }
+
+            if ($transaction->getRefundedAmount()) {
+                $payment->setRefundedAmount($transaction->getRefundedAmount());
+            }
 
             $this->paymentRepository->save($payment);
         }

@@ -2,11 +2,9 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
-use Brick\Math\BigDecimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Loevgaard\Dandomain\Pay\Model\Payment as BasePayment;
-use Money\Currency;
 use Money\Money;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -73,13 +71,6 @@ class Payment extends BasePayment
      * @ORM\Column(type="integer")
      */
     protected $totalAmountAmount;
-
-    /**
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $totalAmountCurrency;
 
     /**
      * @Assert\NotBlank()
@@ -360,13 +351,6 @@ class Payment extends BasePayment
 
     /**
      * @Assert\NotBlank()
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $shippingFeeCurrency;
-
-    /**
-     * @Assert\NotBlank()
      * @Assert\Length(max="191")
      *
      * @ORM\Column(type="string", length=191)
@@ -379,13 +363,6 @@ class Payment extends BasePayment
      * @ORM\Column(type="integer")
      */
     protected $paymentFeeAmount;
-
-    /**
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $paymentFeeCurrency;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=191)
@@ -514,30 +491,30 @@ class Payment extends BasePayment
     protected $cardHolderCurrencyAlpha;
 
     /**
-     * @var float|null
+     * @var int|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @ORM\Column(type="integer")
      */
     protected $reservedAmount;
 
     /**
-     * @var float|null
+     * @var int|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @ORM\Column(type="integer")
      */
     protected $capturedAmount;
 
     /**
-     * @var float|null
+     * @var int|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @ORM\Column(type="integer")
      */
     protected $refundedAmount;
 
     /**
-     * @var float|null
+     * @var int|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @ORM\Column(type="integer")
      */
     protected $recurringDefaultAmount;
 
@@ -627,11 +604,11 @@ class Payment extends BasePayment
      */
     public function isCaptureable(): bool
     {
-        if ($this->capturableAmount() <= 0) {
+        if ($this->capturableAmount()->getAmount() <= 0) {
             return false;
         }
 
-        if ($this->capturedAmount > 0 && !$this->supportsMultipleCaptures) {
+        if ($this->getCapturedAmount()->getAmount() > 0 && !$this->supportsMultipleCaptures) {
             return false;
         }
 
@@ -645,11 +622,11 @@ class Payment extends BasePayment
      */
     public function isRefundable(): bool
     {
-        if ($this->refundableAmount() <= 0) {
+        if ($this->refundableAmount()->getAmount() <= 0) {
             return false;
         }
 
-        if ($this->refundedAmount > 0 && !$this->supportsMultipleRefunds) {
+        if ($this->getRefundedAmount()->getAmount() > 0 && !$this->supportsMultipleRefunds) {
             return false;
         }
 
@@ -657,24 +634,24 @@ class Payment extends BasePayment
     }
 
     /**
-     * @return float
+     * @return Money
      */
     public function refundableAmount()
     {
-        $capturedAmount = BigDecimal::of($this->capturedAmount);
+        $capturedAmount = $this->getCapturedAmount();
 
-        return $capturedAmount->minus($this->refundedAmount)->toFloat();
+        return $capturedAmount->subtract($this->getRefundedAmount());
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function capturableAmount()
+    public function capturableAmount(): Money
     {
-        $reservedAmount = BigDecimal::of($this->reservedAmount);
-        $realCapturedAmount = BigDecimal::of($this->capturedAmount)->minus($this->refundedAmount);
+        $reservedAmount = $this->getReservedAmount();
+        $realCapturedAmount = $this->getCapturedAmount()->subtract($this->getRefundedAmount());
 
-        return $reservedAmount->minus($realCapturedAmount)->toFloat();
+        return $reservedAmount->subtract($realCapturedAmount);
     }
 
     // @todo create type hints for getters and setters
@@ -684,23 +661,13 @@ class Payment extends BasePayment
         parent::setTotalAmount($totalAmount);
 
         $this->totalAmountAmount = $totalAmount->getAmount();
-        $this->totalAmountCurrency = $totalAmount->getCurrency()->getCode();
 
         return $this;
     }
 
     public function getTotalAmount(): ?Money
     {
-        if (!$this->totalAmountCurrency) {
-            return null;
-        }
-
-        $amount = $this->totalAmountAmount;
-        if (!$amount) {
-            $amount = 0;
-        }
-
-        return new Money($amount, new Currency($this->totalAmountCurrency));
+        return $this->createMoney((int) $this->totalAmountAmount);
     }
 
     public function setShippingFee(Money $shippingFee): BasePayment
@@ -708,23 +675,13 @@ class Payment extends BasePayment
         parent::setShippingFee($shippingFee);
 
         $this->shippingFeeAmount = $shippingFee->getAmount();
-        $this->shippingFeeCurrency = $shippingFee->getCurrency()->getCode();
 
         return $this;
     }
 
     public function getShippingFee(): ?Money
     {
-        if (!$this->shippingFeeCurrency) {
-            return null;
-        }
-
-        $amount = $this->shippingFeeAmount;
-        if (!$amount) {
-            $amount = 0;
-        }
-
-        return new Money($amount, new Currency($this->shippingFeeCurrency));
+        return $this->createMoney((int) $this->shippingFeeAmount);
     }
 
     public function setPaymentFee(Money $paymentFee): BasePayment
@@ -732,23 +689,13 @@ class Payment extends BasePayment
         parent::setPaymentFee($paymentFee);
 
         $this->paymentFeeAmount = $paymentFee->getAmount();
-        $this->paymentFeeCurrency = $paymentFee->getCurrency()->getCode();
 
         return $this;
     }
 
     public function getPaymentFee(): ?Money
     {
-        if (!$this->paymentFeeCurrency) {
-            return null;
-        }
-
-        $amount = $this->paymentFeeAmount;
-        if (!$amount) {
-            $amount = 0;
-        }
-
-        return new Money($amount, new Currency($this->paymentFeeCurrency));
+        return $this->createMoney((int) $this->paymentFeeAmount);
     }
 
     /**
@@ -1072,81 +1019,81 @@ class Payment extends BasePayment
     }
 
     /**
-     * @return float|null
+     * @return Money|null
      */
-    public function getReservedAmount()
+    public function getReservedAmount(): ?Money
     {
-        return $this->reservedAmount;
+        return $this->createMoney((int) $this->reservedAmount);
     }
 
     /**
-     * @param float|null $reservedAmount
+     * @param Money $reservedAmount
      *
      * @return Payment
      */
-    public function setReservedAmount($reservedAmount)
+    public function setReservedAmount(Money $reservedAmount)
     {
-        $this->reservedAmount = $reservedAmount;
+        $this->reservedAmount = $reservedAmount->getAmount();
 
         return $this;
     }
 
     /**
-     * @return float|null
+     * @return Money|null
      */
-    public function getCapturedAmount()
+    public function getCapturedAmount(): ?Money
     {
-        return $this->capturedAmount;
+        return $this->createMoney((int) $this->capturedAmount);
     }
 
     /**
-     * @param float|null $capturedAmount
+     * @param Money $capturedAmount
      *
      * @return Payment
      */
-    public function setCapturedAmount($capturedAmount)
+    public function setCapturedAmount(Money $capturedAmount)
     {
-        $this->capturedAmount = $capturedAmount;
+        $this->capturedAmount = $capturedAmount->getAmount();
 
         return $this;
     }
 
     /**
-     * @return float|null
+     * @return Money|null
      */
-    public function getRefundedAmount()
+    public function getRefundedAmount(): ?Money
     {
-        return $this->refundedAmount;
+        return $this->createMoney((int) $this->refundedAmount);
     }
 
     /**
-     * @param float|null $refundedAmount
+     * @param Money $refundedAmount
      *
      * @return Payment
      */
-    public function setRefundedAmount($refundedAmount)
+    public function setRefundedAmount(Money $refundedAmount)
     {
-        $this->refundedAmount = $refundedAmount;
+        $this->refundedAmount = $refundedAmount->getAmount();
 
         return $this;
     }
 
     /**
-     * @return float|null
+     * @return Money|null
      */
-    public function getRecurringDefaultAmount()
+    public function getRecurringDefaultAmount(): ?Money
     {
-        return $this->recurringDefaultAmount;
+        return $this->createMoney((int) $this->recurringDefaultAmount);
     }
 
     /**
-     * @param float|null $recurringDefaultAmount
+     * @param Money $recurringDefaultAmount
      *
      * @return Payment
      */
-    public function setRecurringDefaultAmount($recurringDefaultAmount)
+    public function setRecurringDefaultAmount(Money $recurringDefaultAmount)
     {
-        $this->recurringDefaultAmount = $recurringDefaultAmount;
+        $this->recurringDefaultAmount = $recurringDefaultAmount->getAmount();
 
         return $this;
     }
@@ -1329,5 +1276,21 @@ class Payment extends BasePayment
         $this->fraudExplanation = $fraudExplanation;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCurrency(): ?string
+    {
+        if ($this->currencySymbol) {
+            return $this->currencySymbol;
+        }
+
+        if ($this->merchantCurrencyAlpha) {
+            return $this->merchantCurrencyAlpha;
+        }
+
+        return null;
     }
 }

@@ -3,6 +3,8 @@
 namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 class PaymentTest extends TestCase
@@ -13,6 +15,11 @@ class PaymentTest extends TestCase
 
         $created = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2017-10-01 04:00:00');
         $updated = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2017-10-01 04:00:01');
+
+        $reservedAmount = new Money(25050, new Currency('DKK'));
+        $capturedAmount = new Money(30020, new Currency('DKK'));
+        $refundedAmount = new Money(40040, new Currency('DKK'));
+        $recurringDefaultAmount = new Money(50060, new Currency('DKK'));
 
         $payment
             ->setId(1)
@@ -31,10 +38,10 @@ class PaymentTest extends TestCase
             ->setMerchantCurrencyAlpha('DKK')
             ->setCardHolderCurrency(700)
             ->setCardHolderCurrencyAlpha('EUR')
-            ->setReservedAmount(250.5)
-            ->setCapturedAmount(125.5)
-            ->setRefundedAmount(300.4)
-            ->setRecurringDefaultAmount(400.9)
+            ->setReservedAmount($reservedAmount)
+            ->setCapturedAmount($capturedAmount)
+            ->setRefundedAmount($refundedAmount)
+            ->setRecurringDefaultAmount($recurringDefaultAmount)
             ->setCreatedDate($created)
             ->setUpdatedDate($updated)
             ->setPaymentNature('paymentnature')
@@ -62,10 +69,10 @@ class PaymentTest extends TestCase
         $this->assertSame('DKK', $payment->getMerchantCurrencyAlpha());
         $this->assertSame(700, $payment->getCardHolderCurrency());
         $this->assertSame('EUR', $payment->getCardHolderCurrencyAlpha());
-        $this->assertSame(250.5, $payment->getReservedAmount());
-        $this->assertSame(125.5, $payment->getCapturedAmount());
-        $this->assertSame(300.4, $payment->getRefundedAmount());
-        $this->assertSame(400.9, $payment->getRecurringDefaultAmount());
+        $this->assertEquals($reservedAmount, $payment->getReservedAmount());
+        $this->assertEquals($capturedAmount, $payment->getCapturedAmount());
+        $this->assertEquals($refundedAmount, $payment->getRefundedAmount());
+        $this->assertEquals($recurringDefaultAmount, $payment->getRecurringDefaultAmount());
         $this->assertSame($created, $payment->getCreatedDate());
         $this->assertSame($updated, $payment->getUpdatedDate());
         $this->assertSame('paymentnature', $payment->getPaymentNature());
@@ -82,9 +89,10 @@ class PaymentTest extends TestCase
         $payment = new Payment();
 
         $payment
-            ->setReservedAmount(100)
-            ->setCapturedAmount(100)
-            ->setRefundedAmount(0)
+            ->setReservedAmount(new Money(10000, new Currency('DKK')))
+            ->setCapturedAmount(new Money(10000, new Currency('DKK')))
+            ->setRefundedAmount(new Money(0, new Currency('DKK')))
+            ->setCurrencySymbol('DKK')
         ;
 
         $this->assertSame(false, $payment->isCaptureable());
@@ -95,10 +103,11 @@ class PaymentTest extends TestCase
         $payment = new Payment();
 
         $payment
-            ->setReservedAmount(100)
-            ->setCapturedAmount(10)
-            ->setRefundedAmount(0)
+            ->setReservedAmount(new Money(10000, new Currency('DKK')))
+            ->setCapturedAmount(new Money(1000, new Currency('DKK')))
+            ->setRefundedAmount(new Money(0, new Currency('DKK')))
             ->setSupportsMultipleCaptures(false)
+            ->setCurrencySymbol('DKK')
         ;
 
         $this->assertSame(false, $payment->isCaptureable());
@@ -109,9 +118,10 @@ class PaymentTest extends TestCase
         $payment = new Payment();
 
         $payment
-            ->setReservedAmount(100)
-            ->setCapturedAmount(0)
-            ->setRefundedAmount(0)
+            ->setReservedAmount(new Money(10000, new Currency('DKK')))
+            ->setCapturedAmount(new Money(0, new Currency('DKK')))
+            ->setRefundedAmount(new Money(0, new Currency('DKK')))
+            ->setCurrencySymbol('DKK')
         ;
 
         $this->assertSame(true, $payment->isCaptureable());
@@ -122,8 +132,9 @@ class PaymentTest extends TestCase
         $payment = new Payment();
 
         $payment
-            ->setCapturedAmount(100)
-            ->setRefundedAmount(100)
+            ->setCapturedAmount(new Money(10000, new Currency('DKK')))
+            ->setRefundedAmount(new Money(10000, new Currency('DKK')))
+            ->setCurrencySymbol('DKK')
         ;
 
         $this->assertSame(false, $payment->isRefundable());
@@ -134,9 +145,10 @@ class PaymentTest extends TestCase
         $payment = new Payment();
 
         $payment
-            ->setCapturedAmount(100)
-            ->setRefundedAmount(50)
+            ->setCapturedAmount(new Money(10000, new Currency('DKK')))
+            ->setRefundedAmount(new Money(5000, new Currency('DKK')))
             ->setSupportsMultipleRefunds(false)
+            ->setCurrencySymbol('DKK')
         ;
 
         $this->assertSame(false, $payment->isRefundable());
@@ -147,8 +159,9 @@ class PaymentTest extends TestCase
         $payment = new Payment();
 
         $payment
-            ->setCapturedAmount(100)
-            ->setRefundedAmount(0)
+            ->setCapturedAmount(new Money(10000, new Currency('DKK')))
+            ->setRefundedAmount(new Money(0, new Currency('DKK')))
+            ->setCurrencySymbol('DKK')
         ;
 
         $this->assertSame(true, $payment->isRefundable());

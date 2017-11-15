@@ -10,6 +10,8 @@ use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator\Fixture\Gateway;
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +24,7 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
         $description = 'description';
         $itemId = 'itemid';
         $quantity = 1.0;
-        $unitPrice = 99.95;
+        $unitPrice = new Money(9995, new Currency('DKK'));
 
         // without optional parameters
         $payload = $generator->createOrderLine($description, $itemId, $quantity, $unitPrice);
@@ -30,7 +32,7 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
         $this->assertSame($description, $payload->getDescription());
         $this->assertSame($itemId, $payload->getItemId());
         $this->assertSame($quantity, $payload->getQuantity());
-        $this->assertSame($unitPrice, $payload->getUnitPrice());
+        $this->assertEquals($unitPrice, $payload->getUnitPrice());
 
         // with tax percent
         $taxPercent = 25.0;
@@ -39,7 +41,7 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
         $this->assertSame($description, $payload->getDescription());
         $this->assertSame($itemId, $payload->getItemId());
         $this->assertSame($quantity, $payload->getQuantity());
-        $this->assertSame($unitPrice, $payload->getUnitPrice());
+        $this->assertEquals($unitPrice, $payload->getUnitPrice());
         $this->assertSame($taxPercent, $payload->getTaxPercent());
 
         // with goods type
@@ -49,7 +51,7 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
         $this->assertSame($description, $payload->getDescription());
         $this->assertSame($itemId, $payload->getItemId());
         $this->assertSame($quantity, $payload->getQuantity());
-        $this->assertSame($unitPrice, $payload->getUnitPrice());
+        $this->assertEquals($unitPrice, $payload->getUnitPrice());
         $this->assertSame($goodsType, $payload->getGoodsType());
     }
 

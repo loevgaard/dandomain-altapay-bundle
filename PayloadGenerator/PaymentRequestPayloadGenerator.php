@@ -10,6 +10,7 @@ use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
+use Money\Money;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -66,23 +67,19 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
      */
     public function generate(): PaymentRequestPayload
     {
-        $totalAmount = (float) $this->dandomainPayment->getTotalAmount()->getAmount() / 100;
-
         $paymentRequestPayload = new PaymentRequestPayload(
             $this->terminal->getTitle(),
             $this->dandomainPayment->getOrderId(),
-            $totalAmount,
+            $this->dandomainPayment->getTotalAmount(),
             $this->dandomainPayment->getCurrencySymbol()
         );
 
         foreach ($this->dandomainPayment->getPaymentLines() as $paymentLine) {
-            $priceExclVat = (float) $paymentLine->getPriceExclVat()->getAmount() / 100;
-
             $orderLinePayload = $this->createOrderLine(
                 $paymentLine->getName(),
                 $paymentLine->getProductNumber(),
                 $paymentLine->getQuantity(),
-                $priceExclVat,
+                $paymentLine->getPriceExclVat(),
                 $paymentLine->getVat()
             );
 
@@ -91,13 +88,11 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
 
         // add payment fee as an order line if it's set
         if ($this->dandomainPayment->getPaymentFee() && 0 !== (int) $this->dandomainPayment->getPaymentFee()->getAmount()) {
-            $paymentFee = (float) $this->dandomainPayment->getPaymentFee()->getAmount() / 100;
-
             $orderLinePayload = $this->createOrderLine(
                 $this->dandomainPayment->getPaymentMethod(),
                 $this->dandomainPayment->getPaymentMethod(),
                 1,
-                $paymentFee,
+                $this->dandomainPayment->getPaymentFee(),
                 null,
                 OrderLinePayload::GOODS_TYPE_HANDLING
             );
@@ -106,13 +101,11 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
 
         // add shipping fee as an order line if it's set
         if ($this->dandomainPayment->getShippingFee() && 0 !== (int) $this->dandomainPayment->getShippingFee()->getAmount()) {
-            $shippingFee = (float) $this->dandomainPayment->getShippingFee()->getAmount() / 100;
-
             $orderLinePayload = $this->createOrderLine(
                 $this->dandomainPayment->getShippingMethod(),
                 $this->dandomainPayment->getShippingMethod(),
                 1,
-                $shippingFee,
+                $this->dandomainPayment->getShippingFee(),
                 null,
                 OrderLinePayload::GOODS_TYPE_SHIPMENT
             );
@@ -190,7 +183,7 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
      * @param string      $description
      * @param string      $itemId
      * @param string      $quantity
-     * @param float       $unitPrice
+     * @param Money       $unitPrice
      * @param float|null  $taxPercent
      * @param string|null $goodsType
      *
@@ -200,7 +193,7 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
         string $description,
         string $itemId,
         string $quantity,
-        float $unitPrice,
+        Money $unitPrice,
         float $taxPercent = null,
         string $goodsType = null
     ): OrderLinePayload {
