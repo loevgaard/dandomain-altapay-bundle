@@ -194,7 +194,7 @@ set delivery_fields = [
                 <td>{{ paymentLine.productNumber }}</td>
                 <td>{{ paymentLine.name }}</td>
                 <td>{{ paymentLine.vat }}</td>
-                <td>{{ paymentLine.price }}</td>
+                <td>{{ paymentLine.price|money_localized_format }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -217,7 +217,7 @@ set delivery_fields = [
                 orderId: {{ payment.orderId }}<br>
                 sessionId: {{ payment.sessionId }}<br>
                 currencySymbol: {{ payment.currencySymbol }}<br>
-                totalAmount: {{ payment.totalAmount }}<br>
+                totalAmount: {{ payment.totalAmount|money_localized_format }}<br>
                 callBackUrl: {{ payment.callBackUrl }}<br>
                 fullCallBackOkUrl: {{ payment.fullCallBackOkUrl }}<br>
                 callBackOkUrl: {{ payment.callBackOkUrl }}<br>
@@ -261,9 +261,9 @@ set delivery_fields = [
                 deliveryEmail: {{ payment.deliveryEmail }}<br>
                 deliveryEan: {{ payment.deliveryEan }}<br>
                 shippingMethod: {{ payment.shippingMethod }}<br>
-                shippingFee: {{ payment.shippingFee }}<br>
+                shippingFee: {{ payment.shippingFee|money_localized_format }}<br>
                 paymentMethod: {{ payment.paymentMethod }}<br>
-                paymentFee: {{ payment.paymentFee }}<br>
+                paymentFee: {{ payment.paymentFee|money_localized_format }}<br>
                 loadBalancerRealIp: {{ payment.loadBalancerRealIp }}<br>
                 referrer: {{ payment.referrer }}<br>
                 altapayId: {{ payment.altapayId }}<br>
