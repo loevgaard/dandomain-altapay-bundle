@@ -14,6 +14,8 @@ use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
 use Loevgaard\DandomainAltapayBundle\PayloadGenerator\PaymentRequestPayloadGenerator;
 use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
 use Loevgaard\DandomainAltapayBundle\Translation\TranslatorTrait;
+use Money\Currency;
+use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -174,7 +176,14 @@ class PaymentController extends Controller
 
         if ($payment) {
             $paymentHandler = $this->getPaymentHandler();
-            $res = $paymentHandler->refund($payment, null, $request->query->get('amount'));
+
+            // @todo this is ugly. Should be put somewhere else, maybe on the Payment entity. Maybe the createMoney*() methods on the payment entity should be public so it's easy to create Money objects based on the Payments currency
+            $amount = $request->query->get('amount');
+            if($amount) {
+                $amount = new Money($amount, new Currency($payment->getMerchantCurrencyAlpha()));
+            }
+
+            $res = $paymentHandler->refund($payment, null, $amount);
 
             if ($res->isSuccessful()) {
                 $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was refunded.'); // @todo fix translation

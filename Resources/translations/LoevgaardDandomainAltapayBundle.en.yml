@@ -96,6 +96,7 @@ payment:
 
     modal:
         refund:
+            amount_caption: Amount to refund in cents (i.e. input 100 to refund €1 if the payment was in euros)
             title: Refund payment
             submit: Refund
 
