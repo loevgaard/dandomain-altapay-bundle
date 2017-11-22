@@ -13,7 +13,7 @@ class SiteSettingRepository extends EntityRepository
     public function findBySiteIdAndSetting(int $siteId, string $setting): ?SiteSetting
     {
         /** @var SiteSetting $obj */
-        $obj = $this->repository->findOneBy([
+        $obj = $this->findOneBy([
             'siteId' => $siteId,
             'setting' => $setting,
         ]);
@@ -32,7 +32,7 @@ class SiteSettingRepository extends EntityRepository
     public function findBySiteId(int $siteId, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
         /** @var SiteSetting[] $objs */
-        $objs = $this->repository->findBy([
+        $objs = $this->findBy([
             'siteId' => $siteId,
         ], $orderBy, $limit, $offset);
 
@@ -50,7 +50,7 @@ class SiteSettingRepository extends EntityRepository
      */
     public function findBySiteIdIndexedBySetting(int $siteId): ?array
     {
-        $qb = $this->repository->createQueryBuilder('s');
+        $qb = $this->getQueryBuilder('s');
         $qb
             ->where($qb->expr()->eq('s.siteId', $siteId))
             ->indexBy('s', 's.setting')
@@ -70,7 +70,7 @@ class SiteSettingRepository extends EntityRepository
     public function findBySetting(string $setting, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
         /** @var SiteSetting[] $objs */
-        $objs = $this->repository->findBy([
+        $objs = $this->findBy([
             'setting' => $setting,
         ], $orderBy, $limit, $offset);
 

@@ -59,7 +59,7 @@ set delivery_fields = [
         <a class="btn btn-success" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-download"></span> {{ 'payment.label.capture'|trans }}</a>
     {% endif %}
     {% if payment.refundable %}
-        <button class="btn btn-warning btn-refund" data-refundable-amount="{{ payment.refundableAmount }}" data-form-action="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</button>
+        <button class="btn btn-warning btn-refund" data-refundable-amount="{{ payment.refundableAmount.amount }}" data-form-action="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</button>
     {% endif %}
     {% if payment.altapayId %}
         <a class="btn btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> {{ 'payment.label.open_in_altapay'|trans }}</a>

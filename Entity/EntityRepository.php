@@ -31,19 +31,24 @@ abstract class EntityRepository
     protected $manager;
 
     /**
-     * @var DoctrineEntityRepository
+     * @var string
      */
-    protected $repository;
+    protected $class;
 
     /**
      * @var PaginatorInterface
      */
     protected $paginator;
 
+    /**
+     * @var DoctrineEntityRepository
+     */
+    private $repository;
+
     public function __construct(ManagerRegistry $managerRegistry, PaginatorInterface $paginator, string $class)
     {
         $this->manager = $managerRegistry->getManagerForClass($class);
-        $this->repository = $this->manager->getRepository($class);
+        $this->class = $class;
         $this->paginator = $paginator;
     }
 
@@ -55,8 +60,8 @@ abstract class EntityRepository
      */
     public function __call($name, $arguments)
     {
-        if (method_exists($this->repository, $name)) {
-            return call_user_func_array([$this->repository, $name], $arguments);
+        if (method_exists($this->getRepository(), $name)) {
+            return call_user_func_array([$this->getRepository(), $name], $arguments);
         }
 
         if (method_exists($this->manager, $name)) {
@@ -107,8 +112,20 @@ abstract class EntityRepository
      *
      * @return QueryBuilder
      */
-    public function getQueryBuilder(string $alias): QueryBuilder
+    protected function getQueryBuilder(string $alias): QueryBuilder
     {
-        return $this->repository->createQueryBuilder($alias);
+        return $this->getRepository()->createQueryBuilder($alias);
+    }
+
+    /**
+     * @return DoctrineEntityRepository
+     */
+    protected function getRepository(): DoctrineEntityRepository
+    {
+        if (!$this->repository) {
+            $this->repository = $this->manager->getRepository($this->class);
+        }
+
+        return $this->repository;
     }
 }

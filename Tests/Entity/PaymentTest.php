@@ -3,6 +3,7 @@
 namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
+use Loevgaard\DandomainAltapayBundle\Entity\PaymentLine;
 use Money\Currency;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
@@ -20,6 +21,9 @@ class PaymentTest extends TestCase
         $capturedAmount = new Money(30020, new Currency('DKK'));
         $refundedAmount = new Money(40040, new Currency('DKK'));
         $recurringDefaultAmount = new Money(50060, new Currency('DKK'));
+        $totalAmount = new Money(60060, new Currency('DKK'));
+        $shippingFee = new Money(70080, new Currency('DKK'));
+        $paymentFee = new Money(80080, new Currency('DKK'));
 
         $payment
             ->setId(1)
@@ -51,6 +55,9 @@ class PaymentTest extends TestCase
             ->setSupportsMultipleRefunds(true)
             ->setFraudRiskScore(13.37)
             ->setFraudExplanation('fraudexplanation')
+            ->setTotalAmount($totalAmount)
+            ->setShippingFee($shippingFee)
+            ->setPaymentFee($paymentFee)
         ;
 
         $this->assertSame(1, $payment->getId());
@@ -82,6 +89,28 @@ class PaymentTest extends TestCase
         $this->assertSame(true, $payment->getSupportsMultipleRefunds());
         $this->assertSame(13.37, $payment->getFraudRiskScore());
         $this->assertSame('fraudexplanation', $payment->getFraudExplanation());
+        $this->assertEquals($totalAmount, $payment->getTotalAmount());
+        $this->assertEquals($shippingFee, $payment->getShippingFee());
+        $this->assertEquals($paymentFee, $payment->getPaymentFee());
+    }
+
+    public function testCurrencyIsNull()
+    {
+        $payment = new Payment();
+        $this->assertSame(null, $payment->getTotalAmount());
+    }
+
+    public function testCreatePaymentLine()
+    {
+        $price = new Money(100, new Currency('DKK'));
+        $paymentLine = Payment::createPaymentLine('product_number', 'name', 1, $price, 25);
+
+        $this->assertInstanceOf(PaymentLine::class, $paymentLine);
+        $this->assertSame('product_number', $paymentLine->getProductNumber());
+        $this->assertSame('name', $paymentLine->getName());
+        $this->assertSame(1, $paymentLine->getQuantity());
+        $this->assertEquals($price, $paymentLine->getPrice());
+        $this->assertSame(25, $paymentLine->getVat());
     }
 
     public function testIsCaptureable1()

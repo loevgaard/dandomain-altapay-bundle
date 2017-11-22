@@ -35,7 +35,7 @@ class EventRepository extends EntityRepository
      */
     public function findRecentEvents(int $offsetEventId, int $limit = 0): ?array
     {
-        $qb = $this->repository->createQueryBuilder('e');
+        $qb = $this->getQueryBuilder('e');
         $qb
             ->where($qb->expr()->gt('e.id', $offsetEventId))
             ->orderBy('e.id')
