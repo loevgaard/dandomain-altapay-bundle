@@ -70,6 +70,10 @@ class SiteSetting
     {
         return [
             self::SETTING_LAYOUT_LOGO => self::SETTING_LAYOUT_LOGO,
+            self::SETTING_OPENING_DAYS => self::SETTING_OPENING_DAYS,
+            self::SETTING_OPENING_HOURS => self::SETTING_OPENING_HOURS,
+            self::SETTING_EMAIL => self::SETTING_EMAIL,
+            self::SETTING_PHONE => self::SETTING_PHONE,
         ];
     }
 
