@@ -28,6 +28,10 @@ class LoevgaardDandomainAltapayExtension extends Extension
 
         // set individual default settings
         $container->setParameter('loevgaard_dandomain_altapay.default_settings.layout.logo', $config['default_settings']['layout']['logo']);
+        $container->setParameter('loevgaard_dandomain_altapay.default_settings.opening_days', $config['default_settings']['opening_days']);
+        $container->setParameter('loevgaard_dandomain_altapay.default_settings.opening_hours', $config['default_settings']['opening_hours']);
+        $container->setParameter('loevgaard_dandomain_altapay.default_settings.phone', $config['default_settings']['phone']);
+        $container->setParameter('loevgaard_dandomain_altapay.default_settings.email', $config['default_settings']['email']);
 
         $this->verifyDefaultSettings($container);
 
