@@ -75,23 +75,23 @@ set delivery_fields = [
         </tr>
         <tr>
             <td>{{ 'payment.show.data.capturable_amount'|trans }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.capturableAmount }}</td>
+            <td>{{ payment.capturableAmount|money_localized_format }}</td>
         </tr>
         <tr>
             <td>{{ 'payment.show.data.refundable_amount'|trans }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.refundableAmount }}</td>
+            <td>{{ payment.refundableAmount|money_localized_format }}</td>
         </tr>
         <tr>
             <td>{{ 'payment.show.data.reserved_amount'|trans }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.reservedAmount }}</td>
+            <td>{{ payment.reservedAmount|money_localized_format }}</td>
         </tr>
         <tr>
             <td>{{ 'payment.show.data.captured_amount'|trans }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.capturedAmount }}</td>
+            <td>{{ payment.capturedAmount|money_localized_format }}</td>
         </tr>
         <tr>
             <td>{{ 'payment.show.data.refunded_amount'|trans }}</td>
-            <td>{{ payment.currencySymbol }} {{ payment.refundedAmount }}</td>
+            <td>{{ payment.refundedAmount|money_localized_format }}</td>
         </tr>
         <tr>
             <td>{{ 'payment.show.data.created'|trans }}</td>
@@ -281,10 +281,10 @@ set delivery_fields = [
                 merchantCurrencyAlpha: {{ payment.merchantCurrencyAlpha }}<br>
                 cardHolderCurrency: {{ payment.cardHolderCurrency }}<br>
                 cardHolderCurrencyAlpha: {{ payment.cardHolderCurrencyAlpha }}<br>
-                reservedAmount: {{ payment.reservedAmount }}<br>
-                capturedAmount: {{ payment.capturedAmount }}<br>
-                refundedAmount: {{ payment.refundedAmount }}<br>
-                recurringDefaultAmount: {{ payment.recurringDefaultAmount }}<br>
+                reservedAmount: {{ payment.reservedAmount|money_localized_format }}<br>
+                capturedAmount: {{ payment.capturedAmount|money_localized_format }}<br>
+                refundedAmount: {{ payment.refundedAmount|money_localized_format }}<br>
+                recurringDefaultAmount: {{ payment.recurringDefaultAmount|money_localized_format }}<br>
                 createdDate: {{ payment.createdDate|date }}<br>
                 updatedDate: {{ payment.updatedDate|date }}<br>
                 paymentNature: {{ payment.paymentNature }}<br>
