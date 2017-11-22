@@ -16,6 +16,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SiteSetting
 {
     const SETTING_LAYOUT_LOGO = 'layout.logo';
+    const SETTING_OPENING_DAYS = 'opening_days';
+    const SETTING_OPENING_HOURS = 'opening_hours';
+    const SETTING_EMAIL = 'email';
+    const SETTING_PHONE = 'phone';
 
     const SETTING_TRANSLATION_PREFIX = 'site_setting.settings.';
 

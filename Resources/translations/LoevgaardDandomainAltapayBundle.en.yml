@@ -127,6 +127,10 @@ site_setting:
     settings:
         layout:
             logo: Logo URL
+        opening_days: Opening days
+        opening_hours: Opening hours
+        email: Email
+        phone: Phone
 
 terminal:
     index:
