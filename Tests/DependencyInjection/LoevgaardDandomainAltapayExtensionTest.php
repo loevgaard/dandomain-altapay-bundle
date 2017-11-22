@@ -104,6 +104,10 @@ webhook_urls:
 default_settings:
     layout:
         logo: logo_default.jpg
+    opening_days: Monday - Friday
+    opening_hours: 09:00 - 15:00
+    email: info@example.com
+    phone: +45 11 22 33 44
 EOF;
         $parser = new Parser();
 
