@@ -14,6 +14,7 @@ use Money\Money;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
 {
@@ -49,13 +50,14 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
 
     public function __construct(
         ContainerInterface $container,
+        RouterInterface $router,
         DandomainPayment $paymentRequest,
         Terminal $terminal,
         Payment $payment,
         ChecksumHelper $checksumHelper
     ) {
         $this->container = $container;
-        $this->router = $this->container->get('router');
+        $this->router = $router;
         $this->dandomainPayment = $paymentRequest;
         $this->terminal = $terminal;
         $this->payment = $payment;

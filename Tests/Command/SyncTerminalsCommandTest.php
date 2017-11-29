@@ -18,8 +18,7 @@ class SyncTerminalsCommandTest extends TestCase
         $altapayClient = $this->createMock(Client::class);
         $terminalSynchronizer = new TerminalSynchronizer($terminalRepository, $altapayClient);
 
-        $command = new SyncTerminalsCommand();
-        $command->setTerminalSynchronizer($terminalSynchronizer);
+        $command = new SyncTerminalsCommand($terminalSynchronizer);
 
         $application = new Application();
         $application->setAutoExit(false);

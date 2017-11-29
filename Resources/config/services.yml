@@ -77,9 +77,9 @@ services:
     # Commands
     loevgaard_dandomain_altapay.sync_terminals_command:
         class: Loevgaard\DandomainAltapayBundle\Command\SyncTerminalsCommand
+        arguments:
+            - "@loevgaard_dandomain_altapay.terminal_synchronizer"
         tags: [console.command]
-        calls:
-            - [setTerminalSynchronizer, ["@loevgaard_dandomain_altapay.terminal_synchronizer"]]
 
     loevgaard_dandomain_altapay.consume_webhook_queue_command:
         class: Loevgaard\DandomainAltapayBundle\Command\ConsumeWebhookQueueCommand

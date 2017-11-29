@@ -137,8 +137,11 @@ class WebhookQueueItem
         $this->setError(null);
     }
 
-    public function markAsError(string $error)
+    public function markAsError($error)
     {
+        if($error instanceof \Exception) {
+            $error = '['.get_class($error).'] '.$error->getMessage().' on line '.$error->getLine().' in file `'.$error->getFile().'`';
+        }
         $this->incrementTries();
         $this->setStatus(self::STATUS_ERROR);
         $this->setError($error);
@@ -291,6 +294,18 @@ class WebhookQueueItem
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * Returns true if the status equals $status.
+     *
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function isStatus(string $status): bool
+    {
+        return $this->status === $status;
     }
 
     /**

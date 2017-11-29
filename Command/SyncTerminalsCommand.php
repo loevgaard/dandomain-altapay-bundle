@@ -14,9 +14,11 @@ class SyncTerminalsCommand extends ContainerAwareCommand
      */
     protected $terminalSynchronizer;
 
-    public function setTerminalSynchronizer(TerminalSynchronizer $terminalSynchronizer)
+    public function __construct(TerminalSynchronizer $terminalSynchronizer)
     {
         $this->terminalSynchronizer = $terminalSynchronizer;
+
+        parent::__construct();
     }
 
     protected function configure()

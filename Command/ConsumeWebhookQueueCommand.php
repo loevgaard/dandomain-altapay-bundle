@@ -4,6 +4,7 @@ namespace Loevgaard\DandomainAltapayBundle\Command;
 
 use Doctrine\Common\Collections\Criteria;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
@@ -40,20 +41,23 @@ class ConsumeWebhookQueueCommand extends ContainerAwareCommand
      */
     private $httpClient;
 
-    public function __construct(
-        WebhookExchangeRepository $webhookExchangeRepository,
-        SerializerInterface $serializer
-    ) {
+    public function __construct(WebhookExchangeRepository $webhookExchangeRepository, SerializerInterface $serializer)
+    {
         $this->webhookExchangeRepository = $webhookExchangeRepository;
         $this->serializer = $serializer;
 
         parent::__construct();
     }
 
+    public function setHttpClient(ClientInterface $client)
+    {
+        $this->httpClient = $client;
+    }
+
     protected function configure()
     {
-        $this->setName('loevgaard:dandomain:altapay:call-webhooks')
-            ->setDescription('Will call all the respective webhook URLs')
+        $this->setName('loevgaard:dandomain:altapay:consume-webhook-queue')
+            ->setDescription('Will consume the webhook queue and do the HTTP requests')
         ;
     }
 
@@ -99,6 +103,8 @@ class ConsumeWebhookQueueCommand extends ContainerAwareCommand
             }
         }
 
+        $this->release();
+
         return 0;
     }
 
@@ -115,13 +121,10 @@ class ConsumeWebhookQueueCommand extends ContainerAwareCommand
                 RequestOptions::CONNECT_TIMEOUT => 15,
                 RequestOptions::TIMEOUT => 30,
                 RequestOptions::HTTP_ERRORS => false,
-                RequestOptions::HEADERS => [
-                    'Content-Type' => 'application/json',
-                ],
             ]);
         }
 
-        $request = new Request('post', $webhookQueueItem->getWebhookExchange()->getUrl(), [], $webhookQueueItem->getContent());
+        $request = new Request('post', $webhookQueueItem->getWebhookExchange()->getUrl(), ['Content-Type' => 'application/json'], $webhookQueueItem->getContent());
         $webhookQueueItem->setRequest($request);
 
         try {

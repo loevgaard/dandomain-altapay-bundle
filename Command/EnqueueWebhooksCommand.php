@@ -4,7 +4,6 @@ namespace Loevgaard\DandomainAltapayBundle\Command;
 
 use JMS\Serializer\SerializerInterface;
 use Loevgaard\DandomainAltapayBundle\Entity\EventRepository;
-use Loevgaard\DandomainAltapayBundle\Entity\WebhookExchange;
 use Loevgaard\DandomainAltapayBundle\Entity\WebhookExchangeRepository;
 use Loevgaard\DandomainAltapayBundle\Entity\WebhookQueueItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -71,20 +70,16 @@ class EnqueueWebhooksCommand extends ContainerAwareCommand
         if (empty($webhookUrls)) {
             $output->writeln('No webhook URLs defined');
 
+            $this->release();
+
             return 0;
         }
 
-        /** @var WebhookExchange[] $webhookExchanges */
-        $webhookExchanges = [];
+        $eventsPerExchange = ceil($maxEventsToEnqueue / count($webhookUrls));
 
         foreach ($webhookUrls as $webhookUrl) {
             $webhookExchange = $this->webhookExchangeRepository->findByUrlOrCreate($webhookUrl);
-            $webhookExchanges[] = $webhookExchange;
-        }
 
-        $eventsPerExchange = ceil($maxEventsToEnqueue / count($webhookExchanges));
-
-        foreach ($webhookExchanges as $webhookExchange) {
             $events = $this->eventRepository->findRecentEvents($webhookExchange->getLastEventId(), $eventsPerExchange);
 
             foreach ($events as $event) {
@@ -98,6 +93,8 @@ class EnqueueWebhooksCommand extends ContainerAwareCommand
                 $this->webhookExchangeRepository->flush();
             }
         }
+
+        $this->release();
 
         return 0;
     }
