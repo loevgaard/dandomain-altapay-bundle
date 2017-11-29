@@ -3,7 +3,6 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -140,7 +139,7 @@ class WebhookExchange
      *
      * @return WebhookExchange
      */
-    public function setWebhookQueueItems(ArrayCollection $webhookQueueItems)
+    public function setWebhookQueueItems(ArrayCollection $webhookQueueItems): self
     {
         $this->webhookQueueItems = $webhookQueueItems;
 
