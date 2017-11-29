@@ -67,6 +67,8 @@ abstract class EntityRepository
         if (method_exists($this->manager, $name)) {
             return call_user_func_array([$this->manager, $name], $arguments);
         }
+
+        throw new \RuntimeException('Method '.$name.' not defined in '.__CLASS__);
     }
 
     /**

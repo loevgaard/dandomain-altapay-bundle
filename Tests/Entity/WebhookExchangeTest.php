@@ -35,7 +35,7 @@ class WebhookExchangeTest extends TestCase
 
         $webhookQueueItems = new ArrayCollection([
             new WebhookQueueItem('content', new WebhookExchange('https://www.example.com')),
-            new WebhookQueueItem('content', new WebhookExchange('https://www.example.com'))
+            new WebhookQueueItem('content', new WebhookExchange('https://www.example.com')),
         ]);
 
         $entity

@@ -23,9 +23,10 @@ class EventRepository extends EntityRepository
 
     /**
      * @param EventInterface $event
+     *
      * @return Event
      */
-    public function createFromDomainEvent(EventInterface $event) : Event
+    public function createFromDomainEvent(EventInterface $event): Event
     {
         return new Event($event->getName(), $this->serializer->serialize($event, 'json'));
     }

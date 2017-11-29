@@ -6,6 +6,8 @@ use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\Dandomain\Pay\Model\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Loevgaard\DandomainAltapayBundle\Form\TestType;
+use Money\Currency;
+use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,8 +53,9 @@ class TestController extends Controller
      */
     public function checksum1Action($orderId, $amount, $sharedKey, $currency)
     {
-        $amount = Payment::currencyStringToFloat($amount);
+        $amount = Payment::priceStringToInt($amount);
+        $money = new Money($amount, new Currency($currency));
 
-        return new JsonResponse(ChecksumHelper::generateChecksum1((int) $orderId, $amount, $sharedKey, (int) $currency));
+        return new JsonResponse(ChecksumHelper::generateChecksum1((int) $orderId, $money, $sharedKey, (int) $currency));
     }
 }

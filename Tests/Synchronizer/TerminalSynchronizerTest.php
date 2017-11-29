@@ -4,7 +4,6 @@ namespace Loevgaard\DandomainAltapayBundle\Tests\Synchronizer;
 
 use Loevgaard\AltaPay\Client;
 use Loevgaard\AltaPay\Response\GetTerminals;
-use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalRepository;
 use Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer;
 use PHPUnit\Framework\TestCase;
@@ -54,8 +53,6 @@ class TerminalSynchronizerTest extends TestCase
   </Body>
 </APIResponse>
 XML;
-
-        $terminal = $this->createMock(Terminal::class);
 
         $psrResponse = $this->createMock(ResponseInterface::class);
         $psrResponse

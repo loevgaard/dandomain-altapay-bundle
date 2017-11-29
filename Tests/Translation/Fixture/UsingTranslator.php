@@ -25,6 +25,6 @@ class UsingTranslator
      */
     public function getIt()
     {
-        return $this->getTranslator();
+        return $this->getTranslator($this->container);
     }
 }

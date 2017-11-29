@@ -16,7 +16,7 @@ class PaymentCreated implements EventInterface
         $this->payment = $payment;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return 'payment_created';
     }

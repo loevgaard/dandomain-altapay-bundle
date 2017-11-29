@@ -7,7 +7,7 @@ use Loevgaard\DandomainAltapayBundle\Form\SiteSettingType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,13 +91,13 @@ class SiteSettingController extends Controller
     }
 
     /**
-     * @param Form        $form
-     * @param SiteSetting $siteSetting
-     * @param Request     $request
+     * @param FormInterface $form
+     * @param SiteSetting   $siteSetting
+     * @param Request       $request
      *
      * @return null|RedirectResponse
      */
-    private function handleUpdate(Form $form, SiteSetting $siteSetting, Request $request)
+    private function handleUpdate(FormInterface $form, SiteSetting $siteSetting, Request $request)
     {
         $form->handleRequest($request);
 
@@ -119,12 +119,12 @@ class SiteSettingController extends Controller
     }
 
     /**
-     * @param SiteSetting $siteSetting
-     * @param Form        $form
+     * @param SiteSetting   $siteSetting
+     * @param FormInterface $form
      *
      * @return Response
      */
-    private function updateResponse(SiteSetting $siteSetting, Form $form): Response
+    private function updateResponse(SiteSetting $siteSetting, FormInterface $form): Response
     {
         return $this->render('@LoevgaardDandomainAltapay/site_setting/edit.html.twig', [
             'siteSetting' => $siteSetting,
@@ -135,9 +135,9 @@ class SiteSettingController extends Controller
     /**
      * @param SiteSetting $siteSetting
      *
-     * @return Form
+     * @return FormInterface
      */
-    private function getForm(SiteSetting $siteSetting): Form
+    private function getForm(SiteSetting $siteSetting): FormInterface
     {
         return $form = $this->createForm(SiteSettingType::class, $siteSetting);
     }

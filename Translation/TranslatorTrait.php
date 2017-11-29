@@ -2,6 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Translation;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 trait TranslatorTrait
@@ -12,12 +13,14 @@ trait TranslatorTrait
     private $translator;
 
     /**
+     * @param ContainerInterface $container
+     *
      * @return TranslatorInterface
      */
-    private function getTranslator(): TranslatorInterface
+    private function getTranslator(ContainerInterface $container): TranslatorInterface
     {
         if (!$this->translator) {
-            $this->translator = $this->container->get('translator');
+            $this->translator = $container->get('translator');
         }
 
         return $this->translator;

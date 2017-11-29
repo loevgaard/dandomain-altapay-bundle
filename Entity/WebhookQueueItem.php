@@ -139,7 +139,7 @@ class WebhookQueueItem
 
     public function markAsError($error)
     {
-        if($error instanceof \Exception) {
+        if ($error instanceof \Exception) {
             $error = '['.get_class($error).'] '.$error->getMessage().' on line '.$error->getLine().' in file `'.$error->getFile().'`';
         }
         $this->incrementTries();

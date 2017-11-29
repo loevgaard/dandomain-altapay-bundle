@@ -2,7 +2,6 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\Command;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use JMS\Serializer\SerializerBuilder;

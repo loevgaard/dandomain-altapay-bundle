@@ -2,9 +2,9 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\Entity;
 
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7;
 use Loevgaard\DandomainAltapayBundle\Entity\WebhookExchange;
 use Loevgaard\DandomainAltapayBundle\Entity\WebhookQueueItem;
 use PHPUnit\Framework\TestCase;

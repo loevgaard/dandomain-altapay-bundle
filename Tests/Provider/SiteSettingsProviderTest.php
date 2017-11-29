@@ -37,7 +37,7 @@ final class SiteSettingsProviderTest extends TestCase
 
         $repository->method('findBySiteIdIndexedBySetting')->willReturn([SiteSetting::SETTING_PHONE => $siteSetting]);
 
-        $expected = array_map(function ($elm) {
+        $expected = array_map(function () {
             return 'default_setting';
         }, SiteSetting::getSettings());
         $expected['phone'] = $siteSetting;

@@ -94,7 +94,7 @@ class PaymentController extends Controller
         $terminalRepository = $this->container->get('loevgaard_dandomain_altapay.terminal_repository');
         $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
         $eventRepository = $this->container->get('loevgaard_dandomain_altapay.event_repository');
-        $translator = $this->getTranslator();
+        $translator = $this->getTranslator($this->container);
 
         $psrRequest = $this->createPsrRequest($request);
         /** @var Payment $paymentEntity */
