@@ -54,7 +54,7 @@ class WebhookExchange
     private $lastEventId;
 
     /**
-     * @var Collection|WebhookQueueItem[]
+     * @var ArrayCollection|WebhookQueueItem[]
      *
      * @ORM\OneToMany(targetEntity="WebhookQueueItem", mappedBy="webhookExchange", cascade={"persist", "remove"})
      */
@@ -128,9 +128,9 @@ class WebhookExchange
     }
 
     /**
-     * @return WebhookQueueItem[]|Collection
+     * @return WebhookQueueItem[]|ArrayCollection
      */
-    public function getWebhookQueueItems() : Collection
+    public function getWebhookQueueItems()
     {
         return $this->webhookQueueItems;
     }
