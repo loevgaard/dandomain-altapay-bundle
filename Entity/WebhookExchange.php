@@ -2,6 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -51,10 +52,18 @@ class WebhookExchange
      */
     private $lastEventId;
 
+    /**
+     * @var ArrayCollection|WebhookQueueItem[]
+     *
+     * @ORM\OneToMany(targetEntity="WebhookQueueItem", mappedBy="webhookExchange", cascade={"persist", "remove"})
+     */
+    private $webhookQueueItems;
+
     public function __construct(string $url, int $lastEventId = 0)
     {
         $this->setUrl($url);
         $this->setLastEventId($lastEventId);
+        $this->webhookQueueItems = new ArrayCollection();
     }
 
     /**
@@ -113,6 +122,39 @@ class WebhookExchange
     public function setLastEventId(int $lastEventId): self
     {
         $this->lastEventId = $lastEventId;
+
+        return $this;
+    }
+
+    /**
+     * @return WebhookQueueItem[]|ArrayCollection
+     */
+    public function getWebhookQueueItems(): ArrayCollection
+    {
+        return $this->webhookQueueItems;
+    }
+
+    /**
+     * @param ArrayCollection $webhookQueueItems
+     *
+     * @return WebhookExchange
+     */
+    public function setWebhookQueueItems(ArrayCollection $webhookQueueItems)
+    {
+        $this->webhookQueueItems = $webhookQueueItems;
+
+        return $this;
+    }
+
+    /**
+     * @param WebhookQueueItem $webhookQueueItem
+     *
+     * @return WebhookExchange
+     */
+    public function addWebhookQueueItem(WebhookQueueItem $webhookQueueItem): self
+    {
+        $webhookQueueItem->setWebhookExchange($this);
+        $this->webhookQueueItems->add($webhookQueueItem);
 
         return $this;
     }

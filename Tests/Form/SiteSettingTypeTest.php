@@ -12,7 +12,7 @@ class SiteSettingTypeTest extends TypeTestCase
         $formData = [
             'siteId' => '26',
             'setting' => 'setting',
-            'val' => 'val'
+            'val' => 'val',
         ];
 
         $form = $this->factory->create(SiteSettingType::class);

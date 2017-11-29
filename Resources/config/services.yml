@@ -81,13 +81,19 @@ services:
         calls:
             - [setTerminalSynchronizer, ["@loevgaard_dandomain_altapay.terminal_synchronizer"]]
 
-    loevgaard_dandomain_altapay.call_webhooks_command:
-        class: Loevgaard\DandomainAltapayBundle\Command\CallWebhooksCommand
+    loevgaard_dandomain_altapay.consume_webhook_queue_command:
+        class: Loevgaard\DandomainAltapayBundle\Command\ConsumeWebhookQueueCommand
+        arguments:
+            - "@loevgaard_dandomain_altapay.webhook_exchange_repository"
+            - "@jms_serializer.serializer"
+        tags: [console.command]
+
+    loevgaard_dandomain_altapay.enqueue_webhooks_command:
+        class: Loevgaard\DandomainAltapayBundle\Command\EnqueueWebhooksCommand
         arguments:
             - "@loevgaard_dandomain_altapay.webhook_exchange_repository"
             - "@loevgaard_dandomain_altapay.event_repository"
             - "@jms_serializer.serializer"
-            - "@logger"
         tags: [console.command]
 
     # Misc

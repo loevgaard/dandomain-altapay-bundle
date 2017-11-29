@@ -8,17 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class WebhookExchangeRepositoryTest extends TestCase
 {
-    public function testReturnNull()
-    {
-        $webhookExchangeRepository = $this->getWebhookExchangeRepository();
-
-        $webhookExchangeRepository
-            ->method('findOneBy')
-            ->willReturn(null);
-
-        $this->assertSame(null, $webhookExchangeRepository->findByUrl('https://www.example.com'));
-    }
-
     public function testReturnObject()
     {
         $webhookExchangeRepository = $this->getWebhookExchangeRepository();
@@ -29,7 +18,7 @@ class WebhookExchangeRepositoryTest extends TestCase
             ->method('findOneBy')
             ->willReturn($obj);
 
-        $this->assertSame($obj, $webhookExchangeRepository->findByUrl($url));
+        $this->assertSame($obj, $webhookExchangeRepository->findByUrlOrCreate($url));
     }
 
     /**
