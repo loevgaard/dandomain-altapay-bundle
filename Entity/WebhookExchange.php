@@ -3,6 +3,7 @@
 namespace Loevgaard\DandomainAltapayBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -53,7 +54,7 @@ class WebhookExchange
     private $lastEventId;
 
     /**
-     * @var ArrayCollection|WebhookQueueItem[]
+     * @var Collection|WebhookQueueItem[]
      *
      * @ORM\OneToMany(targetEntity="WebhookQueueItem", mappedBy="webhookExchange", cascade={"persist", "remove"})
      */
@@ -127,9 +128,9 @@ class WebhookExchange
     }
 
     /**
-     * @return WebhookQueueItem[]|ArrayCollection
+     * @return WebhookQueueItem[]|Collection
      */
-    public function getWebhookQueueItems(): ArrayCollection
+    public function getWebhookQueueItems() : Collection
     {
         return $this->webhookQueueItems;
     }
