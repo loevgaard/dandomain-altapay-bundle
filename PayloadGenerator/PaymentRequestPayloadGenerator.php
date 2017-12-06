@@ -11,20 +11,13 @@ use Loevgaard\Dandomain\Pay\Model\Payment as DandomainPayment;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\Terminal;
 use Money\Money;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
 {
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 
@@ -48,20 +41,32 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
      */
     protected $checksumHelper;
 
+    /**
+     * @var string
+     */
+    protected $cookiePaymentId;
+
+    /**
+     * @var string
+     */
+    protected $cookieChecksumComplete;
+
     public function __construct(
-        ContainerInterface $container,
         RouterInterface $router,
         DandomainPayment $paymentRequest,
         Terminal $terminal,
         Payment $payment,
-        ChecksumHelper $checksumHelper
+        ChecksumHelper $checksumHelper,
+        string $cookiePaymentId,
+        string $cookieChecksumComplete
     ) {
-        $this->container = $container;
         $this->router = $router;
         $this->dandomainPayment = $paymentRequest;
         $this->terminal = $terminal;
         $this->payment = $payment;
         $this->checksumHelper = $checksumHelper;
+        $this->cookiePaymentId = $cookiePaymentId;
+        $this->cookieChecksumComplete = $cookieChecksumComplete;
     }
 
     /**
@@ -72,8 +77,7 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
         $paymentRequestPayload = new PaymentRequestPayload(
             $this->terminal->getTitle(),
             $this->dandomainPayment->getOrderId(),
-            $this->dandomainPayment->getTotalAmount(),
-            $this->dandomainPayment->getCurrencySymbol()
+            $this->dandomainPayment->getTotalAmount()
         );
 
         foreach ($this->dandomainPayment->getPaymentLines() as $paymentLine) {
@@ -123,59 +127,29 @@ class PaymentRequestPayloadGenerator implements PayloadGeneratorInterface
             $this->dandomainPayment->getCustomerAddress().($this->dandomainPayment->getCustomerAddress2() ? "\r\n".$this->dandomainPayment->getCustomerAddress2() : ''),
             $this->dandomainPayment->getCustomerZipCode(),
             $this->dandomainPayment->getCustomerCity(),
-            $this->dandomainPayment->getCustomerCountry(),
+            $this->dandomainPayment->getCustomerCountryCode(),
             $shippingNames[0] ?? '',
             $shippingNames[1] ?? '',
             $this->dandomainPayment->getDeliveryAddress().($this->dandomainPayment->getDeliveryAddress2() ? "\r\n".$this->dandomainPayment->getDeliveryAddress2() : ''),
             $this->dandomainPayment->getDeliveryZipCode(),
             $this->dandomainPayment->getDeliveryCity(),
-            $this->dandomainPayment->getDeliveryCountry()
+            $this->dandomainPayment->getDeliveryCountryCode()
         );
         $paymentRequestPayload->setCustomerInfo($customerInfoPayload);
 
         $configPayload = $this->createConfig(
-            $this->router->generate(
-                'loevgaard_dandomain_altapay_callback_form',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            $this->router->generate(
-                'loevgaard_dandomain_altapay_callback_ok',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            $this->router->generate(
-                'loevgaard_dandomain_altapay_callback_fail',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            $this->router->generate(
-                'loevgaard_dandomain_altapay_callback_redirect',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            $this->router->generate(
-                'loevgaard_dandomain_altapay_callback_open',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            $this->router->generate(
-                'loevgaard_dandomain_altapay_callback_notification',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )
+            $this->router->generate('loevgaard_dandomain_altapay_callback_form', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate('loevgaard_dandomain_altapay_callback_ok', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate('loevgaard_dandomain_altapay_callback_fail', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate('loevgaard_dandomain_altapay_callback_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate('loevgaard_dandomain_altapay_callback_open', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate('loevgaard_dandomain_altapay_callback_notification', [], UrlGeneratorInterface::ABSOLUTE_URL)
         );
         $paymentRequestPayload->setConfig($configPayload);
 
         $paymentRequestPayload
-            ->setCookiePart(
-                $this->container->getParameter('loevgaard_dandomain_altapay.cookie_payment_id'),
-                $this->payment->getId()
-            )
-            ->setCookiePart(
-                $this->container->getParameter('loevgaard_dandomain_altapay.cookie_checksum_complete'),
-                $this->checksumHelper->getChecksum2()
-            )
+            ->setCookiePart($this->cookiePaymentId, $this->payment->getId())
+            ->setCookiePart($this->cookieChecksumComplete, $this->checksumHelper->getChecksum2())
         ;
 
         return $paymentRequestPayload;

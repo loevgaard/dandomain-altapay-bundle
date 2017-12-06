@@ -120,7 +120,7 @@ class PaymentController extends Controller
             throw ChecksumMismatchException::create($translator->trans('payment.exception.checksum_mismatch', [], 'LoevgaardDandomainAltapayBundle'), $request, $paymentEntity);
         }
 
-        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container, $this->container->get('router'), $paymentEntity, $terminalEntity, $paymentEntity, $checksumHelper);
+        $paymentRequestPayloadGenerator = new PaymentRequestPayloadGenerator($this->container->get('router'), $paymentEntity, $terminalEntity, $paymentEntity, $checksumHelper, $this->container->getParameter('loevgaard_dandomain_altapay.cookie_payment_id'), $this->container->getParameter('loevgaard_dandomain_altapay.cookie_checksum_complete'));
         $paymentRequestPayload = $paymentRequestPayloadGenerator->generate();
 
         $altapay = $this->container->get('loevgaard_dandomain_altapay.altapay_client');

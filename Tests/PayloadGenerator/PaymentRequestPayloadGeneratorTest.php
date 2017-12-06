@@ -13,7 +13,6 @@ use Loevgaard\DandomainAltapayBundle\Tests\PayloadGenerator\Fixture\Gateway;
 use Money\Currency;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 final class PaymentRequestPayloadGeneratorTest extends TestCase
@@ -114,26 +113,15 @@ final class PaymentRequestPayloadGeneratorTest extends TestCase
 
     private function getGenerator()
     {
-        $container = $this->getContainer();
         $router = $this->getRouter();
         $dandomainPayment = $this->getDandomainPayment();
         $terminal = $this->getTerminal();
         $payment = $this->getPayment();
         $handler = $this->getChecksumHelper($dandomainPayment);
 
-        $generator = new Gateway($container, $router, $dandomainPayment, $terminal, $payment, $handler);
+        $generator = new Gateway($router, $dandomainPayment, $terminal, $payment, $handler, 'payment_id', 'checksum_complete');
 
         return $generator;
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ContainerInterface
-     */
-    private function getContainer()
-    {
-        $container = $this->getMockForAbstractClass(ContainerInterface::class);
-
-        return $container;
     }
 
     /**
