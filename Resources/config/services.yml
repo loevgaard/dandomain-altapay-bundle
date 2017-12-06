@@ -113,6 +113,7 @@ services:
         arguments:
             - "%loevgaard_dandomain_altapay.altapay_username%"
             - "%loevgaard_dandomain_altapay.altapay_password%"
+            - "%loevgaard_dandomain_altapay.altapay_url%"
 
     loevgaard_dandomain_altapay.altapay_callback_handler:
         class: Loevgaard\AltaPay\CallbackHandler
