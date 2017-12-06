@@ -136,6 +136,29 @@ class PaymentController extends Controller
     }
 
     /**
+     * @Method("POST")
+     * @Route("/bulk", name="loevgaard_dandomain_altapay_payment_bulk")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkPaymentAction(Request $request)
+    {
+        $op = $request->request->getAlpha('bulkOperation');
+        $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
+        $payments = $paymentRepository->findByIds($request->request->get('payments', []));
+
+        if($op === 'capture') {
+            foreach ($payments as $payment) {
+                // @todo capture $payment
+            }
+        }
+
+        return $this->redirectToRoute('loevgaard_dandomain_altapay_payment_index');
+    }
+
+    /**
      * @Method("GET")
      * @Route("/{paymentId}/capture", name="loevgaard_dandomain_altapay_payment_capture")
      *

@@ -25,4 +25,17 @@ class PaymentRepository extends EntityRepository
 
         return $payment;
     }
+
+    /**
+     * @param array $ids
+     * @return array|Payment[]
+     */
+    public function findByIds(array $ids) : array
+    {
+        $qb = $this->getQueryBuilder('p');
+        $qb->where($qb->expr()->in('p.id', ':ids'));
+        $qb->setParameter('ids', $ids);
+
+        return $qb->getQuery()->getResult();
+    }
 }
