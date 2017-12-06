@@ -109,14 +109,14 @@ services:
             - "@loevgaard_dandomain_altapay.http_transaction_repository"
 
     loevgaard_dandomain_altapay.altapay_client:
-        class: Loevgaard\AltaPay\Client
+        class: Loevgaard\AltaPay\Client\Client
         arguments:
             - "%loevgaard_dandomain_altapay.altapay_username%"
             - "%loevgaard_dandomain_altapay.altapay_password%"
             - "%loevgaard_dandomain_altapay.altapay_url%"
 
-    loevgaard_dandomain_altapay.altapay_callback_handler:
-        class: Loevgaard\AltaPay\CallbackHandler
+    loevgaard_dandomain_altapay.altapay_callback_factory:
+        class: Loevgaard\AltaPay\Callback\CallbackFactory
 
     loevgaard_dandomain_altapay.terminal_synchronizer:
         class: Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer

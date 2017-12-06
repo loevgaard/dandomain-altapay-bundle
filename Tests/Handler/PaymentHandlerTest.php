@@ -2,7 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\Handler;
 
-use Loevgaard\AltaPay\Client;
+use Loevgaard\AltaPay\Client\Client;
 use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\AltaPay\Payload\OrderLine;
 use Loevgaard\AltaPay\Payload\RefundCapturedReservation as RefundCapturedReservationPayload;

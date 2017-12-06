@@ -160,15 +160,16 @@ class CallbackController extends Controller
      *
      * @return Payment
      *
+     * @throws CallbackException
      * @throws PaymentException
      */
     protected function handleCallback(Request $request)
     {
         $payment = $this->getPaymentFromRequest($request);
-        $callbackHandler = $this->get('loevgaard_dandomain_altapay.altapay_callback_handler');
+        $callbackFactory = $this->get('loevgaard_dandomain_altapay.altapay_callback_factory');
 
         $psrRequest = $this->createPsrRequest($request);
-        $callback = $callbackHandler->handleCallback($psrRequest);
+        $callback = $callbackFactory->create($psrRequest);
 
         if ($callback instanceof XmlCallback) {
             $transactions = $callback->getTransactions();

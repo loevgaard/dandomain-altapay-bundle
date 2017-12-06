@@ -3,7 +3,7 @@
 namespace Loevgaard\DandomainAltapayBundle\Command;
 
 use GuzzleHttp\Psr7;
-use Loevgaard\AltaPay\Client;
+use Loevgaard\AltaPay\Client\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

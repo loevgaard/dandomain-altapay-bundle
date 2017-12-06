@@ -2,7 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Handler;
 
-use Loevgaard\AltaPay\Client;
+use Loevgaard\AltaPay\Client\Client;
 use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\AltaPay\Payload\CaptureReservation as CaptureReservationPayload;
 use Loevgaard\AltaPay\Payload\OrderLine;

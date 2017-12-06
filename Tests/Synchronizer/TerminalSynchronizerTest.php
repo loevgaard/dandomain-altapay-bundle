@@ -2,7 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Tests\Synchronizer;
 
-use Loevgaard\AltaPay\Client;
+use Loevgaard\AltaPay\Client\Client;
 use Loevgaard\AltaPay\Response\GetTerminals;
 use Loevgaard\DandomainAltapayBundle\Entity\TerminalRepository;
 use Loevgaard\DandomainAltapayBundle\Synchronizer\TerminalSynchronizer;
