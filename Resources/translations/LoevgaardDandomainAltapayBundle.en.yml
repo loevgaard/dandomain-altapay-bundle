@@ -79,12 +79,14 @@ payment:
             name: Name
             vat: VAT
             price: Price
+            price_incl_vat: Price incl. VAT
         developer_info:
             heading: Developer information
 
     label:
         id: Id
         order_id: Order id
+        payment_method: Payment method
         customer_name: Customer
         customer_email: Customer email
         customer_phone: Customer phone

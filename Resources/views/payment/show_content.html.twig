@@ -82,10 +82,6 @@ set delivery_fields = [
             <td>{{ payment.refundableAmount|money_localized_format }}</td>
         </tr>
         <tr>
-            <td>{{ 'payment.show.data.reserved_amount'|trans }}</td>
-            <td>{{ payment.reservedAmount|money_localized_format }}</td>
-        </tr>
-        <tr>
             <td>{{ 'payment.show.data.captured_amount'|trans }}</td>
             <td>{{ payment.capturedAmount|money_localized_format }}</td>
         </tr>
@@ -120,23 +116,25 @@ set delivery_fields = [
         </table>
     </div>
     <div class="col-md-6">
-        <h2>{{ 'payment.show.delivery_info.heading'|trans }}</h2>
-        <table class="table table-hover table-bordered">
-            {% for item in delivery_fields %}
-                {% if attribute(payment, item.getter) is not empty %}
-                    <tr>
-                        <td>{{ item.label }}</td>
-                        <td>
-                            {% if attribute(item, 'type') is defined and attribute(item, 'type') == 'email' %}
-                                <a href="mailto:{{ attribute(payment, item.getter) }}">{{ attribute(payment, item.getter) }}</a>
-                            {% else %}
-                                {{ attribute(payment, item.getter) }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
+        {% if payment.deliveryName %}
+            <h2>{{ 'payment.show.delivery_info.heading'|trans }}</h2>
+            <table class="table table-hover table-bordered">
+                {% for item in delivery_fields %}
+                    {% if attribute(payment, item.getter) is not empty %}
+                        <tr>
+                            <td>{{ item.label }}</td>
+                            <td>
+                                {% if attribute(item, 'type') is defined and attribute(item, 'type') == 'email' %}
+                                    <a href="mailto:{{ attribute(payment, item.getter) }}">{{ attribute(payment, item.getter) }}</a>
+                                {% else %}
+                                    {{ attribute(payment, item.getter) }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        {% endif %}
     </div>
 </div>
 <div class="row">
@@ -153,10 +151,6 @@ set delivery_fields = [
                     <td>{{ payment.paymentFee|money_localized_format }}</td>
                 </tr>
             {% endif %}
-            <tr>
-                <td>{{ ('payment.show.payment_info.payment_nature')|trans }}</td>
-                <td>{{ payment.paymentNature }}</td>
-            </tr>
         </table>
     </div>
     <div class="col-md-6">
@@ -185,6 +179,7 @@ set delivery_fields = [
             <th>{{ 'payment.show.payment_lines.name'|trans }}</th>
             <th>{{ 'payment.show.payment_lines.vat'|trans }}</th>
             <th>{{ 'payment.show.payment_lines.price'|trans }}</th>
+            <th>{{ 'payment.show.payment_lines.price_incl_vat'|trans }}</th>
         </tr>
         </thead>
         <tbody>
@@ -193,8 +188,9 @@ set delivery_fields = [
                 <td>{{ paymentLine.quantity }}</td>
                 <td>{{ paymentLine.productNumber }}</td>
                 <td>{{ paymentLine.name }}</td>
-                <td>{{ paymentLine.vat }}</td>
+                <td>{{ paymentLine.vatAmount|money_localized_format }}</td>
                 <td>{{ paymentLine.price|money_localized_format }}</td>
+                <td>{{ paymentLine.priceInclVat|money_localized_format }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -44,7 +44,9 @@ class PaymentController extends Controller
         $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
 
         /** @var Payment[] $payments */
-        $payments = $paymentRepository->findAllWithPaging($request->query->getInt('page', 1));
+        $payments = $paymentRepository->findAllWithPaging($request->query->getInt('page', 1), 100, [
+            'e.id' => 'desc'
+        ]);
 
         return $this->render('@LoevgaardDandomainAltapay/payment/index.html.twig', [
             'payments' => $payments,
