@@ -179,7 +179,7 @@ class PaymentController extends Controller
             $paymentHandler = $this->getPaymentHandler();
 
             // @todo this is ugly. Should be put somewhere else, maybe on the Payment entity. Maybe the createMoney*() methods on the payment entity should be public so it's easy to create Money objects based on the Payments currency
-            $amount = (int)$request->query->get('amount');
+            $amount = (float)$request->query->get('amount');
             if ($amount) {
                 $amount = new Money($amount * 100, new Currency($payment->getMerchantCurrencyAlpha()));
             }
