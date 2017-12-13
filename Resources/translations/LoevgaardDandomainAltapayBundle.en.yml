@@ -13,6 +13,7 @@ payment:
     index:
         heading: Payments
         empty_collection: No payments yet. Do some marketing please...
+        bulk_capture: Capture
 
     show:
         heading: Payment

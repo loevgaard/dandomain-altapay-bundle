@@ -15,8 +15,6 @@ use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
 use Loevgaard\DandomainAltapayBundle\PayloadGenerator\PaymentRequestPayloadGenerator;
 use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
 use Loevgaard\DandomainAltapayBundle\Translation\TranslatorTrait;
-use Money\Currency;
-use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -138,7 +136,7 @@ class PaymentController extends Controller
 
     /**
      * @Method("POST")
-     * @Route("/bulk/capture", name="loevgaard_dandomain_altapay_payment_bulk")
+     * @Route("/bulk/capture", name="loevgaard_dandomain_altapay_payment_bulk_capture")
      *
      * @param Request $request
      *
@@ -155,6 +153,11 @@ class PaymentController extends Controller
             $paymentHandler->bulkCapture($payments);
 
             $this->addFlash('success', 'All payments were captured'); // @todo fix translation
+        }
+
+        $referrer = $request->headers->get('referer');
+        if($referrer) {
+            return $this->redirect($referrer);
         }
 
         return $this->redirectToRoute('loevgaard_dandomain_altapay_payment_index');
