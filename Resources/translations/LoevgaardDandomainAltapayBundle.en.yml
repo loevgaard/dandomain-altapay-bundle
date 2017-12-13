@@ -6,6 +6,7 @@ callback:
         heading: Your payment succeeded
     fail:
         error: An error occurred
+        error_message: An error occurred. You will be redirected back to the webshop in 15 seconds
     open:
         heading: Your payment is open
 

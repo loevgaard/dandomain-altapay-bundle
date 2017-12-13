@@ -88,9 +88,15 @@ class CallbackController extends Controller
         $payment = $this->handleCallback($request);
         $siteSettings = $this->getSiteSettings($payment);
 
+        $redirect = $payment->getReferrer();
+        if (!$redirect) {
+            $redirect = 'http://'.$payment->getCallBackServerUrl();
+        }
+
         return $this->render('@LoevgaardDandomainAltapay/callback/fail.html.twig', [
             'payment' => $payment,
             'siteSettings' => $siteSettings,
+            'redirect' => $redirect
         ]);
     }
 

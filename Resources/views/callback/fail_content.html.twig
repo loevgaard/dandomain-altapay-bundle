@@ -1,3 +1,10 @@
 {% trans_default_domain 'LoevgaardDandomainAltapayBundle' %}
 
 <h1>{{ 'callback.fail.error'|trans }}</h1>
+<p>{{ 'callback.fail.error_message'|trans }}</p>
+
+<script>
+    setTimeout(function () {
+        location.href = '{{ redirect }}';
+    }, 15000);
+</script>
