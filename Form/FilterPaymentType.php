@@ -15,6 +15,7 @@ class FilterPaymentType extends AbstractType
             ->setMethod('get')
             ->add('orderId', Filters\NumberFilterType::class)
             ->add('submit', SubmitType::class, [
+                'label' => 'layout.submit',
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]
@@ -30,8 +31,9 @@ class FilterPaymentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'translation_domain' => 'LoevgaardDandomainAltapayBundle',
             'csrf_protection'   => false,
-            'validation_groups' => array('filtering') // avoid NotBlank() constraint-related message
+            'validation_groups' => ['filtering'] // avoid NotBlank() constraint-related message
         ]);
     }
 }
