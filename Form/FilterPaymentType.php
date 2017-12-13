@@ -12,6 +12,7 @@ class FilterPaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('get')
             ->add('orderId', Filters\NumberFilterType::class)
             ->add('submit', SubmitType::class, [
                 'attr' => [
