@@ -40,6 +40,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Tbbc\MoneyBundle\TbbcMoneyBundle(),
+            new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle()
         );
 
         // ...

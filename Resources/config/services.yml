@@ -86,6 +86,7 @@ services:
             - "@doctrine"
             - "@knp_paginator"
             - Loevgaard\DandomainAltapayBundle\Entity\Payment
+            - "@lexik_form_filter.query_builder_updater"
 
     loevgaard_dandomain_altapay.event_repository:
         class: Loevgaard\DandomainAltapayBundle\Entity\EventRepository

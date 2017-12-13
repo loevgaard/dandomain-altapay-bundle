@@ -48,8 +48,9 @@ abstract class EntityRepository
     public function __construct(ManagerRegistry $managerRegistry, PaginatorInterface $paginator, string $class)
     {
         $this->manager = $managerRegistry->getManagerForClass($class);
-        $this->class = $class;
         $this->paginator = $paginator;
+        $this->class = $class;
+
     }
 
     /**
@@ -114,7 +115,7 @@ abstract class EntityRepository
      *
      * @return QueryBuilder
      */
-    protected function getQueryBuilder(string $alias): QueryBuilder
+    public function getQueryBuilder(string $alias): QueryBuilder
     {
         return $this->getRepository()->createQueryBuilder($alias);
     }

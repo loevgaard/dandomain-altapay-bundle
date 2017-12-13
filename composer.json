@@ -20,6 +20,7 @@
         "jms/serializer-bundle": "^2.2",
         "knplabs/doctrine-behaviors": "^1.1",
         "knplabs/knp-paginator-bundle": "^2.6",
+        "lexik/form-filter-bundle": "^5.0",
         "loevgaard/altapay-php-sdk": "^3.0",
         "loevgaard/dandomain-pay-php-sdk": "^3.4.1",
         "sensio/framework-extra-bundle": "^3.0",

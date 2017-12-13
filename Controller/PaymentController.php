@@ -11,6 +11,7 @@ use Loevgaard\DandomainAltapayBundle\Exception\AltapayPaymentRequestException;
 use Loevgaard\DandomainAltapayBundle\Exception\ChecksumMismatchException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
 use Loevgaard\DandomainAltapayBundle\Exception\TerminalNotFoundException;
+use Loevgaard\DandomainAltapayBundle\Form\FilterPaymentType;
 use Loevgaard\DandomainAltapayBundle\Handler\PaymentHandler;
 use Loevgaard\DandomainAltapayBundle\PayloadGenerator\PaymentRequestPayloadGenerator;
 use Loevgaard\DandomainAltapayBundle\PsrHttpMessage\DiactorosTrait;
@@ -42,13 +43,16 @@ class PaymentController extends Controller
     {
         $paymentRepository = $this->container->get('loevgaard_dandomain_altapay.payment_repository');
 
+        $filterForm = $this->createForm(FilterPaymentType::class);
+
         /** @var Payment[] $payments */
-        $payments = $paymentRepository->findAllWithPaging($request->query->getInt('page', 1), 100, [
+        $payments = $paymentRepository->findAllWithPagingAndFilter($request->query->getInt('page', 1), 100, [
             'e.id' => 'desc'
-        ]);
+        ], $filterForm, $request);
 
         return $this->render('@LoevgaardDandomainAltapay/payment/index.html.twig', [
             'payments' => $payments,
+            'filter' => $filterForm->createView()
         ]);
     }
 

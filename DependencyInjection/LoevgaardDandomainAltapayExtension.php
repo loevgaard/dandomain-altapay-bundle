@@ -5,10 +5,11 @@ namespace Loevgaard\DandomainAltapayBundle\DependencyInjection;
 use Loevgaard\DandomainAltapayBundle\Entity\SiteSetting;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class LoevgaardDandomainAltapayExtension extends Extension
+class LoevgaardDandomainAltapayExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -55,6 +56,19 @@ class LoevgaardDandomainAltapayExtension extends Extension
             if (!$container->hasParameter($parameter)) {
                 throw new \RuntimeException('The parameter `'.$parameter.'` is not configured in the code');
             }
+        }
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        foreach ($container->getExtensions() as $name => $extension) {
+            if($name !== 'twig') {
+                continue;
+            }
+
+            $container->prependExtensionConfig($name, [
+                'form_themes' => ['LexikFormFilterBundle:Form:form_div_layout.html.twig']
+            ]);
         }
     }
 }

@@ -3,56 +3,64 @@
 <h1>{{ 'payment.index.heading'|trans }}</h1>
 
 {% if payments|length %}
-    <form action="{{ path('loevgaard_dandomain_altapay_payment_bulk_capture') }}" method="post">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" class="input-select-all" title=""></th>
-                    <th>{{ 'payment.label.order_id'|trans }}</th>
-                    <th>{{ 'payment.label.payment_method'|trans }}</th>
-                    <th>{{ 'payment.label.customer_name'|trans }}</th>
-                    <th>{{ 'payment.label.total'|trans }}</th>
-                    <th>{{ 'payment.label.refunded_amount'|trans }}</th>
-                    <th>{{ 'layout.actions'|trans }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for payment in payments %}
-                <tr>
-                    <td><input type="checkbox" name="payments[]" value="{{ payment.id }}" title=""></td>
-                    <td>{{ payment.orderId }}</td>
-                    <td>{{ payment.paymentMethod }}</td>
-                    <td>{{ payment.customerName }}</td>
-                    <td>{{ payment.totalAmount|money_localized_format }}</td>
-                    <td>{{ payment.refundedAmount|money_localized_format }}</td>
-                    <td nowrap>
-                        <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_show', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
-                        {% if payment.captureable %}
-                            <a class="btn btn-sm btn-success" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-download"></span> {{ 'payment.label.capture'|trans }}</a>
-                        {% endif %}
-                        {% if payment.refundable %}
-                            <button class="btn btn-sm btn-warning btn-refund" data-refundable-amount="{{ payment.refundableAmount.amount }}" data-form-action="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</button>
-                        {% endif %}
-                        {% if payment.altapayId %}
-                            <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> {{ 'payment.label.open_in_altapay'|trans }}</a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="7">
-                        <select class="form-control" name="bulkOperation" title="" style="display:inline;width:auto">
-                            <option value=""></option>
-                            <option value="capture">{{ 'payment.index.bulk_capture'|trans }}</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary">{{ 'layout.submit'|trans }}</button>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </form>
+    <div class="row">
+        <div class="col-md-9">
+            <form action="{{ path('loevgaard_dandomain_altapay_payment_bulk_capture') }}" method="post">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" class="input-select-all" title=""></th>
+                        <th>{{ 'payment.label.order_id'|trans }}</th>
+                        <th>{{ 'payment.label.payment_method'|trans }}</th>
+                        <th>{{ 'payment.label.customer_name'|trans }}</th>
+                        <th>{{ 'payment.label.total'|trans }}</th>
+                        <th>{{ 'payment.label.refunded_amount'|trans }}</th>
+                        <th>{{ 'layout.actions'|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for payment in payments %}
+                        <tr>
+                            <td><input type="checkbox" name="payments[]" value="{{ payment.id }}" title=""></td>
+                            <td>{{ payment.orderId }}</td>
+                            <td>{{ payment.paymentMethod }}</td>
+                            <td>{{ payment.customerName }}</td>
+                            <td>{{ payment.totalAmount|money_localized_format }}</td>
+                            <td>{{ payment.refundedAmount|money_localized_format }}</td>
+                            <td nowrap>
+                                <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_payment_show', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-eye-open"></span> {{ 'layout.show'|trans }}</a>
+                                {% if payment.captureable %}
+                                    <a class="btn btn-sm btn-success" href="{{ path('loevgaard_dandomain_altapay_payment_capture', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-download"></span> {{ 'payment.label.capture'|trans }}</a>
+                                {% endif %}
+                                {% if payment.refundable %}
+                                    <button class="btn btn-sm btn-warning btn-refund" data-refundable-amount="{{ payment.refundableAmount.amount }}" data-form-action="{{ path('loevgaard_dandomain_altapay_payment_refund', {paymentId: payment.id}) }}"><span class="glyphicon glyphicon-upload"></span> {{ 'payment.label.refund'|trans }}</button>
+                                {% endif %}
+                                {% if payment.altapayId %}
+                                    <a class="btn btn-sm btn-default" href="{{ path('loevgaard_dandomain_altapay_redirect_to_altapay_payment', {paymentId: payment.id}) }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> {{ 'payment.label.open_in_altapay'|trans }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="7">
+                            <select class="form-control" name="bulkOperation" title="" style="display:inline;width:auto">
+                                <option value=""></option>
+                                <option value="capture">{{ 'payment.index.bulk_capture'|trans }}</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">{{ 'layout.submit'|trans }}</button>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </form>
+        </div>
+        <div class="col-md-3">
+            {{ form(filter) }}
+        </div>
+    </div>
+
     {{ knp_pagination_render(payments) }}
 {% else %}
     <div class="alert alert-info">{{ 'payment.index.empty_collection'|trans }}</div>
