@@ -28,7 +28,7 @@ class PaymentRepository extends EntityRepository
 
     /**
      * @param array $ids
-     * @return array|Payment[]
+     * @return Payment[]
      */
     public function findByIds(array $ids) : array
     {

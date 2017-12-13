@@ -49,13 +49,23 @@ class PaymentHandler
     }
 
     /**
+     * @param Payment[] $payments
+     */
+    public function bulkCapture(array $payments)
+    {
+        foreach ($payments as $payment) {
+            $this->capture($payment);
+        }
+    }
+
+    /**
      * @param Payment            $payment      The payment to refund
-     * @param PaymentLine[]|null $paymentLines The payment lines to refund
      * @param Money|null         $amount       The amount to refund
+     * @param PaymentLine[]|null $paymentLines The payment lines to refund
      *
      * @return RefundCapturedReservationResponse
      */
-    public function refund(Payment $payment, array $paymentLines = null, Money $amount = null)
+    public function refund(Payment $payment, Money $amount = null, array $paymentLines = null)
     {
         $payload = new RefundCapturedReservationPayload($payment->getAltapayId());
 

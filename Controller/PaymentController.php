@@ -2,6 +2,7 @@
 
 namespace Loevgaard\DandomainAltapayBundle\Controller;
 
+use Loevgaard\AltaPay;
 use Loevgaard\Dandomain\Pay\Helper\ChecksumHelper;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
@@ -55,7 +56,7 @@ class PaymentController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/{paymentId}/show", name="loevgaard_dandomain_altapay_payment_show")
+     * @Route("/{paymentId}/show", name="loevgaard_dandomain_altapay_payment_show", requirements={"paymentId" = "\d+"})
      *
      * @param int $paymentId
      *
@@ -137,7 +138,7 @@ class PaymentController extends Controller
 
     /**
      * @Method("POST")
-     * @Route("/bulk", name="loevgaard_dandomain_altapay_payment_bulk")
+     * @Route("/bulk/capture", name="loevgaard_dandomain_altapay_payment_bulk")
      *
      * @param Request $request
      *
@@ -150,9 +151,10 @@ class PaymentController extends Controller
         $payments = $paymentRepository->findByIds($request->request->get('payments', []));
 
         if($op === 'capture') {
-            foreach ($payments as $payment) {
-                // @todo capture $payment
-            }
+            $paymentHandler = $this->getPaymentHandler();
+            $paymentHandler->bulkCapture($payments);
+
+            $this->addFlash('success', 'All payments were captured'); // @todo fix translation
         }
 
         return $this->redirectToRoute('loevgaard_dandomain_altapay_payment_index');
@@ -160,7 +162,7 @@ class PaymentController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/{paymentId}/capture", name="loevgaard_dandomain_altapay_payment_capture")
+     * @Route("/{paymentId}/capture", name="loevgaard_dandomain_altapay_payment_capture", requirements={"paymentId" = "\d+"})
      *
      * @param int     $paymentId
      * @param Request $request
@@ -173,7 +175,13 @@ class PaymentController extends Controller
 
         if ($payment) {
             $paymentHandler = $this->getPaymentHandler();
-            $res = $paymentHandler->capture($payment, $request->query->get('amount'));
+
+            $amount = $request->query->get('amount');
+            if($amount) {
+                $amount = AltaPay\createMoneyFromFloat($payment->getCurrencySymbol(), $amount);
+            }
+
+            $res = $paymentHandler->capture($payment, $amount);
 
             if ($res->isSuccessful()) {
                 $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was captured.'); // @todo fix translation
@@ -189,7 +197,7 @@ class PaymentController extends Controller
 
     /**
      * @Method({"POST", "GET"})
-     * @Route("/{paymentId}/refund", name="loevgaard_dandomain_altapay_payment_refund")
+     * @Route("/{paymentId}/refund", name="loevgaard_dandomain_altapay_payment_refund", requirements={"paymentId" = "\d+"})
      *
      * @param int     $paymentId
      * @param Request $request
@@ -203,13 +211,12 @@ class PaymentController extends Controller
         if ($payment) {
             $paymentHandler = $this->getPaymentHandler();
 
-            // @todo this is ugly. Should be put somewhere else, maybe on the Payment entity. Maybe the createMoney*() methods on the payment entity should be public so it's easy to create Money objects based on the Payments currency
-            $amount = (float) $request->query->get('amount');
+            $amount = $request->query->get('amount');
             if ($amount) {
-                $amount = new Money($amount * 100, new Currency($payment->getMerchantCurrencyAlpha()));
+                $amount = AltaPay\createMoneyFromFloat($payment->getCurrencySymbol(), $amount);
             }
 
-            $res = $paymentHandler->refund($payment, null, $amount);
+            $res = $paymentHandler->refund($payment, $amount);
 
             if ($res->isSuccessful()) {
                 $this->addFlash('success', 'The payment for order '.$payment->getOrderId().' was refunded.'); // @todo fix translation
@@ -225,7 +232,7 @@ class PaymentController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/{paymentId}/redirectToAltapay", name="loevgaard_dandomain_altapay_redirect_to_altapay_payment")
+     * @Route("/{paymentId}/redirectToAltapay", name="loevgaard_dandomain_altapay_redirect_to_altapay_payment", requirements={"paymentId" = "\d+"})
      *
      * @param int $paymentId
      *

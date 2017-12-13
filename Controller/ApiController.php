@@ -65,7 +65,7 @@ class ApiController extends FOSRestController
 
         $payment = $this->findPaymentByOrderIdOrAltapayId($id);
         $paymentHandler = $this->getPaymentHandler();
-        $res = $paymentHandler->refund($payment, null, $request->query->get('amount'));
+        $res = $paymentHandler->refund($payment, $request->query->get('amount'));
 
         if ($res->isSuccessful()) {
             $transactions = $res->getTransactions();
