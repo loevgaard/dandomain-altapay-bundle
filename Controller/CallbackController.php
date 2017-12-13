@@ -7,6 +7,7 @@ use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\DandomainAltapayBundle\Annotation\LogHttpTransaction;
 use Loevgaard\DandomainAltapayBundle\Entity\Payment;
 use Loevgaard\DandomainAltapayBundle\Entity\PaymentRepository;
+use Loevgaard\DandomainAltapayBundle\Entity\SiteSetting;
 use Loevgaard\DandomainAltapayBundle\Exception\CallbackException;
 use Loevgaard\DandomainAltapayBundle\Exception\NotAllowedIpException;
 use Loevgaard\DandomainAltapayBundle\Exception\PaymentException;
@@ -32,15 +33,15 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
+     * @throws CallbackException
+     * @throws PaymentException
      *
      * @return Response
      */
     public function formAction(Request $request)
     {
         $payment = $this->handleCallback($request);
-        $siteSettings = $this
-            ->get('loevgaard_dandomain_altapay.site_settings_provider')
-            ->findBySiteIdIndexedBySetting($payment->getLanguageId());
+        $siteSettings = $this->getSiteSettings($payment);
 
         return $this->render('@LoevgaardDandomainAltapay/callback/form.html.twig', [
             'payment' => $payment,
@@ -55,7 +56,8 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
-     *
+     * @throws CallbackException
+     * @throws PaymentException
      * @return RedirectResponse
      */
     public function okAction(Request $request)
@@ -77,14 +79,19 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
-     *
+     * @throws CallbackException
+     * @throws PaymentException
      * @return Response
      */
     public function failAction(Request $request)
     {
-        $this->handleCallback($request);
+        $payment = $this->handleCallback($request);
+        $siteSettings = $this->getSiteSettings($payment);
 
-        return $this->render('@LoevgaardDandomainAltapay/callback/fail.html.twig');
+        return $this->render('@LoevgaardDandomainAltapay/callback/fail.html.twig', [
+            'payment' => $payment,
+            'siteSettings' => $siteSettings,
+        ]);
     }
 
     /**
@@ -94,14 +101,19 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
-     *
+     * @throws CallbackException
+     * @throws PaymentException
      * @return Response
      */
     public function redirectAction(Request $request)
     {
-        $this->handleCallback($request);
+        $payment = $this->handleCallback($request);
+        $siteSettings = $this->getSiteSettings($payment);
 
-        return $this->render('@LoevgaardDandomainAltapay/callback/redirect.html.twig');
+        return $this->render('@LoevgaardDandomainAltapay/callback/redirect.html.twig', [
+            'payment' => $payment,
+            'siteSettings' => $siteSettings,
+        ]);
     }
 
     /**
@@ -111,14 +123,19 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
-     *
+     * @throws CallbackException
+     * @throws PaymentException
      * @return Response
      */
     public function openAction(Request $request)
     {
-        $this->handleCallback($request);
+        $payment = $this->handleCallback($request);
+        $siteSettings = $this->getSiteSettings($payment);
 
-        return $this->render('@LoevgaardDandomainAltapay/callback/open.html.twig');
+        return $this->render('@LoevgaardDandomainAltapay/callback/open.html.twig', [
+            'payment' => $payment,
+            'siteSettings' => $siteSettings,
+        ]);
     }
 
     /**
@@ -128,7 +145,8 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
-     *
+     * @throws CallbackException
+     * @throws PaymentException
      * @return Response
      */
     public function notificationAction(Request $request)
@@ -145,7 +163,8 @@ class CallbackController extends Controller
      * @LogHttpTransaction()
      *
      * @param Request $request
-     *
+     * @throws CallbackException
+     * @throws PaymentException
      * @return Response
      */
     public function verifyOrderAction(Request $request)
@@ -251,5 +270,16 @@ class CallbackController extends Controller
     protected function getPaymentRepository()
     {
         return $this->container->get('loevgaard_dandomain_altapay.payment_repository');
+    }
+
+    /**
+     * @param Payment $payment
+     * @return SiteSetting[]
+     */
+    protected function getSiteSettings(Payment $payment) : array
+    {
+        return $this
+            ->get('loevgaard_dandomain_altapay.site_settings_provider')
+            ->findBySiteIdIndexedBySetting($payment->getLanguageId());
     }
 }

@@ -24,7 +24,7 @@ class SiteSettingsProvider
         $this->siteSettingRepository = $siteSettingRepository;
     }
 
-    public function findBySiteIdIndexedBySetting(int $siteId)
+    public function findBySiteIdIndexedBySetting(int $siteId) : array
     {
         $availableSettings = SiteSetting::getSettings();
 
