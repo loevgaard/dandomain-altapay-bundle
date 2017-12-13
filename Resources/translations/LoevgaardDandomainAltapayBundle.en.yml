@@ -6,7 +6,7 @@ callback:
         heading: Your payment succeeded
     fail:
         error: An error occurred
-        error_message: An error occurred. You will be redirected back to the webshop in 15 seconds
+        error_message: An error occurred. Go back to the webshop by clicking <a href="%url%">here</a>.
     open:
         heading: Your payment is open
 
